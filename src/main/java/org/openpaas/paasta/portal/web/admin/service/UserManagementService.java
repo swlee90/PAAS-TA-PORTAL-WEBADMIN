@@ -2,7 +2,10 @@ package org.openpaas.paasta.portal.web.admin.service;
 
 import org.openpaas.paasta.portal.web.admin.common.Common;
 import org.openpaas.paasta.portal.web.admin.common.Constants;
+import org.openpaas.paasta.portal.web.admin.controller.UserManagementController;
 import org.openpaas.paasta.portal.web.admin.model.UserManagement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
@@ -10,13 +13,14 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
 
 /**
  * Created by MIN on 2018-03-28.
  */
 @Service
 public class UserManagementService extends Common {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserManagementController.class);
 
     @Autowired
     CommonService commonService;
@@ -87,6 +91,19 @@ public class UserManagementService extends Common {
     }
 
     /**
+     * 사용자를 조직에 연결
+     *
+     * @param key
+     * @param reqUrl
+     * @param httpMethod
+     * @param param2
+     * @return
+     */
+    public Map<String, Object> associateUserOrg(int key, String reqUrl,HttpMethod httpMethod, Map param2) {
+        return commonService.procCfApiRestTemplate(key,Constants.V2_URL+reqUrl,httpMethod,param2);
+    }
+
+    /**
      * 사용자가 로그인 가능 유무 수정
      *
      * @param param UserManagement(모델클래스)
@@ -97,6 +114,4 @@ public class UserManagementService extends Common {
         param.setActive(result.get("active").toString().equals("true") ? "Y" : "N");
         return commonService.procCommonApiRestTemplate(key,Constants.V2_URL + reqUrl, httpMethod, param);
     }
-
-
 }

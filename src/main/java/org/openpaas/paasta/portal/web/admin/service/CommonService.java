@@ -399,7 +399,6 @@ public class CommonService extends Common {
      * @return map map
      */
     public Map<String, Object> procCommonApiRestTemplate(int key, String reqUrl, HttpMethod httpMethod, Object obj) {
-
         LOGGER.info("> Init");
 
         Map map = getServerInfo(key);

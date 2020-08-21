@@ -115,6 +115,15 @@
                                             <input type="password" class="form-control" id="addUserPassword" autocomplete="new-password"/>
                                         </div>
                                     </div>
+                                    <!--사용자관리 조직타겟-->
+                                    <div class="form-group">
+                                        <label for="addUserId" class="col-sm-3 control-label">조직</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control" id="getOrgList">
+                                                <!--<option>테스트1</option>-->
+                                            </select>
+                                        </div>
+                                    </div>
                                     <div class="form-group">
                                         <label for="addUserActive" class="col-sm-3 control-label">Active 설정 (승인 여부)</label>
                                         <div class="col-sm-9" style="margin-top : 5px">
@@ -148,7 +157,9 @@
 
     /*<![CDATA[*/
     var V2_URL = "/v2";
+    var GET_ORGS_FOR_ADMIN_URL = V2_URL + "/orgs";
     var REST_URL = V2_URL + "/usermgnts";
+    var REST_URL2 = V2_URL + "/organizations";
     var REST_URL_ACCESS = V2_URL + "/usermgnts/access/";
     var LOADED_LIST_COUNT = 0;
     var BOOLEN_SEARCH = false;
@@ -280,7 +291,6 @@
                 }
 
                 htmlString.push('</td></tr>');
-
                 usersObj[resultList[i].userId] = resultList[i].userName;
             }
             LOADED_LIST_COUNT += listLength;
@@ -463,6 +473,24 @@
         $("#addUserModal").modal("show");
     };
 
+    var procCallbackGetOrgs2 = function (data, param) {
+
+        if(data.resources.length == 0){
+            $("#getOrgList").append ("<option value='N'>생성된 조직이 없습니다.</option>");
+        } else {
+            var orgName = new Array();
+            var idMap = new Map();
+            for (var i = 0; i < data.resources.length; i++) {
+                orgName[i] = data.resources[i].entity.name;
+                idMap.set(orgName[i],data.resources[i].metadata.guid);
+            }
+            orgName.sort();
+            for (var i = 0; i < data.resources.length; i++) {
+                $("#getOrgList").append ("<option value='"+idMap.get(orgName[i])+"'>"+orgName[i]+"</option>");
+            }
+        }
+    }
+
     function addUserInsert() {
         key = $("#apiUrls").val();
 
@@ -485,7 +513,13 @@
             adminYn: "N"
         };
 
+        var guid = $("#getOrgList option:selected").val();
+
+        var param2 = {username : $("#addUserId").val()};
+
         procCallAjax(REST_URL + "/user"+"?key="+key, 'POST', JSON.stringify(param), procCallbackAddUserInsert, $('#layerModalLoadingBar'));
+
+        procCallAjax(REST_URL2 +"/"+guid+"/users"+"?key="+key, 'PUT', JSON.stringify(param2), procCallbackAddUserInsert, null);
     };
 
     var procCallbackAddUserInsert = function(data) {
@@ -496,8 +530,17 @@
 
     // ON LOAD
     $(document.body).ready(function () {
-
         procInitPage();
+
+        if($.cookie("api_key") != null){
+            key = $.cookie("api_key");
+            $("#apiUrls").val(key);
+        }else{
+            key = $("#apiUrls").val();
+        }
+
+        getInitMarketPlaceURL();
+        procCallAjax2(GET_ORGS_FOR_ADMIN_URL+"?key="+key,"GET",null ,procCallbackGetOrgs2);
     });
 
 

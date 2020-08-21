@@ -120,6 +120,20 @@ public class UserManagementController extends Common {
         return userManagementService.addUser(Integer.parseInt(key),HttpMethod.POST, param);
     }
 
+    /**
+     * 사용자를 조직에 연결
+     *
+     * @param guid
+     * @param request
+     * @param param2
+     * @return
+     */
+    @PutMapping(V2_URL + "/organizations/{guid}/users")
+    @ResponseBody
+    public Map<String,Object> associateUserOrg(@PathVariable String guid,HttpServletRequest request,@RequestBody Map param2){
+        String key = request.getParameter("key");
+        return userManagementService.associateUserOrg(Integer.parseInt(key),"/organizations/"+guid+"/users",HttpMethod.PUT,param2);
+    }
 
     /**
      * 사용자가 로그인 가능 유무 수정
