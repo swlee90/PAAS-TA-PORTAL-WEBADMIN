@@ -91,7 +91,7 @@ public class UserManagementService extends Common {
     }
 
     /**
-     * 사용자를 조직에 연결
+     * 유저 이름으로 조직에 연결
      *
      * @param key
      * @param reqUrl
