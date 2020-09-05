@@ -3,17 +3,15 @@ package org.openpaas.paasta.portal.web.admin.controller;
 import org.openpaas.paasta.portal.web.admin.common.Common;
 import org.openpaas.paasta.portal.web.admin.common.Constants;
 import org.openpaas.paasta.portal.web.admin.common.User;
-import org.openpaas.paasta.portal.web.admin.entity.ConfigEntity;
-import org.openpaas.paasta.portal.web.admin.service.ConfigService;
+import org.openpaas.paasta.portal.web.admin.model.Org;
+import org.openpaas.paasta.portal.web.admin.model.Space;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -73,6 +71,18 @@ public class OrgSpaceListController extends Common {
         return orgSpaceListService.getOrgsForAdmin(Integer.parseInt(key),"/orgs-admin", HttpMethod.GET, null);
     }
 
+    /**
+     * admin 유저로 접근 가능한 모든 공간목록을 조회한다.
+     *
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @GetMapping(V2_URL + "/spaces2")
+    public Map<String,Object> getSpacesForAdmin( HttpServletRequest request) throws Exception{
+        String key=request.getParameter("key");
+        return orgSpaceListService.getAllSpacesForAdmin(Integer.parseInt(key),"/spaces-admin",HttpMethod.GET,null);
+    }
 
     /**
      * admin 유저로 접근 가능한 영역 목록(모든 영역 목록)을 조회한다.
@@ -112,7 +122,42 @@ public class OrgSpaceListController extends Common {
         return orgSpaceListService.getOrgQuota(Integer.parseInt(key),"/orgs/" + orgid + "/quota-admin", HttpMethod.GET, null);
     }
 
+    /**
+     * 운영자 포털에서 조직이름을 변경한다.
+     *
+     * @param org
+     * @param request
+     * @return
+     */
+    @PutMapping(Constants.V2_URL + "/organization-admin")
+    public Map renameOrgForAdmin(@RequestBody Org org, HttpServletRequest request){
+        String key=request.getParameter("key");
+        return orgSpaceListService.renameOrgForAdmin(Integer.parseInt(key),"/organization-admin",HttpMethod.PUT,org);
+    }
 
+    /**
+     * 운영자 포털에서 조직이름을 변경한다.
+     *
+     * @param space
+     * @param request
+     * @return
+     */
+    @PutMapping(Constants.V2_URL + "/space-admin")
+    public Map renameSpaceForAdmin(@RequestBody Space space, HttpServletRequest request){
+        String key=request.getParameter("key");
+        return orgSpaceListService.renameSpaceForAdmin(Integer.parseInt(key),"/space-admin",HttpMethod.PUT,space);
+    }
+
+    /**
+     * 운영자 포털에서 조직을 삭제한다. (Org Delete)
+     *
+     * @param guid      the organization id (guid)
+     */
+    @DeleteMapping(Constants.V2_URL + "/organizations-admin/{guid}")
+    public Map deleteOrgForAdmin(@PathVariable String guid,HttpServletRequest request) throws Exception {
+        String key=request.getParameter("key");
+        return orgSpaceListService.deleteOrgForAdmin(Integer.parseInt(key),"/organizations-admin/"+guid,HttpMethod.DELETE);
+    }
 
     /**
      * 영역 요약 정보를 조회한다.
@@ -148,6 +193,20 @@ public class OrgSpaceListController extends Common {
         String key = request.getParameter("key");
         return orgSpaceListService.getSpace(Integer.parseInt(key),"/spaces-admin", HttpMethod.GET, null);
 
+    }
+
+    /**
+     *
+     * 운영자 포털에서 조직을 생성한다.
+     *
+     * @param request
+     * @param param
+     * @return
+     */
+    @PostMapping(V2_URL + "/organizations")
+    public Map createOrgForAdmin(HttpServletRequest request,@RequestBody Map param){
+        String key = request.getParameter("key");
+        return orgSpaceListService.createOrgForAdmin(Integer.parseInt(key),"/organizations",HttpMethod.POST,param);
     }
 
 

@@ -1,20 +1,18 @@
 package org.openpaas.paasta.portal.web.admin.controller;
 
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONObject;
 import org.openpaas.paasta.portal.web.admin.common.Common;
 import org.openpaas.paasta.portal.web.admin.common.User;
-import org.openpaas.paasta.portal.web.admin.entity.ConfigEntity;
 import org.openpaas.paasta.portal.web.admin.model.UserManagement;
-import org.openpaas.paasta.portal.web.admin.service.ConfigService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
-
 import java.util.List;
 import java.util.Map;
 
@@ -125,14 +123,13 @@ public class UserManagementController extends Common {
      *
      * @param guid
      * @param request
-     * @param param2
      * @return
      */
     @PutMapping(V2_URL + "/organizations/{guid}/users")
     @ResponseBody
-    public Map<String,Object> associateUserOrg(@PathVariable String guid,HttpServletRequest request,@RequestBody Map param2){
+    public Map<String,Object> associateUserOrg(@PathVariable String guid,HttpServletRequest request,@RequestBody String param) throws Exception{
         String key = request.getParameter("key");
-        return userManagementService.associateUserOrg(Integer.parseInt(key),"/organizations/"+guid+"/users",HttpMethod.PUT,param2);
+        return userManagementService.associateUserOrg(Integer.parseInt(key),"/organizations/"+guid+"/users",HttpMethod.PUT,param);
     }
 
     /**

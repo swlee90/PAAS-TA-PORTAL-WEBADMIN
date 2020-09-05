@@ -1,5 +1,7 @@
 package org.openpaas.paasta.portal.web.admin.service;
 
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONObject;
 import org.openpaas.paasta.portal.web.admin.common.Common;
 import org.openpaas.paasta.portal.web.admin.common.Constants;
 import org.openpaas.paasta.portal.web.admin.controller.UserManagementController;
@@ -96,11 +98,10 @@ public class UserManagementService extends Common {
      * @param key
      * @param reqUrl
      * @param httpMethod
-     * @param param2
      * @return
      */
-    public Map<String, Object> associateUserOrg(int key, String reqUrl,HttpMethod httpMethod, Map param2) {
-        return commonService.procCfApiRestTemplate(key,Constants.V2_URL+reqUrl,httpMethod,param2);
+    public Map<String, Object> associateUserOrg(int key, String reqUrl,HttpMethod httpMethod, String param) throws Exception{
+        return commonService.procCfApiRestTemplate(key,Constants.V2_URL+reqUrl,httpMethod,param);
     }
 
     /**

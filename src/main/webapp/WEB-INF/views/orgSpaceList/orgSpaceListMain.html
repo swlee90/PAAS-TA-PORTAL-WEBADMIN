@@ -53,6 +53,8 @@
 
             </div>
             </div>
+
+            <!--조직 관리 모달-->
             <div class="modal fade" id="modal-default" style="display: none;">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -63,6 +65,8 @@
                     </div>
                     <div class="modal-body" id="modalbody">
                         <p>One fine body…</p>
+                        <div id="#layerModalLoadingBar" class="overlay hide"><i class="fa fa-refresh fa-spin"></i>
+                        </div>
                     </div>
                     <div class="modal-footer" id="modal-footer">
                         <!--<button type="button" class="btn btn-primary" data-dismiss="modal">확인</button>-->
@@ -73,8 +77,7 @@
             <!-- /.modal-dialog -->
         </div>
 
-
-            <!-- [조직 등록] Modal -->
+            <!-- 조직등록모달 -->
             <div class="modal fade" id="devEnvFormModal" data-backdrop="static" data-keyboard="false">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
@@ -107,7 +110,7 @@
                                             </div>
                                         </div>
 
-                                    <div id="selectOS">
+                                    <!--<div id="selectOS">
                                         <div class="form-group" style="height:50px;" id="orgSelect">
                                             <label for="orgInput" class="col-sm-3 col-xs-12 control-label">조직 권한</label>
                                             <div class="col-sm-4 col-xs-3">
@@ -131,7 +134,7 @@
                                                 </select>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div>-->
 
                                         <div class="form-group" style="height:50px;">
                                             <label for="orgQuota" class="col-sm-3 col-xs-12 control-label">조직 할당량</label>
@@ -164,7 +167,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" id="devEnvCloseBtn" class="btn btn-sm btn-default pull-left" data-dismiss="modal">취소</button>
-                            <button type="button" id="devEnvRegBtn" name="modalRegBtn" class="btn btn-sm btn-primary pull-right" onclick="createOrg()">등록</button>
+                            <button type="button" id="devEnvRegBtn" name="modalRegBtn" class="btn btn-sm btn-primary pull-right" data-dismiss="modal" onclick="createOrg()">등록</button>
                         </div>
                     </div>
                     <!-- /.modal-content -->
@@ -180,10 +183,13 @@
 <script layout:fragment="custom-script">
     var V2_URL = "/v2";
     var GET_ORGS_FOR_ADMIN_URL = V2_URL + "/orgs";
+    var GET_SPACES_FOR_ADMIN_URL = V2_URL + "/spaces2";
     var OrgAndSpace = "/OrgAndSpace";
     var Space = "/Space";
     var domainNames;
     var currentOrg;
+    var currentOrgId;
+    var currentOrgNum;
     var spaces;
     var quotaName;
     var totalRoutes;
@@ -200,6 +206,7 @@
     var SPACE_SOURCE_LIST;
 
     var orgObj = new Object();
+    var spaceObj = new Object();
 
     $(document).ready(function(){
         if($.cookie("api_key") != null){
@@ -210,6 +217,7 @@
         }
         getInitMarketPlaceURL();
         procCallAjax2(GET_ORGS_FOR_ADMIN_URL+"?key="+key,"GET",null ,procCallbackGetOrgs);
+        procCallAjax2(GET_SPACES_FOR_ADMIN_URL+"?key="+key,"GET",null ,procCallbackGetSpacesAll);
         getDomains(key);
 
         procCallAjax("/v2/orgs/quota-definitions"+"?key="+key, "GET", null, procCallbackGetOrgQuotaDefinitionList,null);
@@ -223,7 +231,6 @@
 
         $("#orgTable *").remove();
         $("#spaceTable *").remove();
-
         procCallAjax2(GET_ORGS_FOR_ADMIN_URL+"?key="+key,"GET",null ,procCallbackGetOrgs);
 
         getDomains(key);
@@ -251,7 +258,15 @@
         });
     }
 
-
+    var procCallbackGetSpacesAll = function (data) {
+        spaceObj = new Object();
+        var spaceName = new Array();
+        for(var i=0; i < data.resources.length; i++){
+            spaceName[i] = data.resources[i].entity.name;
+            spaceObj[spaceName[i]] = spaceName[i];
+        }
+        spaceName.sort();
+    }
 
     var procCallbackGetOrgs = function (data, param) {
         $("#orgTable").hide();
@@ -306,8 +321,8 @@
 
         if(flag==1){
             $("#modaltitle").html("조직 관리");
-            $("#modalbody").html("<input maxlength='25' style='width: 80%;height: 33px; float: left;font-size: 19px;' placeholder='변경할 조직이름을 입력해주세요.' onkeyup='pattenTest()' id='ManagementName' readonly type='text' value="+name+">"+"<button type='button' style='margin-left: 15px;' class='btn btn-primary' onclick=\'changeReadOnly()\'>변경하기</button>");
-            $("#modal-footer").html("<button type=\"button\" class=\"btn btn-sm btn-danger pull-left\">삭제</button>"+
+            $("#modalbody").html("<input maxlength='25' style='width: 80%;height: 33px; float: left;font-size: 19px;' placeholder='변경할 조직이름을 입력해주세요.' onkeyup='pattenTest()' id='ManagementName' readonly type='text' value="+name+">"+"<button type='button' style='margin-left: 15px;' id='updateRead' class='btn btn-primary' onclick=\'changeReadOnly()\'>변경하기</button>");
+            $("#modal-footer").html("<button type=\"button\" class=\"btn btn-sm btn-danger pull-left\"onclick='deleteChekOrg()'>삭제</button>"+
                 "<button type=\"button\" class=\"btn btn-sm btn-default pull-left\" data-dismiss=\"modal\">취소</button>"+
                 "<button type='button' class='btn btn-primary'  data-dismiss=\"modal\" onclick='updateChek(1)'>수정</button>"+
                     "<input type='hidden' id='guid' value="+guid+">"
@@ -323,25 +338,101 @@
 
     }
     function createOrg() {
-        $("#devEnvForm input[type=text]").each(function () {
-            if(this.value.length==0 || this.value ==null){
-                alert("내용을 입력해주세요.");
-                this.focus();
-                return false;
-            }
-        });
+        if($("#orgName").val().length==0 || $("#orgName").val() ==null){
+            alert("조직명 을 입력해주세요.");
+            $("#orgName").focus();
+            return false;
+        }else if($("#spaceName").val().length==0 || $("#spaceName").val() ==null){
+            alert("공간명 을 입력해주세요.");
+            $("#spaceName").focus();
+            return false;
+        }else{
+            var param = {
+                orgName: $("#orgName").val(),
+                spaceName: $("#spaceName").val(),
+                orgQuotaGuid: $('#orgQuota option:checked').val(),
+                spaceQuotaGuid: $('#spaceQuota option:checked').val()
+            };
+            procCallAjax(V2_URL + "/organizations"+"?key="+key, 'POST', JSON.stringify(param), procCallbackResetPage, $('#layerModalLoadingBar'));
+        }
+    }
+
+    function deleteChekOrg() {
+        var guid=$("#guid").val();
+        var name=$("#ManagementName").val();
+        $("#modaltitle").html("조직 삭제");
+        $("#modal-footer button").remove();
+        $("#ManagementName").remove();
+        $("#modalbody").html("정말 삭제 하시겠습니까?");
+        $("#modal-footer").html("<button type=\"button\" class=\"btn btn-sm btn-danger pull-right\"onclick='deleteOrg()'>삭제</button>"+
+            "<button type=\"button\" class=\"btn btn-sm btn-default pull-left\"  onclick=\"deleteOrgCansle('" + guid + "','" + name + "','" + 1 + "')\">취소</button>"+"<input type='hidden' id='guid' value="+guid+">");
+    }
+
+    function deleteOrgCansle(guid,name,flag) {
+        procManagement(guid,name,flag);
+    }
+
+    function deleteOrg() {
+        var guid=$("#guid").val();
+        $("#modal-default").modal("toggle");
+        procCallAjax(V2_URL + "/organizations-admin/"+guid+"?key="+key, 'DELETE', null, procCallbackResetPage, $('#layerModalLoadingBar'));
     }
 
     function updateChek(flag) {
         var name=$("#ManagementName").val();
+        var guid=$("#guid").val();
         if(name.length == 0 || name == null){
             notifyAlert("warning", "", "내용을 입력해주세요.");
             return false;
-        }else if(orgObj[name] != undefined) {
-            notifyAlert("warning", "", name+" 은(는) 이미 사용중인 ID 입니다.");
-            return false;
+        }else if(flag==1){
+            if(orgObj[name] != undefined) {
+                notifyAlert("warning", "", name+" 은(는) 이미 사용중인 이름 입니다.");
+                return false;
+            }else{
+                var param = {
+                    guid: guid,
+                    newOrgName: name
+                };
+                procCallAjax(V2_URL + "/organization-admin"+"?key="+key, 'PUT', JSON.stringify(param), procCallbackResetPage, $('#layerModalLoadingBar'));
+            }
+        }else if(flag==2){
+            if(spaceObj[name] != undefined) {
+                notifyAlert("warning", "", name+" 은(는) 이미 사용중인 이름 입니다.");
+                return false;
+            }else{
+                var param = {
+                    guid: guid,
+                    newSpaceName: name
+                };
+                procCallAjax(V2_URL + "/space-admin"+"?key="+key, 'PUT', JSON.stringify(param), procCallbackResetPage, $('#layerModalLoadingBar'));
+            }
         }
 
+    }
+
+    var procCallbackResetPage = function (data) {
+        if(data.result){
+            procInitPage();
+        }
+    }
+    /*var procCallbackResetPage2 = function (data) {
+        if(data.result){
+            getSpacesForAdmin(currentOrgId,currentOrg,currentOrgNum);
+        }
+    }*/
+    function procInitPage(){
+        if($.cookie("api_key") != null){
+            key = $.cookie("api_key");
+            $("#apiUrls").val(key);
+        }else{
+            key = $("#apiUrls").val();
+        }
+
+        $("#orgTable *").remove();
+        $("#spaceTable *").remove();
+
+        procCallAjax2(GET_ORGS_FOR_ADMIN_URL+"?key="+key,"GET",null ,procCallbackGetOrgs);
+        procCallAjax2(GET_SPACES_FOR_ADMIN_URL+"?key="+key,"GET",null ,procCallbackGetSpacesAll);
     }
 
     function pattenTest() {
@@ -364,11 +455,13 @@
         $("#spaceTable").hide();
         $("#noSpaceMessage").hide();
         currentOrg = orgName;
+        currentOrgId = orgid;
+        currentOrgNum = orgNum;
         procCallAjax2(GET_ORGS_FOR_ADMIN_URL+"/"+orgid+"/spaces"+"?key="+key,"GET" ,null ,procCallbackGetSpace);
         contentSelectControl("group", orgNum);
     }
 
-    //org 권한
+    /*//org 권한
     $(document).on("change keyup","select[id=orgInput]",function(){
          var value = $('#orgInput').val();
          if(value!='N'){
@@ -381,9 +474,9 @@
     })
 
     function getManagment(val){
-        /*
+        /!*
         $("#orgInput").append("<option value='"+val+"'>"+val+"</option>");
-        $("#orgOutput").remove();*/
+        $("#orgOutput").remove();*!/
         $("#selectOS button").each(function () {
             if($(this).text() == val){
                 $(this).parent().parent().children().find('select').append("<option value='"+val+"'>"+val+"</option>");
@@ -402,7 +495,7 @@
                 ' style="position: absolute;top: 6px;left: -8px;" onclick="getManagment(\''+value+'\')">'+value+'</button></div>'
             );
         }
-    })
+    })*/
 
     // 조직 할당량
     $(document).on("change keyup","select[id=orgQuota]",function(){
@@ -622,10 +715,10 @@
 
     //조직등록 모달 초기화
     $('#devEnvFormModal').on('hidden.bs.modal', function (e) {
-        $("#selectOS button").each(function () {
+        /*$("#selectOS button").each(function () {
             $(this).parent().parent().children().find('select').append("<option value='"+$(this).text()+"'>"+$(this).text()+"</option>");
             $(this).parent().remove();
-        });
+        });*/
 
 
         $(this).find($("#selectSQ")).text("선택안함");

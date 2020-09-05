@@ -314,9 +314,7 @@ public class CommonService extends Common {
      * @return map map
      */
     public Map<String, Object> procCfApiRestTemplate(int key, String reqUrl, HttpMethod httpMethod, Object obj) {
-
         LOGGER.info("> Init");
-
         Map map = getServerInfo(key);
         String apiUri = map.get("apiuri").toString();
         String authorization = map.get("authorization").toString();
@@ -326,6 +324,7 @@ public class CommonService extends Common {
         HttpHeaders reqHeaders = new HttpHeaders();
         reqHeaders.add(AUTHORIZATION_HEADER_KEY, authorization);
         LOGGER.info(authorization);
+        LOGGER.info(token);
 
         if (null != token && !"".equals(token)) reqHeaders.add(CF_AUTHORIZATION_HEADER_KEY, token);
         HttpEntity<Object> reqEntity = new HttpEntity<>(obj, reqHeaders);
@@ -410,6 +409,7 @@ public class CommonService extends Common {
         HttpHeaders reqHeaders = new HttpHeaders();
         reqHeaders.add(AUTHORIZATION_HEADER_KEY, authorization);
         LOGGER.info(authorization);
+        LOGGER.info(token);
 
         if (null != token && !"".equals(token)) reqHeaders.add(CF_AUTHORIZATION_HEADER_KEY, token);
         HttpEntity<Object> reqEntity = new HttpEntity<>(obj, reqHeaders);

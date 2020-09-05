@@ -98,7 +98,7 @@
                     <div class="modal-body">
 
                         <div class="box" style="margin-bottom: 10px; border-top: 0px; box-shadow: 0 0px 0px">
-                            <div id="layerModalLoadingBar" class="overlay hide"><i class="fa fa-refresh fa-spin"></i>
+                            <div id="#layerModalLoadingBar" class="overlay hide"><i class="fa fa-refresh fa-spin"></i>
                             </div>
                             <form id="securityGroupForm" class="form-horizontal">
                                 <div class="box-body">
@@ -115,7 +115,8 @@
                                             <input type="password" class="form-control" id="addUserPassword" autocomplete="new-password"/>
                                         </div>
                                     </div>
-                                    <!--사용자관리 조직타겟-->
+
+                                    <!--사용자관리 조직지정-->
                                     <div class="form-group">
                                         <label for="addUserId" class="col-sm-3 control-label">조직</label>
                                         <div class="col-sm-9">
@@ -124,6 +125,43 @@
                                             </select>
                                         </div>
                                     </div>
+
+                                    <!--사용자관리 공간지정-->
+                                    <div class="form-group">
+                                        <label for="addUserId" class="col-sm-3 control-label">공간</label>
+                                        <div class="col-sm-9">
+                                            <select class="form-control" id="getSpaceList">
+                                                <!--<option>테스트1</option>-->
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div id="selectOS">
+                                        <div class="form-group" style="height:50px;" id="orgSelect">
+                                            <label for="orgInput" class="col-sm-3 col-xs-12 control-label">조직 권한</label>
+                                            <div class="col-sm-4 col-xs-3">
+                                                <select class="form-control" id="orgInput">
+                                                    <option value="N">조직을 선택해주세요.</option>
+                                                    <option value="OrgManager">OrgManager</option>
+                                                    <option value="BillingManager">BillingManager</option>
+                                                    <option value="OrgAuditor">OrgAuditor</option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group" style="height:50px;" id="spaceSelect">
+                                            <label for="spaceInput" class="col-sm-3 col-xs-12 control-label">공간 권한</label>
+                                            <div class="col-sm-4 col-xs-3">
+                                                <select class="form-control" id="spaceInput">
+                                                    <option value="N">공간을 선택해주세요.</option>
+                                                    <option value="SpaceManager">SpaceManager</option>
+                                                    <option value="SpaceDeveloper">SpaceDeveloper</option>
+                                                    <option value="SpaceAuditor">SpaceAuditor</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div class="form-group">
                                         <label for="addUserActive" class="col-sm-3 control-label">Active 설정 (승인 여부)</label>
                                         <div class="col-sm-9" style="margin-top : 5px">
@@ -170,6 +208,10 @@
 
     var usersObj = new Object();
 
+    var arr = new Array();
+
+    var restOrgGuid;
+    var restOrgName;
 
     // GET LIST
     var getUserInfoList = function (reqPageNo) {
@@ -466,6 +508,9 @@
     function btnAddUser() {
         $("#addUserId").val("");
         $("#addUserPassword").val("");
+        $("#getOrgList option").remove();
+        $("#getSpaceList option").remove();
+        procCallAjax2(GET_ORGS_FOR_ADMIN_URL+"?key="+key,"GET",null ,procCallbackGetOrgs2);
         showLayerPopAddUser();
     };
 
@@ -488,6 +533,7 @@
             for (var i = 0; i < data.resources.length; i++) {
                 $("#getOrgList").append ("<option value='"+idMap.get(orgName[i])+"'>"+orgName[i]+"</option>");
             }
+            getSpacesForAdmin(idMap.get(orgName[0]),orgName[0], 1);
         }
     }
 
@@ -513,20 +559,34 @@
             adminYn: "N"
         };
 
-        var guid = $("#getOrgList option:selected").val();
-
-        var param2 = {username : $("#addUserId").val()};
+        arr=[];
+        $("#selectOS button").each(function () {
+            arr.push($(this).text());
+        });
 
         procCallAjax(REST_URL + "/user"+"?key="+key, 'POST', JSON.stringify(param), procCallbackAddUserInsert, $('#layerModalLoadingBar'));
 
-        procCallAjax(REST_URL2 +"/"+guid+"/users"+"?key="+key, 'PUT', JSON.stringify(param2), null, null);
     };
 
     var procCallbackAddUserInsert = function(data) {
         if(data.result) {
-            procInitPage();
+            var guid = $("#getOrgList option:selected").val();
+
+            var param2 = {
+                username : $("#addUserId").val(),
+                spaceguid : $("#getSpaceList option:selected").val(),
+                role : arr
+            };
+            alert(JSON.stringify(param2));
+            procCallAjax(REST_URL2 +"/"+guid+"/users"+"?key="+key, 'PUT', JSON.stringify(param2), procCallbackOrgTarget, null);
         }
     };
+
+    var procCallbackOrgTarget = function(data){
+        if(data.result){
+            procInitPage();
+        }
+    }
 
     // ON LOAD
     $(document.body).ready(function () {
@@ -540,7 +600,6 @@
         }
 
         getInitMarketPlaceURL();
-        procCallAjax2(GET_ORGS_FOR_ADMIN_URL+"?key="+key,"GET",null ,procCallbackGetOrgs2);
     });
 
 
@@ -550,6 +609,75 @@
         getUserInfoList(/*[[${T(org.openpaas.paasta.portal.web.admin.common.Constants).USER_MANAGEMENT_PAGE_NO}]]*/ "",key);
     });
 
+    //org 권한
+    $(document).on("change keyup","select[id=orgInput]",function(){
+        var value = $('#orgInput').val();
+        if(value!='N'){
+            $("#orgInput option[value='"+value+"']").remove();
+            $("#orgSelect").append(
+                '<div id ="orgOutput" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 15px;" ><button type="button" class="user_btn colors2"'+
+                ' style="position: absolute;top: 6px;left: -8px;" onclick="getManagment(\''+value+'\')">'+value+'</button></div>'
+            );
+        }
+    })
+
+    function getManagment(val){
+        /*
+        $("#orgInput").append("<option value='"+val+"'>"+val+"</option>");
+        $("#orgOutput").remove();*/
+        $("#selectOS button").each(function () {
+            if($(this).text() == val){
+                $(this).parent().parent().children().find('select').append("<option value='"+val+"'>"+val+"</option>");
+                $(this).parent().remove();
+            }
+        });
+    }
+
+    //space 권한
+    $(document).on("change keyup","select[id=spaceInput]",function(){
+        var value = $('#spaceInput').val();
+        if(value!='N'){
+            $("#spaceInput option[value='"+value+"']").remove();
+            $("#spaceSelect").append(
+                '<div id ="spaceOutput" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 15px;"><button type="button" class="user_btn colors2"'+
+                ' style="position: absolute;top: 6px;left: -8px;" onclick="getManagment(\''+value+'\')">'+value+'</button></div>'
+            );
+        }
+    })
+
+    //조직등록 모달 role 초기화
+    $('#addUserModal').on('hidden.bs.modal', function (e) {
+        $("#selectOS button").each(function () {
+            $(this).parent().parent().children().find('select').append("<option value='"+$(this).text()+"'>"+$(this).text()+"</option>");
+            $(this).parent().remove();
+        });
+
+        //$(this).find($("#selectSQ")).text("선택안함");
+        //$(this).find($("#selectOQ")).text("선택안함");
+    });
+
+    $(document).on("change keyup","select[id=getOrgList]",function(){
+        var orgId = $('#getOrgList').val();
+        getSpacesForAdmin(orgId);
+    })
+
+    function getSpacesForAdmin(orgId){
+        procCallAjax2(GET_ORGS_FOR_ADMIN_URL+"/"+orgId+"/spaces"+"?key="+key,"GET" ,null ,procCallbackGetSpace);
+    }
+
+    var procCallbackGetSpace = function(data, param) {
+        if(data.spaceList.resources.length === 0){
+            $('#getSpaceList').val("");
+            $('#getSpaceList').text("");
+            $("#getSpaceList").append ("<option value='N'>생성된 공간이 없습니다.</option>");
+        } else {
+            $('#getSpaceList').val("");
+            $('#getSpaceList').text("");
+            $.each(data.spaceList.resources, function (eventId, space) {
+                $("#getSpaceList").append ("<option value='"+space.metadata.guid+"'>"+space.entity.name+"</option>");
+            });
+        }
+    }
     /*]]>*/
 </script>
 </body>

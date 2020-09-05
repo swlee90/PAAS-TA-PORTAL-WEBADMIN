@@ -2,8 +2,10 @@ package org.openpaas.paasta.portal.web.admin.service;
 
 import org.openpaas.paasta.portal.web.admin.common.Common;
 import org.openpaas.paasta.portal.web.admin.common.Constants;
+import org.openpaas.paasta.portal.web.admin.controller.OrgSpaceListController;
 import org.openpaas.paasta.portal.web.admin.model.Org;
 import org.openpaas.paasta.portal.web.admin.model.Space;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
+import java.util.logging.Logger;
 
 /**
  * Created by MIN on 2018-03-22.
@@ -21,6 +24,7 @@ import java.util.Map;
 @Service
 public class OrgSpaceListService extends Common {
 
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(OrgSpaceListService.class);
 
     /**
      * Gets org space list main.
@@ -51,6 +55,20 @@ public class OrgSpaceListService extends Common {
 
     public Map<String, Object> getOrgsForAdmin(int key, String reqUrl, HttpMethod httpMethod, Object obj) throws Exception {
         return commonService.procCfApiRestTemplate(key,Constants.V3_URL + reqUrl, httpMethod, obj);
+    }
+
+    /**
+     * admin 유저로 접근 가능한 모든 공간목록을 조회한다.
+     *
+     * @param key
+     * @param reqUrl
+     * @param httpMethod
+     * @param obj
+     * @return
+     * @throws Exception
+     */
+    public Map<String, Object> getAllSpacesForAdmin(int key,String reqUrl,HttpMethod httpMethod,Object obj) throws Exception{
+        return commonService.procCfApiRestTemplate(key,Constants.V3_URL+reqUrl,httpMethod,obj);
     }
 
     /**
@@ -88,6 +106,42 @@ public class OrgSpaceListService extends Common {
         return commonService.procCfApiRestTemplate(key,Constants.V3_URL + reqUrl, httpMethod, obj);
     }
 
+    /**
+     * 운영자 포털에서 조직이름을 변경한다.
+     *
+     * @param key
+     * @param reqUrl
+     * @param httpMethod
+     * @return
+     */
+    public Map renameOrgForAdmin (int key,String reqUrl,HttpMethod httpMethod,Org org){
+        return commonService.procCfApiRestTemplate(key,Constants.V3_URL+reqUrl,httpMethod,org);
+    }
+
+    /**
+     * 운영자 포털에서 조직이름을 변경한다.
+     *
+     * @param key
+     * @param reqUrl
+     * @param httpMethod
+     * @return
+     */
+    public Map renameSpaceForAdmin (int key,String reqUrl,HttpMethod httpMethod,Space space){
+        return commonService.procCfApiRestTemplate(key,Constants.V3_URL+reqUrl,httpMethod,space);
+    }
+
+    /**
+     *
+     * 운영자 포털에서 조직을 삭제한다.
+     *
+     * @param key
+     * @param reqUrl
+     * @param httpMethod
+     * @return
+     */
+    public Map deleteOrgForAdmin(int key,String reqUrl,HttpMethod httpMethod){
+        return commonService.procCfApiRestTemplate(key,Constants.V3_URL+reqUrl,httpMethod,null);
+    }
 
     /**
      * 영역 요약 정보를 조회한다.
@@ -121,4 +175,19 @@ public class OrgSpaceListService extends Common {
     public Map<String, Object> getSpace(int key, String reqUrl, HttpMethod httpMethod, Object obj) {
         return commonService.procCfApiRestTemplate(key,Constants.V3_URL + reqUrl, httpMethod, obj);
     }
+
+    /**
+     *
+     * 운영자 포털에서 조직을 생성한다.
+     *
+     * @param key
+     * @param reqUrl
+     * @param httpMethod
+     * @param param
+     * @return
+     */
+    public Map createOrgForAdmin(int key,String reqUrl,HttpMethod httpMethod,Map param){
+        return commonService.procCfApiRestTemplate(key,Constants.V3_URL + reqUrl,httpMethod,param);
+    }
+
 }
