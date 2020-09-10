@@ -7,6 +7,8 @@ import org.openpaas.paasta.portal.web.admin.entity.ConfigEntity;
 import org.openpaas.paasta.portal.web.admin.model.Quota;
 import org.openpaas.paasta.portal.web.admin.service.CommonService;
 import org.openpaas.paasta.portal.web.admin.service.ConfigService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +27,8 @@ import java.util.Map;
  */
 @RestController
 public class QuotaManagementController extends Common {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserManagementController.class);
 
     @Autowired
     private CommonService commonService;
@@ -56,6 +60,18 @@ public class QuotaManagementController extends Common {
        return commonService.procCfApiRestTemplate(Integer.parseInt(key),Constants.V3_URL + "/orgs/quota-definitions", HttpMethod.GET, quota);
     }
 
+    /**
+     *
+     * 특정 조직 에 대한 모든 공간할당량 조회
+     *
+     * @param guid
+     * @return
+     */
+    @GetMapping(Constants.V2_URL + "/organizations/{guid}/space_quota_definitions")
+    public Map<String,Object> getOrgSpaceQuotaDefinitionsList(HttpServletRequest request, @PathVariable String guid){
+        String key = request.getParameter("key");
+        return commonService.procCfApiRestTemplate(Integer.parseInt(key),Constants.V3_URL+"/organizations/"+guid+"/space_quota_definitions",HttpMethod.GET,null);
+    }
 
     /**
      * 조직 할당량 정의를 조회한다.
@@ -131,9 +147,9 @@ public class QuotaManagementController extends Common {
      */
     @GetMapping(value = {Constants.V2_URL + "/spaces/quota-definitions/{spaceQuotaId}"})
     @ResponseBody
-    public Map<String, Object> getSpaceQuotaDefinition(@ModelAttribute Quota quota, @PathVariable String spaceQuotaId, HttpServletRequest request) {
-        String key = request.getParameter("key");
-        return commonService.procCfApiRestTemplate(Integer.parseInt(key),Constants.V3_URL + "/spaces/quota-definitions/"+spaceQuotaId, HttpMethod.GET, quota);
+    public Map<String, Object> getSpaceQuotaDefinition(@PathVariable String spaceQuotaId, HttpServletRequest request) {
+        String key= request.getParameter("key");
+        return commonService.procCfApiRestTemplate(Integer.parseInt(key),Constants.V3_URL + "/spaces/quota-definitions/"+spaceQuotaId, HttpMethod.GET, null);
     }
 
     /**

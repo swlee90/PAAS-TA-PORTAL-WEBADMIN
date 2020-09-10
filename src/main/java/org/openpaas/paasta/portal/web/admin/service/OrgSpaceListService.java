@@ -107,7 +107,7 @@ public class OrgSpaceListService extends Common {
     }
 
     /**
-     * 운영자 포털에서 조직이름을 변경한다.
+     * 운영자 포털에서 조직이름과 할당량을 변경한다.
      *
      * @param key
      * @param reqUrl
@@ -119,14 +119,14 @@ public class OrgSpaceListService extends Common {
     }
 
     /**
-     * 운영자 포털에서 조직이름을 변경한다.
+     * 운영자 포털에서 공간이름을 변경한다.
      *
      * @param key
      * @param reqUrl
      * @param httpMethod
      * @return
      */
-    public Map renameSpaceForAdmin (int key,String reqUrl,HttpMethod httpMethod,Space space){
+    public Map renameSpaceForAdmin (int key,String reqUrl,HttpMethod httpMethod,Map space){
         return commonService.procCfApiRestTemplate(key,Constants.V3_URL+reqUrl,httpMethod,space);
     }
 
@@ -188,6 +188,20 @@ public class OrgSpaceListService extends Common {
      */
     public Map createOrgForAdmin(int key,String reqUrl,HttpMethod httpMethod,Map param){
         return commonService.procCfApiRestTemplate(key,Constants.V3_URL + reqUrl,httpMethod,param);
+    }
+
+    /**
+     *
+     * 운영자 포털에서 공간을 생성한다.
+     *
+     * @param key
+     * @param reqUrl
+     * @param httpMethod
+     * @param space
+     * @return
+     */
+    public Map createSpaceForAdmin(int key,String reqUrl,HttpMethod httpMethod,Map param){
+        return commonService.procCfApiRestTemplate(key,Constants.V3_URL+reqUrl,httpMethod,param);
     }
 
 }

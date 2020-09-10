@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -123,7 +124,7 @@ public class OrgSpaceListController extends Common {
     }
 
     /**
-     * 운영자 포털에서 조직이름을 변경한다.
+     * 운영자 포털에서 조직이름과 할당량을 변경한다.
      *
      * @param org
      * @param request
@@ -136,14 +137,14 @@ public class OrgSpaceListController extends Common {
     }
 
     /**
-     * 운영자 포털에서 조직이름을 변경한다.
+     * 운영자 포털에서 공간이름을 변경한다.
      *
      * @param space
      * @param request
      * @return
      */
     @PutMapping(Constants.V2_URL + "/space-admin")
-    public Map renameSpaceForAdmin(@RequestBody Space space, HttpServletRequest request){
+    public Map renameSpaceForAdmin(@RequestBody Map space, HttpServletRequest request){
         String key=request.getParameter("key");
         return orgSpaceListService.renameSpaceForAdmin(Integer.parseInt(key),"/space-admin",HttpMethod.PUT,space);
     }
@@ -209,6 +210,17 @@ public class OrgSpaceListController extends Common {
         return orgSpaceListService.createOrgForAdmin(Integer.parseInt(key),"/organizations",HttpMethod.POST,param);
     }
 
+    /**
+     * 운영자 포털에서 Space 을 생성한다.
+     *
+     * @return CreateOrganizationResponse
+     * @throws Exception the exception
+     */
+    @PostMapping(V2_URL+"/spaces")
+    public Map<?,?> createSpaceForAdmin(HttpServletRequest request,@RequestBody Map param){
+        String key=request.getParameter("key");
+        return orgSpaceListService.createSpaceForAdmin(Integer.parseInt(key),"/spaces",HttpMethod.POST,param);
+    }
 
     @ModelAttribute("configs")
     public List<User> configs(){

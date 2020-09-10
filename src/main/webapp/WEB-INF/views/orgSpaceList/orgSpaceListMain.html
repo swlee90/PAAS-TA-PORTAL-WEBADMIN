@@ -18,16 +18,21 @@
                     <div class="box">
                         <div class="box-header">
                             <h3 class="box-title"></h3>
-                            <div class="box-tools" style="width: 496px; padding-right: 21px;">
+                            <div class="box-tools" style="width: 577px; padding-right: 21px;">
                                 <div class="input-group input-group-sm" style="width: 393px; float: left;">
                                     <input type="text"  name="table_search" class="form-control pull-right" placeholder="Search" id="org-searchKeyword" onkeyup="searchOrg()"/>
                                     <div class="input-group-btn" >
                                         <button type="submit"  class="btn btn-default" onclick="searchOrg()"><i class="fa fa-search"></i></button>
                                     </div>
                                 </div>
-                                <div class="pull-right" style="padding-right: 0px; ">
+                                <div class="pull-left" style="padding-right: 0px; margin-left: 9px;">
                                     <button type="button" class="btn btn-block btn-primary btn-sm" data-title-text="조직 할당량 등록" id="devEnvRegistBtn" name="registBtn" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#devEnvFormModal">
                                         조직 등록
+                                    </button>
+                                </div>
+                                <div class="pull-right" style="padding-right: 0px; ">
+                                    <button type="button" class="btn btn-block btn-primary btn-sm" data-title-text="조직 할당량 등록" id="devEnvRegistBtn2" name="registBtn" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#devEnvFormModal2">
+                                        공간 등록
                                     </button>
                                 </div>
                             </div>
@@ -54,7 +59,6 @@
             </div>
             </div>
 
-            <!--조직 관리 모달-->
             <div class="modal fade" id="modal-default" style="display: none;">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -103,48 +107,88 @@
                                             </div>
                                         </div>
 
-                                        <div class="form-group required">
-                                            <label for="spaceName" class="col-sm-3 control-label">공간 이름</label>
-                                            <div class="col-sm-9">
-                                                <input type="text" class="form-control checkDevEnvForm" id="spaceName" onkeyup='pattenTest2()' placeholder="공간 이름을 입력해주세요/"/>
-                                            </div>
-                                        </div>
-
-                                    <!--<div id="selectOS">
-                                        <div class="form-group" style="height:50px;" id="orgSelect">
-                                            <label for="orgInput" class="col-sm-3 col-xs-12 control-label">조직 권한</label>
-                                            <div class="col-sm-4 col-xs-3">
-                                                <select class="form-control" id="orgInput">
-                                                    <option value="N">조직을 선택해주세요.</option>
-                                                    <option value="OrgManager">OrgManager</option>
-                                                    <option value="BillingManager">BillingManager</option>
-                                                    <option value="OrgAuditor">OrgAuditor</option>
-                                                </select>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group" style="height:50px;" id="spaceSelect">
-                                            <label for="spaceInput" class="col-sm-3 col-xs-12 control-label">공간 권한</label>
-                                            <div class="col-sm-4 col-xs-3">
-                                                <select class="form-control" id="spaceInput">
-                                                    <option value="N">공간을 선택해주세요.</option>
-                                                    <option value="SpaceManager">SpaceManager</option>
-                                                    <option value="SpaceDeveloper">SpaceDeveloper</option>
-                                                    <option value="SpaceAuditor">SpaceAuditor</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>-->
-
                                         <div class="form-group" style="height:50px;">
                                             <label for="orgQuota" class="col-sm-3 col-xs-12 control-label">조직 할당량</label>
                                             <div class="col-sm-4 col-xs-3">
                                                 <select class="form-control" id="orgQuota">
-                                                    <option value="N">선택안함</option>
                                                 </select>
                                             </div>
                                             <div class="col-sm-1 col-xs-3" style="margin-left: 15px;">
-                                                <button class="user_btn colors1" id="selectOQ" style="position: absolute;top: 6px;left: -8px;" disabled="disabled" >선택안함</button>
+                                                <button class="user_btn colors1" id="selectOQ" style="position: absolute;top: 6px;left: -8px;" disabled="disabled" ></button>
+                                            </div>
+                                        </div>
+                                        <div class="box-body no-padding table-responsive">
+                                            <table class="table table-striped text-center" style="table-layout:fixed; word-break:break-all;"> <!-- table-responsive -->
+                                                <thead>
+                                                <tr class="text-center">
+                                                    <th>메모리</th>
+                                                    <th>인스턴스 메모리</th>
+                                                    <th>라우트</th>
+                                                    <th>서비스 인스턴스</th>
+                                                    <th>가격</th>
+                                                    <th>예약 라우트 포트</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody id="orgQuotaDefinitionList">
+                                                <tr>
+                                                    <td id="memorySize"></td>
+                                                    <td id="instanceMemorySize"></td>
+                                                    <td id="routeCnt"></td>
+                                                    <td id="serviceCnt"></td>
+                                                    <td id="price"></td>
+                                                    <td id="reservedRouteCnt"></td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" id="devEnvCloseBtn" class="btn btn-sm btn-default pull-left" data-dismiss="modal">취소</button>
+                            <button type="button" id="devEnvRegBtn" name="modalRegBtn" class="btn btn-sm btn-primary pull-right" onclick="createOrg(1)">등록</button>
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+            <!-- Modal END -->
+
+
+            <!-- 공간등록모달 -->
+            <div class="modal fade" id="devEnvFormModal2" data-backdrop="static" data-keyboard="false">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span></button>
+
+                            <h4 class="modal-title">
+                                <div id="devEnvTitle2" name="modalTitle">공간 등록</div>
+                            </h4>
+                        </div>
+                        <div class="modal-body">
+
+                            <div class="box" style="margin-bottom: 0px; border-top: 0px; box-shadow: 0 0px 0px">
+                                <div id="devEnvModalLoadingBar2" name="modalLoadingBar" class="overlay hide"><i class="fa fa-refresh fa-spin"></i></div>
+                                <form id="devEnvForm2" class="form-horizontal">
+                                    <div class="box-body">
+
+                                        <div class="form-group required">
+                                            <label for="orgName2" class="col-sm-3 control-label">조직 이름</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control checkDevEnvForm" id="orgName2" readonly="readonly" />
+                                                <input type="hidden" class="form-control checkDevEnvForm" id="orgGuid" />
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group required">
+                                            <label for="spaceName" class="col-sm-3 control-label">공간 이름</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control checkDevEnvForm" id="spaceName" onkeyup='pattenTest()' placeholder="공간 이름을 입력해주세요"/>
                                             </div>
                                         </div>
 
@@ -160,14 +204,39 @@
                                             </div>
                                         </div>
 
+                                        <div class="box-body no-padding table-responsive"> <!-- table-responsive -->
+                                            <table class="table table-striped text-center" style="table-layout:fixed; word-break:break-all;">
+                                                <thead>
+                                                <tr class="text-center">
+                                                    <th>메모리</th>
+                                                    <th>인스턴스 메모리</th>
+                                                    <th>라우트</th>
+                                                    <th>서비스 인스턴스</th>
+                                                    <th>가격</th>
+                                                    <th>예약 라우트 포트</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody id="spaceQuotaDefinitionList">
+                                                <tr>
+                                                    <td id="memorySize2"></td>
+                                                    <td id="instanceMemorySize2"></td>
+                                                    <td id="routeCnt2"></td>
+                                                    <td id="serviceCnt2"></td>
+                                                    <td id="price2"></td>
+                                                    <td id="reservedRouteCnt2"></td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
                                     </div>
                                 </form>
                             </div>
 
                         </div>
                         <div class="modal-footer">
-                            <button type="button" id="devEnvCloseBtn" class="btn btn-sm btn-default pull-left" data-dismiss="modal">취소</button>
-                            <button type="button" id="devEnvRegBtn" name="modalRegBtn" class="btn btn-sm btn-primary pull-right" data-dismiss="modal" onclick="createOrg()">등록</button>
+                            <button type="button" id="devEnvCloseBtn2" class="btn btn-sm btn-default pull-left" data-dismiss="modal">취소</button>
+                            <button type="button" id="devEnvRegBtn2" name="modalRegBtn" class="btn btn-sm btn-primary pull-right" onclick="createOrg(2)">등록</button>
                         </div>
                     </div>
                     <!-- /.modal-content -->
@@ -208,6 +277,8 @@
     var orgObj = new Object();
     var spaceObj = new Object();
 
+    var ORG_LIST_MAP = new Map(); // 조직 할당량정의에서 사용할 조직 정보 Map
+
     $(document).ready(function(){
         if($.cookie("api_key") != null){
             key = $.cookie("api_key");
@@ -221,8 +292,6 @@
         getDomains(key);
 
         procCallAjax("/v2/orgs/quota-definitions"+"?key="+key, "GET", null, procCallbackGetOrgQuotaDefinitionList,null);
-
-        procCallAjax("/v2/spaces/quota-definitions"+"?key="+key, "GET", null, procCallbackGetSpaceQuotaDefinitionList,null);
     });
 
     $( "#apiUrls" ).change(function() {
@@ -302,101 +371,106 @@
                     "<label><input name='groupTable-checkbox' id='groupTable-checkbox-no-"+(i+1)+"' value='"+(i+1)+"' class='checkbox-inline' type='checkbox' style='display: none'></label>"+
                     '<td>'+
                     '<div>'+
-                    '<label class="fa fa-gears" style="cursor: pointer;" href="#none" data-toggle="modal" data-target="#modal-default" onClick="procManagement(\''+idMap.get(orgName[i])+'\',\''+orgName[i]+'\',1)"></label>'+
+                    '<label class="fa fa-gears" style="cursor: pointer;" href="#none" data-toggle="modal" data-target="#devEnvFormModal" onClick="procManagement(\''+idMap.get(orgName[i])+'\',\''+orgName[i]+'\',null,1)"></label>'+
                     '</div></td></tr>'
                 )
                 orgObj[orgName[i]] = orgName[i];
+                ORG_LIST_MAP.set(idMap.get(orgName[i]),orgName[i]);
             }
             $("#orgTable").append (
                     "</tbody>"
             )
             changeTableContentColor("org")
             $("#orgTable").show();
+            currentOrg = idMap.get(orgName[0]);
+            currentOrgId = orgName[0];
             getSpacesForAdmin(idMap.get(orgName[0]),orgName[0], 1);
         }
     }
 
-    function procManagement(guid,name,flag){
+    function procManagement(guid,name,quota,flag){
         $("#modalbody").html("데이터를 불러오고 있습니다.");
 
         if(flag==1){
-            $("#modaltitle").html("조직 관리");
-            $("#modalbody").html("<input maxlength='25' style='width: 80%;height: 33px; float: left;font-size: 19px;' placeholder='변경할 조직이름을 입력해주세요.' onkeyup='pattenTest()' id='ManagementName' readonly type='text' value="+name+">"+"<button type='button' style='margin-left: 15px;' id='updateRead' class='btn btn-primary' onclick=\'changeReadOnly()\'>변경하기</button>");
-            $("#modal-footer").html("<button type=\"button\" class=\"btn btn-sm btn-danger pull-left\"onclick='deleteChekOrg()'>삭제</button>"+
+            updateSet(flag,guid);
+            $("#devEnvTitle").html("조직 관리");
+            $("#devEnvFormModal #orgName").val(name);
+            $("#devEnvFormModal .modal-footer").html("<button type=\"button\" class=\"btn btn-sm btn-danger pull-left\" onclick='deleteChekOrg(\""+name+"\")'>삭제</button>"+
                 "<button type=\"button\" class=\"btn btn-sm btn-default pull-left\" data-dismiss=\"modal\">취소</button>"+
-                "<button type='button' class='btn btn-primary'  data-dismiss=\"modal\" onclick='updateChek(1)'>수정</button>"+
-                    "<input type='hidden' id='guid' value="+guid+">"
-            );
+                "<button type='button' class='btn btn-primary' onclick='updateChek(1)'>수정</button>"+
+                    "<input type='hidden' id='guid' value="+guid+">");
+
         }else if(flag==2){
-            $("#modaltitle").html("공간 관리");
-            $("#modalbody").html("<input maxlength='25' style='width: 80%;height: 33px; float: left;font-size: 19px;' placeholder='변경할 공간 이름을 입력해주세요.' onkeyup='pattenTest()' id='ManagementName' readonly type='text' value="+name+">"+"<button type='button' style='margin-left: 15px;' class='btn btn-primary' onclick=\'changeReadOnly()\'>변경하기</button>");
-            $("#modal-footer").html("<button type=\"button\" class=\"btn btn-sm btn-default pull-left\" data-dismiss=\"modal\">취소</button>"+
-                "<button type='button' class='btn btn-primary' data-dismiss=\"modal\" onclick='updateChek(2)'>수정</button>"+
-                "<input type='hidden' id='guid' value="+guid+">"
-            );
-        }
-
+            updateSet(flag,quota);
+            $("#devEnvTitle2").html("공간 관리");
+            $("#devEnvFormModal2 #spaceName").val(name);
+            $("#devEnvFormModal2 .modal-footer").html("<button type=\"button\" class=\"btn btn-sm btn-default pull-left\" data-dismiss=\"modal\">취소</button>"+
+                "<button type='button' class='btn btn-primary' onclick='updateChek(2)'>수정</button>"+
+                "<input type='hidden' id='guid' value="+guid+">");
+         }
     }
-    function createOrg() {
-        if($("#orgName").val().length==0 || $("#orgName").val() ==null){
-            alert("조직명 을 입력해주세요.");
-            $("#orgName").focus();
-            return false;
-        }else if($("#spaceName").val().length==0 || $("#spaceName").val() ==null){
-            alert("공간명 을 입력해주세요.");
-            $("#spaceName").focus();
-            return false;
+
+    function updateSet(flag,guid) {
+        if(flag==1){
+            procCallAjax2(V2_URL + "/orgs/"+guid+"/summary"+"?key="+key, "GET",null, procCallbackGetOrgSetUpdate);
         }else{
-            var param = {
-                orgName: $("#orgName").val(),
-                spaceName: $("#spaceName").val(),
-                orgQuotaGuid: $('#orgQuota option:checked').val(),
-                spaceQuotaGuid: $('#spaceQuota option:checked').val()
-            };
-            procCallAjax(V2_URL + "/organizations"+"?key="+key, 'POST', JSON.stringify(param), procCallbackResetPage, $('#layerModalLoadingBar'));
+            procCallAjax2(V2_URL+"/spaces/quota-definitions/"+guid+"?key="+key,"GET", null, procCallbackGetSpaceSetUpdate);
+        }
+
+    }
+
+    var procCallbackGetOrgSetUpdate = function(data, param) {
+        if(data != null){
+            $('#orgQuota option').each(function () {
+                if($(this).text() == data.quota.name){
+                    $(this).prop("selected",true);
+                    getOrgQuotaDefinition($(this).val());
+                    $("#selectOQ").text($(this).text());
+                }
+            });
         }
     }
 
-    function deleteChekOrg() {
-        var guid=$("#guid").val();
-        var name=$("#ManagementName").val();
-        $("#modaltitle").html("조직 삭제");
-        $("#modal-footer button").remove();
-        $("#ManagementName").remove();
-        $("#modalbody").html("정말 삭제 하시겠습니까?");
-        $("#modal-footer").html("<button type=\"button\" class=\"btn btn-sm btn-danger pull-right\"onclick='deleteOrg()'>삭제</button>"+
-            "<button type=\"button\" class=\"btn btn-sm btn-default pull-left\"  onclick=\"deleteOrgCansle('" + guid + "','" + name + "','" + 1 + "')\">취소</button>"+"<input type='hidden' id='guid' value="+guid+">");
-    }
-
-    function deleteOrgCansle(guid,name,flag) {
-        procManagement(guid,name,flag);
-    }
-
-    function deleteOrg() {
-        var guid=$("#guid").val();
-        $("#modal-default").modal("toggle");
-        procCallAjax(V2_URL + "/organizations-admin/"+guid+"?key="+key, 'DELETE', null, procCallbackResetPage, $('#layerModalLoadingBar'));
+    var procCallbackGetSpaceSetUpdate = function(data, param) {
+        if (data.entity != null) {
+            $('#spaceQuota option').each(function () {
+                if($(this).text() == data.entity.name){
+                    $(this).prop("selected",true);
+                    getSpaceQuotaDefinition($(this).val());
+                    $("#selectSQ").text($(this).text());
+                    $("#devEnvFormModal2 #spaceQuota option[value='N']").text("선택 안함");
+                }
+            });
+        }
     }
 
     function updateChek(flag) {
-        var name=$("#ManagementName").val();
         var guid=$("#guid").val();
-        if(name.length == 0 || name == null){
-            notifyAlert("warning", "", "내용을 입력해주세요.");
-            return false;
-        }else if(flag==1){
-            if(orgObj[name] != undefined) {
+
+        if(flag==1){
+            var name=$("#orgName").val();
+            var quota =$('#orgQuota option:checked').val();
+            if(name.length == 0 || name == null){
+                notifyAlert("warning", "", "내용을 입력해주세요.");
+                return false;
+            }else if(orgObj[name] != undefined) {
                 notifyAlert("warning", "", name+" 은(는) 이미 사용중인 이름 입니다.");
                 return false;
             }else{
                 var param = {
                     guid: guid,
-                    newOrgName: name
+                    newOrgName: name,
+                    quota : quota
                 };
                 procCallAjax(V2_URL + "/organization-admin"+"?key="+key, 'PUT', JSON.stringify(param), procCallbackResetPage, $('#layerModalLoadingBar'));
+                $("#devEnvFormModal .close").click();
             }
         }else if(flag==2){
-            if(spaceObj[name] != undefined) {
+            var name=$("#spaceName").val();
+            if(name.length == 0 || name == null){
+                notifyAlert("warning", "", "내용을 입력해주세요.");
+                return false;
+            }else if(spaceObj[name] != undefined) {
                 notifyAlert("warning", "", name+" 은(는) 이미 사용중인 이름 입니다.");
                 return false;
             }else{
@@ -405,9 +479,62 @@
                     newSpaceName: name
                 };
                 procCallAjax(V2_URL + "/space-admin"+"?key="+key, 'PUT', JSON.stringify(param), procCallbackResetPage, $('#layerModalLoadingBar'));
+                $("#devEnvFormModal2 .close").click();
             }
         }
 
+    }
+
+    function createOrg(flag) {
+        //조직등록
+        if(flag==1){
+            if($("#orgName").val().length==0 || $("#orgName").val() ==null){
+                notifyAlert("warning", "", "조직명 을 입력해주세요.");
+                $("#orgName").focus();
+                return false;
+            }else if(orgObj[$("#orgName").val()] != undefined) {
+                notifyAlert("warning", "", $("#orgName").val()+" 은(는) 이미 사용중인 이름 입니다.");
+                return false;
+            }else{
+                var param = {
+                    orgName: $("#orgName").val(),
+                    orgQuotaGuid: $('#orgQuota option:checked').val()
+                };
+                procCallAjax(V2_URL + "/organizations"+"?key="+key, 'POST', JSON.stringify(param), procCallbackResetPage, $('#layerModalLoadingBar'));
+                $("#devEnvFormModal .close").click();
+            }
+        //공간등록
+        }else if(flag==2){
+            if($("#spaceName").val().length==0 || $("#spaceName").val() ==null){
+                notifyAlert("warning", "", "공간명 을 입력해주세요.");
+                $("#spaceName").focus();
+                return false;
+            }else if(spaceObj[$("#spaceName").val()] != undefined) {
+                notifyAlert("warning", "", $("#spaceName").val()+" 은(는) 이미 사용중인 이름 입니다.");
+                return false;
+            }else{
+                var param = {
+                    orgGuid : $("#orgGuid").val(),
+                    spaceName : $("#spaceName").val(),
+                    spaceQuotaGuid : $('#spaceQuota option:checked').val()
+                };
+                procCallAjax(V2_URL + "/spaces"+"?key="+key, 'POST', JSON.stringify(param), procCallbackResetPage, $('#layerModalLoadingBar'));
+                $("#devEnvFormModal2 .close").click();
+            }
+        }
+    }
+
+    function deleteChekOrg(name) {
+        $("#orgName").val(name);
+        if(confirm("정말 삭제 하시겠습니까?")){
+            deleteOrg()
+        }
+    }
+
+    function deleteOrg() {
+        var guid=$("#guid").val();
+        procCallAjax(V2_URL + "/organizations-admin/"+guid+"?key="+key, 'DELETE', null, procCallbackResetPage, $('#layerModalLoadingBar'));
+        $("#devEnvFormModal .close").click();
     }
 
     var procCallbackResetPage = function (data) {
@@ -415,11 +542,7 @@
             procInitPage();
         }
     }
-    /*var procCallbackResetPage2 = function (data) {
-        if(data.result){
-            getSpacesForAdmin(currentOrgId,currentOrg,currentOrgNum);
-        }
-    }*/
+
     function procInitPage(){
         if($.cookie("api_key") != null){
             key = $.cookie("api_key");
@@ -437,8 +560,11 @@
 
     function pattenTest() {
         var patten = /[\{\}\[\]\/@?,;:|\)*~`!^+<>\#$%&\\\=\(\'\"]/gi;
-        $('#ManagementName').val($('#ManagementName').val().replace(patten, ''));
+        $("#devEnvFormModal2 input[type=text]").each(function () {
+            $(this).val($(this).val().replace(patten, ''));
+        });
     }
+
     function pattenTest2() {
         var patten = /[\{\}\[\]\/@?,;:|\)*~`!^+<>\#$%&\\\=\(\'\"]/gi;
         $("#devEnvForm input[type=text]").each(function () {
@@ -446,12 +572,9 @@
         });
     }
 
-    function changeReadOnly(){
-        $("#ManagementName").removeAttr("readonly");
-        $("#ManagementName").focus();
-    }
-
     function getSpacesForAdmin(orgid, orgName, orgNum){
+        $("#devEnvFormModal2 #orgName2").val(orgName);
+        $("#devEnvFormModal2 #orgGuid").val(orgid);
         $("#spaceTable").hide();
         $("#noSpaceMessage").hide();
         currentOrg = orgName;
@@ -459,61 +582,27 @@
         currentOrgNum = orgNum;
         procCallAjax2(GET_ORGS_FOR_ADMIN_URL+"/"+orgid+"/spaces"+"?key="+key,"GET" ,null ,procCallbackGetSpace);
         contentSelectControl("group", orgNum);
+        procCallAjax("/v2/organizations/"+orgid+"/space_quota_definitions"+"?key="+key, "GET", null, procCallbackGetSpaceQuotaDefinitionList,null);
     }
-
-    /*//org 권한
-    $(document).on("change keyup","select[id=orgInput]",function(){
-         var value = $('#orgInput').val();
-         if(value!='N'){
-             $("#orgInput option[value='"+value+"']").remove();
-             $("#orgSelect").append(
-                 '<div id ="orgOutput" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 15px;" ><button type="button" class="user_btn colors2"'+
-                 ' style="position: absolute;top: 6px;left: -8px;" onclick="getManagment(\''+value+'\')">'+value+'</button></div>'
-             );
-         }
-    })
-
-    function getManagment(val){
-        /!*
-        $("#orgInput").append("<option value='"+val+"'>"+val+"</option>");
-        $("#orgOutput").remove();*!/
-        $("#selectOS button").each(function () {
-            if($(this).text() == val){
-                $(this).parent().parent().children().find('select').append("<option value='"+val+"'>"+val+"</option>");
-                $(this).parent().remove();
-            }
-        });
-    }
-
-    //space 권한
-    $(document).on("change keyup","select[id=spaceInput]",function(){
-         var value = $('#spaceInput').val();
-        if(value!='N'){
-            $("#spaceInput option[value='"+value+"']").remove();
-            $("#spaceSelect").append(
-                '<div id ="spaceOutput" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 15px;"><button type="button" class="user_btn colors2"'+
-                ' style="position: absolute;top: 6px;left: -8px;" onclick="getManagment(\''+value+'\')">'+value+'</button></div>'
-            );
-        }
-    })*/
 
     // 조직 할당량
     $(document).on("change keyup","select[id=orgQuota]",function(){
         var value = $('#orgQuota option:checked').text();
-        if(value != 'N'){
+        var value2 = $('#orgQuota option:checked').val();
+            getOrgQuotaDefinition(value2);
             $('#selectOQ').text(value);
-        }else{
-            $('#selectOQ').text("선택안함");
-        }
     })
 
     //공간 할당량
     $(document).on("change keyup","select[id=spaceQuota]",function(){
         var value = $('#spaceQuota option:checked').text();
-        if(value != 'N'){
+        var value2 = $('#spaceQuota option:checked').val();
+        if(value2 != 'N'){
+            getSpaceQuotaDefinition(value2);
             $('#selectSQ').text(value);
         }else{
             $('#selectSQ').text("선택안함");
+            $("#spaceQuotaDefinitionList td").text("");
         }
     })
 
@@ -540,7 +629,7 @@
                         "<td>" + space.entity.name + "&nbsp; <a href='#none' onClick=\"procGetSpaceSummary('"+ space.metadata.guid +"','" + space.entity.space_quota_definition_guid + "')\" style='font-size:10px' data-toggle='modal' data-target='#modal-default'>[상세정보]</a></td>" +
                         '<td>'+
                         '<div>'+
-                    '<label class="fa fa-gears" style="cursor: pointer;" href="#none" data-toggle="modal" data-target="#modal-default" onClick="procManagement(\''+space.metadata.guid+'\',\''+space.entity.name+'\',2)"></label>'+
+                    '<label class="fa fa-gears" style="cursor: pointer;" href="#none" data-toggle="modal" data-target="#devEnvFormModal2" onClick="procManagement(\''+space.metadata.guid+'\',\''+space.entity.name+'\',\''+space.entity.space_quota_definition_guid+'\',2)"></label>'+
                         '</div></td></tr>'
                 )
             });
@@ -597,7 +686,7 @@
         spaceQuotaText = "없음";
 
         if(spaceQuotaId != "null") {
-            //procCallAjax2(V2_URL+"/spaces/quota-definitions/"+spaceQuotaId,"GET", null, procCallbackGetSpaceQuota);
+            procCallAjax2(V2_URL+"/spaces/quota-definitions/"+spaceQuotaId+"?key="+key,"GET", null, procCallbackGetSpaceQuota);
             // To-Be : Quota 정보 관리 추가
         }
 
@@ -606,30 +695,28 @@
     };
 
 
-    // GET ORG SUMMARY CALLBACK
+    // GET SPACE SUMMARY CALLBACK
     var procCallbackGetSpaceQuota = function(data, param) {
-
-        if (data.spaceQuota != null) {
-            var spaceQuota = JSON.parse(data.spaceQuota);
-            quotaNameSpace = spaceQuota.entity.name;
-            totalRoutesSpace = spaceQuota.entity.total_routes;
-            totalServicesSpace = spaceQuota.entity.total_services;
-            if (spaceQuota.entity.non_basic_services_allowed) {
+        if (data.entity != null) {
+            quotaNameSpace = data.entity.name;
+            totalRoutesSpace = data.entity.total_routes;
+            totalServicesSpace = data.entity.total_services;
+            if (data.entity.non_basic_services_allowed) {
                 paidServicesSpace = "paid services allowed";
             } else {
                 paidServicesSpace = "paid services disallowed";
             }
-            spaceQuotaText = quotaNameSpace + " (" + spaceQuota.entity.memory_limit + "M memory limit, " + totalRoutesSpace + " routes, " + totalServicesSpace + " services, " + paidServicesSpace + ")";
+            spaceQuotaText = quotaNameSpace + " (" + data.entity.memory_limit + "M memory limit, " + totalRoutesSpace + " routes, " + totalServicesSpace + " services, " + paidServicesSpace + ")";
         } else {
             spaceQuotaText = "";
         }
 
-        $("#modalbody").html("<b>Domains</b> : " + domainNames +
+        /*$("#modalbody").html("<b>Domains</b> : " + domainNames +
                 "<br><b>Quota</b> : " + quotaName + " (" + MemoryLimit + "M memory limit, " + totalRoutes + " routes, " + totalServices + " services, " + paidServices + ")" +
-                "<br><b>Spaces</b> : " + spaces);
+                "<br><b>Spaces</b> : " + spaces);*/
     }
 
-    // GET ORG SUMMARY CALLBACK
+    // GET SPACE SUMMARY CALLBACK
     var procCallbackGetSpaceSummary = function(data, param) {
 
         apps = "없음";
@@ -715,15 +802,24 @@
 
     //조직등록 모달 초기화
     $('#devEnvFormModal').on('hidden.bs.modal', function (e) {
-        /*$("#selectOS button").each(function () {
-            $(this).parent().parent().children().find('select').append("<option value='"+$(this).text()+"'>"+$(this).text()+"</option>");
-            $(this).parent().remove();
-        });*/
-
-
-        $(this).find($("#selectSQ")).text("선택안함");
-        $(this).find($("#selectOQ")).text("선택안함");
+        $("#devEnvTitle").html("조직 등록");
         $(this).find('form')[0].reset();
+        $("#devEnvFormModal .modal-footer").html("<button type=\"button\" id=\"devEnvCloseBtn\" class=\"btn btn-sm btn-default pull-left\" data-dismiss=\"modal\">취소</button>"+
+            "<button type=\"button\" id=\"devEnvRegBtn\" name=\"modalRegBtn\" class=\"btn btn-sm btn-primary pull-right\" onclick=\"createOrg(1)\">등록</button>"
+        );
+    });
+
+    //공간등록 모달 초기화
+    $('#devEnvFormModal2').on('hidden.bs.modal', function (e) {
+        $("#devEnvTitle2").html("공간 등록");
+        $("#spaceName").val("");
+        $("#devEnvFormModal2 #spaceQuota option[value='N']").prop("selected",true);
+        $("#devEnvFormModal2 #spaceQuota option[value='N']").text("선택안함");
+        $(this).find($("#selectSQ")).text("선택안함");
+        $("#spaceQuotaDefinitionList td").text("");
+        $("#devEnvFormModal2 .modal-footer").html("<button type=\"button\" id=\"devEnvCloseBtn2\" class=\"btn btn-sm btn-default pull-left\" data-dismiss=\"modal\">취소</button>"+
+            "<button type=\"button\" id=\"devEnvRegBtn2\" name=\"modalRegBtn\" class=\"btn btn-sm btn-primary pull-right\" onclick=\"createOrg(2)\">등록</button>"
+        );
     });
 
     var procCallbackGetOrgQuotaDefinitionList = function(data){
@@ -733,7 +829,6 @@
     };
 
     var procCallbackGetSpaceQuotaDefinitionList = function(data){
-
         SPACE_SOURCE_LIST = data.resources;
         printSpaceData(SPACE_SOURCE_LIST);
     };
@@ -741,21 +836,111 @@
     // 조직 할당량 정의 리스트 출력
     function printOrgData(dataList) {
         if(dataList.length == 0){
-            $("#orgQuota option[value='N']").text("생선된 할당량이 없습니다.");
+            $("#devEnvFormModal #orgQuota option[value='N']").text("생선된 할당량이 없습니다.");
         }else{
             $.each(dataList, function (index, data) {
-                $("#orgQuota").append("<option value='"+data.metadata.guid+"'>"+data.entity.name+"</option>");
+                if(index==1){
+
+                }
+                $("#devEnvFormModal #orgQuota").append("<option value='"+data.metadata.guid+"'>"+data.entity.name+"</option>");
             });
         }
     };
 
-    // 공간 할당량 리스트 출력
+    function convertDataToView(str){
+        if(typeof(str) === 'boolean' && str == true){ // 무료/유료
+            return '무료';
+        }else if(typeof(str) === 'boolean' && str == false){
+            return '유료';
+        }else if(str == -1){ // 화면 출력시 -1 '무제한' 출력
+            return '무제한'
+        }else if(str.length == 0){
+            return '';
+        }else{
+            return str;
+        }
+    };
+
+    // MB -> MB/GB , -1 -> 무제한
+    function convertUnit(amount){
+        var unit;
+        var regex = /^[0-9]*$/g;
+
+        if(amount == -1){
+            return '무제한';
+        }
+
+        if(amount >= 1024){
+            amount = amount/1024;
+            unit = 'G';
+        }else{
+            unit = 'M';
+        }
+
+        if(!regex.test(amount)){
+            amount = amount.toFixed(1); // 단위가 GB일시 소수점 1자리까지(반올림)
+        }
+        return amount+unit;
+    }
+
+    // 조직 허용량 상세
+    function getOrgQuotaDefinition(quotaId) {
+        procCallAjax("/v2/orgs/quota-definitions/"+quotaId+"?key="+key, "GET", null, procCallbackGetQuotaDefinition, null);
+    }
+
+    var procCallbackGetQuotaDefinition = function(data){
+
+        var entity = data.entity;
+
+        if (entity) {
+
+            var instanceMemoryLimit = entity.instance_memory_limit;
+            var routePorts          = entity.total_reserved_route_ports;
+            var serviceCnt          = entity.total_services;
+            var routeCnt            = entity.total_routes;
+
+            $('#memorySize').text(convertUnit(entity.memory_limit));
+            $('#instanceMemorySize').text(convertUnit(instanceMemoryLimit));
+            $('#routeCnt').text(convertDataToView(routeCnt));
+            $('#serviceCnt').text(convertDataToView(serviceCnt));
+            $("#price").text(convertDataToView(entity.non_basic_services_allowed));
+            $('#reservedRouteCnt').text(convertDataToView(routePorts));
+        }
+    }
+
+    // 공간 허용량 정의 상세
+    function getSpaceQuotaDefinition(quotaId) {
+        procCallAjax("/v2/spaces/quota-definitions/"+quotaId+"?key="+key, "GET", null, procCallbackGetQuotaDefinition2, null);
+    }
+
+    var procCallbackGetQuotaDefinition2 = function(data){
+
+        var entity = data.entity;
+
+        if (entity) {
+
+            var instanceMemoryLimit = entity.instance_memory_limit;
+            var routePorts          = entity.total_reserved_route_ports;
+            var serviceCnt          = entity.total_services;
+            var routeCnt            = entity.total_routes;
+
+            $('#memorySize2').text(convertUnit(entity.memory_limit));
+            $('#instanceMemorySize2').text(convertUnit(instanceMemoryLimit));
+            $('#routeCnt2').text(convertDataToView(routeCnt));
+            $('#serviceCnt2').text(convertDataToView(serviceCnt));
+            $("#price2").text(convertDataToView(entity.non_basic_services_allowed));
+            $('#reservedRouteCnt2').text(convertDataToView(routePorts));
+        }
+    }
+
+    //특정 조직의 공간 할당량 리스트 출력
     function printSpaceData(dataList) {
+        $("#devEnvFormModal2 select#spaceQuota option[value !='N']").remove();
         if(dataList.length == 0){
-            $("#spaceQuota option[value='N']").text("생선된 할당량이 없습니다.");
+            $("#devEnvFormModal2 #spaceQuota option[value='N']").text("생선된 할당량이 없습니다.");
         }else{
             $.each(dataList, function (index, data) {
-                $("#spaceQuota").append("<option value='"+data.metadata.guid+"'>"+data.entity.name+"</option>");
+                $("#devEnvFormModal2 #spaceQuota").append("<option value='"+data.metadata.guid+"'>"+data.entity.name+"</option>");
             });
         }
     };

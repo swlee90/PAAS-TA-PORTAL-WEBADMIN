@@ -15,6 +15,8 @@ public class Space {
     private String orgName;
     private String spaceName;
     private String newSpaceName;
+    private String orgGuid;
+    private String spaceQuotaGuid;
 
     private UUID guid;
     private String name;
@@ -38,8 +40,25 @@ public class Space {
 
     private List<Service> services = new ArrayList<Service>();
 
-    public Space() {
-        //empty
+    public Space(String orgName, String spaceName, String newSpaceName, String orgGuid, String spaceQuotaGuid, UUID guid, String name, int serviceCount, int appCount, int appCountStarted, int appCountStopped, int appCountCrashed, int memDevTotal, int memProdTotal, int memoryUsage, int memoryLimit, List<App> apps, List<Service> services) {
+        this.orgName = orgName;
+        this.spaceName = spaceName;
+        this.newSpaceName = newSpaceName;
+        this.orgGuid = orgGuid;
+        this.spaceQuotaGuid = spaceQuotaGuid;
+        this.guid = guid;
+        this.name = name;
+        this.serviceCount = serviceCount;
+        this.appCount = appCount;
+        this.appCountStarted = appCountStarted;
+        this.appCountStopped = appCountStopped;
+        this.appCountCrashed = appCountCrashed;
+        this.memDevTotal = memDevTotal;
+        this.memProdTotal = memProdTotal;
+        this.memoryUsage = memoryUsage;
+        this.memoryLimit = memoryLimit;
+        this.apps = apps;
+        this.services = services;
     }
 
     public String getOrgName() {
@@ -64,6 +83,22 @@ public class Space {
 
     public void setNewSpaceName(String newSpaceName) {
         this.newSpaceName = newSpaceName;
+    }
+
+    public String getOrgGuid() {
+        return orgGuid;
+    }
+
+    public void setOrgGuid(String orgGuid) {
+        this.orgGuid = orgGuid;
+    }
+
+    public String getSpaceQuotaGuid() {
+        return spaceQuotaGuid;
+    }
+
+    public void setSpaceQuotaGuid(String spaceQuotaGuid) {
+        this.spaceQuotaGuid = spaceQuotaGuid;
     }
 
     public UUID getGuid() {
@@ -138,14 +173,6 @@ public class Space {
         this.memProdTotal = memProdTotal;
     }
 
-    public List<App> getApps() {
-        return apps;
-    }
-
-    public void setApps(List<App> apps) {
-        this.apps = apps;
-    }
-
     public int getMemoryUsage() {
         return memoryUsage;
     }
@@ -162,11 +189,43 @@ public class Space {
         this.memoryLimit = memoryLimit;
     }
 
+    public List<App> getApps() {
+        return apps;
+    }
+
+    public void setApps(List<App> apps) {
+        this.apps = apps;
+    }
+
     public List<Service> getServices() {
         return services;
     }
 
     public void setServices(List<Service> services) {
         this.services = services;
+    }
+
+    @Override
+    public String toString() {
+        return "Space{" +
+                "orgName='" + orgName + '\'' +
+                ", spaceName='" + spaceName + '\'' +
+                ", newSpaceName='" + newSpaceName + '\'' +
+                ", orgGuid='" + orgGuid + '\'' +
+                ", spaceQuotaGuid='" + spaceQuotaGuid + '\'' +
+                ", guid=" + guid +
+                ", name='" + name + '\'' +
+                ", serviceCount=" + serviceCount +
+                ", appCount=" + appCount +
+                ", appCountStarted=" + appCountStarted +
+                ", appCountStopped=" + appCountStopped +
+                ", appCountCrashed=" + appCountCrashed +
+                ", memDevTotal=" + memDevTotal +
+                ", memProdTotal=" + memProdTotal +
+                ", memoryUsage=" + memoryUsage +
+                ", memoryLimit=" + memoryLimit +
+                ", apps=" + apps +
+                ", services=" + services +
+                '}';
     }
 }

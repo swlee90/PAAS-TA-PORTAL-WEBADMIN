@@ -580,7 +580,6 @@
                 spaceguid : $("#getSpaceList option:selected").val(),
                 role : arr
             };
-            alert(JSON.stringify(param2));
             procCallAjax(REST_URL2 +"/"+guid+"/users"+"?key="+key, 'PUT', JSON.stringify(param2), procCallbackOrgTarget, null);
         }
     };
