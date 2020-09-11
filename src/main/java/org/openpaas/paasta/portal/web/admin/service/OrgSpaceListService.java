@@ -114,12 +114,24 @@ public class OrgSpaceListService extends Common {
      * @param httpMethod
      * @return
      */
-    public Map renameOrgForAdmin (int key,String reqUrl,HttpMethod httpMethod,Org org){
+    public Map renameOrgForAdmin (int key,String reqUrl,HttpMethod httpMethod,Map org){
         return commonService.procCfApiRestTemplate(key,Constants.V3_URL+reqUrl,httpMethod,org);
     }
 
     /**
-     * 운영자 포털에서 공간이름을 변경한다.
+     * 운영자 포털에서 공간이름과할당량을 변경한다..
+     *
+     * @param key
+     * @param reqUrl
+     * @param httpMethod
+     * @return
+     */
+    public Map renameSpaceQuotaForAdmin (int key,String reqUrl,HttpMethod httpMethod,Map space){
+        return commonService.procCfApiRestTemplate(key,Constants.V3_URL+reqUrl,httpMethod,space);
+    }
+
+    /**
+     * 운영자 포털에서 공간명을 변경한다..
      *
      * @param key
      * @param reqUrl
@@ -127,6 +139,19 @@ public class OrgSpaceListService extends Common {
      * @return
      */
     public Map renameSpaceForAdmin (int key,String reqUrl,HttpMethod httpMethod,Map space){
+        return commonService.procCfApiRestTemplate(key,Constants.V3_URL+reqUrl,httpMethod,space);
+    }
+
+
+    /**
+     * 운영자 포털에서 할당량을 변경한다.
+     *
+     * @param key
+     * @param reqUrl
+     * @param httpMethod
+     * @return
+     */
+    public Map qutaoSpaceForAdmin (int key,String reqUrl,HttpMethod httpMethod,Map space){
         return commonService.procCfApiRestTemplate(key,Constants.V3_URL+reqUrl,httpMethod,space);
     }
 

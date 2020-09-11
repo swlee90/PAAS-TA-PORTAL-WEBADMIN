@@ -131,22 +131,48 @@ public class OrgSpaceListController extends Common {
      * @return
      */
     @PutMapping(Constants.V2_URL + "/organization-admin")
-    public Map renameOrgForAdmin(@RequestBody Org org, HttpServletRequest request){
+    public Map renameOrgForAdmin(@RequestBody Map org, HttpServletRequest request){
         String key=request.getParameter("key");
         return orgSpaceListService.renameOrgForAdmin(Integer.parseInt(key),"/organization-admin",HttpMethod.PUT,org);
     }
 
     /**
-     * 운영자 포털에서 공간이름을 변경한다.
+     * 운영자 포털에서 공간이름과할당량을 변경한다.
      *
      * @param space
      * @param request
      * @return
      */
     @PutMapping(Constants.V2_URL + "/space-admin")
+    public Map renameSpaceQuotaForAdmin(@RequestBody Map space, HttpServletRequest request){
+        String key=request.getParameter("key");
+        return orgSpaceListService.renameSpaceQuotaForAdmin(Integer.parseInt(key),"/space-admin",HttpMethod.PUT,space);
+    }
+
+    /**
+     * 운영자 포털에서 공간명을 변경한다.
+     *
+     * @param space
+     * @param request
+     * @return
+     */
+    @PutMapping(Constants.V2_URL + "/space-name-admin")
     public Map renameSpaceForAdmin(@RequestBody Map space, HttpServletRequest request){
         String key=request.getParameter("key");
         return orgSpaceListService.renameSpaceForAdmin(Integer.parseInt(key),"/space-admin",HttpMethod.PUT,space);
+    }
+
+    /**
+     * 운영자 포털에서 할당량을 변경한다.
+     *
+     * @param space
+     * @param request
+     * @return
+     */
+    @PutMapping(Constants.V2_URL + "/space-quota-admin")
+    public Map qutaoSpaceForAdmin(@RequestBody Map space, HttpServletRequest request){
+        String key=request.getParameter("key");
+        return orgSpaceListService.qutaoSpaceForAdmin(Integer.parseInt(key),"/space-quota-admin",HttpMethod.PUT,space);
     }
 
     /**

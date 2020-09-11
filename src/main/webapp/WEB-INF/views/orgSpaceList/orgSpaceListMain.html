@@ -31,7 +31,7 @@
                                     </button>
                                 </div>
                                 <div class="pull-right" style="padding-right: 0px; ">
-                                    <button type="button" class="btn btn-block btn-primary btn-sm" data-title-text="조직 할당량 등록" id="devEnvRegistBtn2" name="registBtn" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#devEnvFormModal2">
+                                    <button type="button" class="btn btn-block btn-primary btn-sm" onclick="spaceModalInit()" data-title-text="조직 할당량 등록" id="devEnvRegistBtn2" name="registBtn" data-toggle="modal" data-backdrop="static" data-keyboard="false" data-target="#devEnvFormModal2">
                                         공간 등록
                                     </button>
                                 </div>
@@ -390,23 +390,26 @@
 
     function procManagement(guid,name,quota,flag){
         $("#modalbody").html("데이터를 불러오고 있습니다.");
-
+        $("#devEnvFormModal2 #spaceQuota option[value='N']").prop("selected",true);
         if(flag==1){
             updateSet(flag,guid);
             $("#devEnvTitle").html("조직 관리");
             $("#devEnvFormModal #orgName").val(name);
             $("#devEnvFormModal .modal-footer").html("<button type=\"button\" class=\"btn btn-sm btn-danger pull-left\" onclick='deleteChekOrg(\""+name+"\")'>삭제</button>"+
                 "<button type=\"button\" class=\"btn btn-sm btn-default pull-left\" data-dismiss=\"modal\">취소</button>"+
-                "<button type='button' class='btn btn-primary' onclick='updateChek(1)'>수정</button>"+
-                    "<input type='hidden' id='guid' value="+guid+">");
+                "<button type='button' class='btn btn-primary' onclick='updateChek(1,null)'>수정</button>"+
+                    "<input type='hidden' id='guid' value="+guid+">"+"<input type='hidden' id='originalName' value="+name+">");
 
         }else if(flag==2){
+            $("#selectSQ").text("선택안함");
+            $("#spaceQuotaDefinitionList td").text("");
+
             updateSet(flag,quota);
             $("#devEnvTitle2").html("공간 관리");
             $("#devEnvFormModal2 #spaceName").val(name);
             $("#devEnvFormModal2 .modal-footer").html("<button type=\"button\" class=\"btn btn-sm btn-default pull-left\" data-dismiss=\"modal\">취소</button>"+
-                "<button type='button' class='btn btn-primary' onclick='updateChek(2)'>수정</button>"+
-                "<input type='hidden' id='guid' value="+guid+">");
+                "<button type='button' class='btn btn-primary' onclick='updateChek(2,\""+quota+"\")'>수정</button>"+
+                "<input type='hidden' id='guid' value="+guid+">"+"<input type='hidden' id='originalName' value="+name+">");
          }
     }
 
@@ -438,15 +441,19 @@
                     $(this).prop("selected",true);
                     getSpaceQuotaDefinition($(this).val());
                     $("#selectSQ").text($(this).text());
-                    $("#devEnvFormModal2 #spaceQuota option[value='N']").text("선택 안함");
                 }
             });
+        }else{
+            if($("#devEnvFormModal2 #spaceQuota option:eq(1)").val() != null){
+                $("#devEnvFormModal2 #spaceQuota option[value='N']").text("선택 안함");
+            }
         }
     }
 
-    function updateChek(flag) {
+    function updateChek(flag,spaceQuota) {
         var guid=$("#guid").val();
-
+        var orginName =$("#originalName").val();
+        if(spaceQuota=="null"){spaceQuota=null};
         if(flag==1){
             var name=$("#orgName").val();
             var quota =$('#orgQuota option:checked').val();
@@ -454,36 +461,74 @@
                 notifyAlert("warning", "", "내용을 입력해주세요.");
                 return false;
             }else if(orgObj[name] != undefined) {
-                notifyAlert("warning", "", name+" 은(는) 이미 사용중인 이름 입니다.");
-                return false;
+                if(orginName == name){
+                    var param = {
+                        guid: guid,
+                        newOrgName: null,
+                        quotaGuid : quota
+                    };
+                    procCallAjax(V2_URL + "/organization-admin"+"?key="+key, 'PUT', JSON.stringify(param), procCallbackResetPage, $('#layerModalLoadingBar'));
+                    $("#devEnvFormModal .close").click();
+                }else{
+                    notifyAlert("warning", "", name+" 은(는) 이미 사용중인 이름 입니다.");
+                    return false;
+                }
             }else{
                 var param = {
                     guid: guid,
                     newOrgName: name,
-                    quota : quota
+                    quotaGuid : quota
                 };
                 procCallAjax(V2_URL + "/organization-admin"+"?key="+key, 'PUT', JSON.stringify(param), procCallbackResetPage, $('#layerModalLoadingBar'));
                 $("#devEnvFormModal .close").click();
             }
         }else if(flag==2){
             var name=$("#spaceName").val();
+            var quota =$('#spaceQuota option:checked').val();
+
             if(name.length == 0 || name == null){
                 notifyAlert("warning", "", "내용을 입력해주세요.");
                 return false;
-            }else if(spaceObj[name] != undefined) {
-                notifyAlert("warning", "", name+" 은(는) 이미 사용중인 이름 입니다.");
-                return false;
+            }else if(spaceObj[name] != undefined){
+                if(orginName == name){
+                    spaceUpdateForAdmin(orginName,name,guid,quota,spaceQuota);
+                }else{
+                    notifyAlert("warning", "", name+" 은(는) 이미 사용중인 이름 입니다.");
+                    return false;
+                }
             }else{
-                var param = {
-                    guid: guid,
-                    newSpaceName: name
-                };
-                procCallAjax(V2_URL + "/space-admin"+"?key="+key, 'PUT', JSON.stringify(param), procCallbackResetPage, $('#layerModalLoadingBar'));
-                $("#devEnvFormModal2 .close").click();
+            var param = {//할당량만변경x 이름만변경 그리고 둘다변경
+                spaceGuid: guid,
+                newSpaceName: name,
+                spaceQuotaGuid : quota,
+                orgGuid : spaceQuota //original guid 로 사용
+            };
+            procCallAjax(V2_URL + "/space-admin"+"?key="+key, 'PUT', JSON.stringify(param), procCallbackResetPage, $('#layerModalLoadingBar'));
+            $("#devEnvFormModal2 .close").click();
             }
         }
-
     }
+
+    function spaceUpdateForAdmin(orginName,name,guid,quota,spaceQuota) {
+        if(quota=="N" && spaceQuota == null) {
+            var param = {
+                spaceGuid: guid,
+                newSpaceName: name
+            };
+            procCallAjax(V2_URL + "/space-name-admin"+"?key="+key, 'PUT', JSON.stringify(param), procCallbackResetPage, $('#layerModalLoadingBar'));
+            $("#devEnvFormModal2 .close").click();
+            procInitPage();
+        }else{
+            var param = {
+                spaceGuid: guid,
+                spaceQuotaGuid : quota,
+                orgGuid : spaceQuota
+            };
+            procCallAjax(V2_URL + "/space-quota-admin"+"?key="+key, 'PUT', JSON.stringify(param), procCallbackResetPage, $('#layerModalLoadingBar'));
+            $("#devEnvFormModal2 .close").click();
+        }
+    }
+
 
     function createOrg(flag) {
         //조직등록
@@ -804,26 +849,31 @@
     $('#devEnvFormModal').on('hidden.bs.modal', function (e) {
         $("#devEnvTitle").html("조직 등록");
         $(this).find('form')[0].reset();
+        $("#selectOQ").text($(this).find("#orgQuota option:eq(0)").text());
+        getOrgQuotaDefinition($(this).find("#orgQuota option:eq(0)").val());
         $("#devEnvFormModal .modal-footer").html("<button type=\"button\" id=\"devEnvCloseBtn\" class=\"btn btn-sm btn-default pull-left\" data-dismiss=\"modal\">취소</button>"+
             "<button type=\"button\" id=\"devEnvRegBtn\" name=\"modalRegBtn\" class=\"btn btn-sm btn-primary pull-right\" onclick=\"createOrg(1)\">등록</button>"
         );
     });
 
     //공간등록 모달 초기화
-    $('#devEnvFormModal2').on('hidden.bs.modal', function (e) {
+    function spaceModalInit(){
         $("#devEnvTitle2").html("공간 등록");
         $("#spaceName").val("");
         $("#devEnvFormModal2 #spaceQuota option[value='N']").prop("selected",true);
-        $("#devEnvFormModal2 #spaceQuota option[value='N']").text("선택안함");
-        $(this).find($("#selectSQ")).text("선택안함");
+        if($("#devEnvFormModal2 #spaceQuota option:eq(1)").val() != null){
+            $("#devEnvFormModal2 #spaceQuota option[value='N']").text("선택안함");
+        }else{
+            $("#devEnvFormModal2 #spaceQuota option[value='N']").text("생선된 할당량이 없습니다.");
+        }
+        $("#selectSQ").text("선택안함");
         $("#spaceQuotaDefinitionList td").text("");
         $("#devEnvFormModal2 .modal-footer").html("<button type=\"button\" id=\"devEnvCloseBtn2\" class=\"btn btn-sm btn-default pull-left\" data-dismiss=\"modal\">취소</button>"+
             "<button type=\"button\" id=\"devEnvRegBtn2\" name=\"modalRegBtn\" class=\"btn btn-sm btn-primary pull-right\" onclick=\"createOrg(2)\">등록</button>"
         );
-    });
+    }
 
     var procCallbackGetOrgQuotaDefinitionList = function(data){
-
         ORG_SOURCE_LIST = data.resources;
         printOrgData(ORG_SOURCE_LIST);
     };
@@ -839,8 +889,9 @@
             $("#devEnvFormModal #orgQuota option[value='N']").text("생선된 할당량이 없습니다.");
         }else{
             $.each(dataList, function (index, data) {
-                if(index==1){
-
+                if(index==0){
+                    $("#selectOQ").text(data.entity.name);
+                    getOrgQuotaDefinition(data.metadata.guid);
                 }
                 $("#devEnvFormModal #orgQuota").append("<option value='"+data.metadata.guid+"'>"+data.entity.name+"</option>");
             });
@@ -936,6 +987,7 @@
     //특정 조직의 공간 할당량 리스트 출력
     function printSpaceData(dataList) {
         $("#devEnvFormModal2 select#spaceQuota option[value !='N']").remove();
+        $("#devEnvFormModal2 #spaceQuota option[value='N']").text("선택 안함");
         if(dataList.length == 0){
             $("#devEnvFormModal2 #spaceQuota option[value='N']").text("생선된 할당량이 없습니다.");
         }else{
