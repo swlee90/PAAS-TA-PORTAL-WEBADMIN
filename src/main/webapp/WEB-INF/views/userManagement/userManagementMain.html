@@ -150,6 +150,10 @@
                                                     <option value="OrgAuditor">OrgAuditor</option>
                                                 </select>
                                             </div>
+                                            <!--<div id ="orgOutput" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 15px;" ><button type="button" class="user_btn colors2" style="position: absolute;top: 6px;left: -8px;" >\
+                                                    vavavava<button type="button" id="close" class="close" style="float: left;margin-left: 54px;">
+                                                    <span aria-hidden="true">×</span></button>
+                                            </button></div>-->
                                         </div>
 
                                         <div class="form-group" style="height:50px;" id="spaceSelect">
@@ -615,47 +619,107 @@
     $(document).on("change keyup","select[id=orgInput]",function(){
         var value = $('#orgInput').val();
         if(value!='N'){
-            $("#orgInput option[value='"+value+"']").remove();
-            $("#orgSelect").append(
-                '<div id ="orgOutput" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 15px;" ><button type="button" class="user_btn colors2"'+
-                ' style="position: absolute;top: 6px;left: -8px;" onclick="getManagment(\''+value+'\')">'+value+'</button></div>'
-            );
+            switch (value) {
+                case "OrgManager":
+                    $("#orgInput option[value='"+value+"']").remove();
+                    $("#orgSelect").append(
+                        '<div id ="orgOutput" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 15px;" ><button type="button" class="user_btn colors2"'+
+                        ' style="position: absolute;top: 6px;left: -8px;" onclick="getManagment(\''+value+'\',1)">'+value+'</button></div>'+
+                        '<button type="button" id="orgClose" class="close" style="float: left;margin-left: -21px;" onclick="getManagment(\''+value+'\',1)">\n' +
+                        '                                                    <span aria-hidden="true">×</span></button>'
+                    );
+                    break;
+
+                case "BillingManager":
+                    $("#orgInput option[value='"+value+"']").remove();
+                    $("#orgSelect").append(
+                        '<div id ="orgOutput" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 15px;" ><button type="button" class="user_btn colors2"'+
+                        ' style="position: absolute;top: 6px;left: -8px;" onclick="getManagment(\''+value+'\',1)">'+value+'</button></div>'+
+                        '<button type="button" id="orgClose" class="close" style="float: left;margin-left: -6px;" onclick="getManagment(\''+value+'\',1)">\n' +
+                        '                                                    <span aria-hidden="true">×</span></button>'
+                    );
+                    break;
+
+                case "OrgAuditor":
+                    $("#orgInput option[value='"+value+"']").remove();
+                    $("#orgSelect").append(
+                        '<div id ="orgOutput" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 15px;" ><button type="button" class="user_btn colors2"'+
+                        ' style="position: absolute;top: 6px;left: -8px;" onclick="getManagment(\''+value+'\',1)">'+value+'</button></div>'+
+                        '<button type="button" id="orgClose" class="close" style="float: left;margin-left: -29px;" onclick="getManagment(\''+value+'\',1)">\n' +
+                        '                                                    <span aria-hidden="true">×</span></button>'
+                    );
+                    break;
+
+
+            }
         }
     })
-
-    function getManagment(val){
-        /*
-        $("#orgInput").append("<option value='"+val+"'>"+val+"</option>");
-        $("#orgOutput").remove();*/
-        $("#selectOS button").each(function () {
-            if($(this).text() == val){
-                $(this).parent().parent().children().find('select').append("<option value='"+val+"'>"+val+"</option>");
-                $(this).parent().remove();
-            }
-        });
-    }
 
     //space 권한
     $(document).on("change keyup","select[id=spaceInput]",function(){
         var value = $('#spaceInput').val();
         if(value!='N'){
-            $("#spaceInput option[value='"+value+"']").remove();
-            $("#spaceSelect").append(
-                '<div id ="spaceOutput" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 15px;"><button type="button" class="user_btn colors2"'+
-                ' style="position: absolute;top: 6px;left: -8px;" onclick="getManagment(\''+value+'\')">'+value+'</button></div>'
-            );
+            switch (value) {
+                case "SpaceManager":
+                    $("#spaceInput option[value='"+value+"']").remove();
+                    $("#spaceSelect").append(
+                        '<div id ="spaceOutput" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 15px;"><button type="button" class="user_btn colors2"'+
+                        ' style="position: absolute;top: 6px;left: -8px;" onclick="getManagment(\''+value+'\',2)">'+value+'</button></div>'+
+                        '<button type="button" id="spaceClose" class="close" style="float: left;margin-left: -8px;" onclick="getManagment(\''+value+'\',2)">\n' +
+                        '                                                    <span aria-hidden="true">×</span></button>'
+                    );
+                    break;
+
+                case "SpaceAuditor":
+                    $("#spaceInput option[value='"+value+"']").remove();
+                    $("#spaceSelect").append(
+                        '<div id ="spaceOutput" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 15px;"><button type="button" class="user_btn colors2"'+
+                        ' style="position: absolute;top: 6px;left: -8px;" onclick="getManagment(\''+value+'\',2)">'+value+'</button></div>'+
+                        '<button type="button" id="spaceClose" class="close" style="float: left;margin-left: -15px;" onclick="getManagment(\''+value+'\',2)">\n' +
+                        '                                                    <span aria-hidden="true">×</span></button>'
+                    );
+                    break;
+
+                case "SpaceDeveloper":
+                    $("#spaceInput option[value='"+value+"']").remove();
+                    $("#spaceSelect").append(
+                        '<div id ="spaceOutput" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 15px;"><button type="button" class="user_btn colors2"'+
+                        ' style="position: absolute;top: 6px;left: -8px;" onclick="getManagment(\''+value+'\',2)">'+value+'</button></div>'+
+                        '<button type="button" id="spaceClose" class="close" style="float: left;margin-left: 1px;" onclick="getManagment(\''+value+'\',2)">\n' +
+                        '                                                    <span aria-hidden="true">×</span></button>'
+                    );
+                    break;
+            }
         }
-    })
+    });
+
+    function getManagment(val,flag){
+        if(flag==1){
+            $("#selectOS #orgOutput>button").each(function () {
+                if($(this).text() == val){
+                    $(this).parent().parent().children().find('select').append("<option value='"+val+"'>"+val+"</option>");
+                    $(this).parent().remove();
+                    $("#orgClose").remove();
+                }
+            });
+        }else if(flag==2){
+            $("#selectOS #spaceOutput>button").each(function () {
+                if($(this).text() == val){
+                    $(this).parent().parent().children().find('select').append("<option value='"+val+"'>"+val+"</option>");
+                    $(this).parent().remove();
+                    $("#spaceClose").remove();
+                }
+            });
+        }
+    }
 
     //조직등록 모달 role 초기화
     $('#addUserModal').on('hidden.bs.modal', function (e) {
         $("#selectOS button").each(function () {
+            $("#selectOS .close").remove();
             $(this).parent().parent().children().find('select').append("<option value='"+$(this).text()+"'>"+$(this).text()+"</option>");
             $(this).parent().remove();
         });
-
-        //$(this).find($("#selectSQ")).text("선택안함");
-        //$(this).find($("#selectOQ")).text("선택안함");
     });
 
     $(document).on("change keyup","select[id=getOrgList]",function(){
