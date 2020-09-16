@@ -115,4 +115,35 @@ public class UserManagementService extends Common {
         param.setActive(result.get("active").toString().equals("true") ? "Y" : "N");
         return commonService.procCommonApiRestTemplate(key,Constants.V2_URL + reqUrl, httpMethod, param);
     }
+
+    /**
+     *
+     * 유저 상세정보전체출력
+     *
+     * @return
+     */
+    public Map<String,Object> GetUserSummary(int key,String reqUrl,HttpMethod httpMethod){
+        return commonService.procCfApiRestTemplate(key,Constants.V3_URL+reqUrl,httpMethod,null);
+    }
+
+    /**
+     * 유저의 이름과 Guid를 목록으로 가져온다.
+     *
+     * @return map all user name
+     * @throws Exception the exception
+     */
+    public Map<String,Object> getUser(int key,String reqUrl,HttpMethod httpMethod){
+        return commonService.procCfApiRestTemplate(key,Constants.V3_URL+reqUrl,httpMethod,null);
+    }
+
+    /**
+     *
+     * 유저의 역할(Role)를 전부조회한다
+     *
+     * @return
+     */
+    public Map<String,Object> getOrgUserRolesForAdmin(int key,String reqUrl,HttpMethod httpMethod,UserManagement users){
+        LOGGER.info("@@@@@@@@@서비스");
+        return commonService.procCfApiRestTemplate(key,Constants.V3_URL+reqUrl,httpMethod,users);
+    }
 }

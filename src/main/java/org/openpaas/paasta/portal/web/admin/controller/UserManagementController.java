@@ -13,8 +13,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 
 /**
@@ -150,4 +152,45 @@ public class UserManagementController extends Common {
     public List<User> configs(){
         return getServerInfos();
     }
+
+    /**
+     *
+     * 유저 상세정보전체출력
+     *
+     * @param userid
+     * @return
+     */
+    @GetMapping(V2_URL+"/users/{userid}/summary")
+    public Map<String,Object> GetUserSummary(@PathVariable String userid,HttpServletRequest request){
+        String key= request.getParameter("key");
+        return userManagementService.GetUserSummary(Integer.parseInt(key),"/users/"+userid+"/summary",HttpMethod.GET);
+    }
+
+    /**
+     * 유저의 이름과 Guid를 목록으로 가져온다.
+     *
+     * @return map all user name
+     * @throws Exception the exception
+     */
+    @GetMapping(V2_URL + "/users/{userId}")
+    public Map<String,Object> getUser(@PathVariable String userId,HttpServletRequest request) {
+        String key= request.getParameter("key");
+        return userManagementService.getUser(Integer.parseInt(key),"/users/"+userId,HttpMethod.GET);
+    }
+
+    /**
+     *
+     * 유저의 역할(Role)를 전부조회한다
+     *
+     * @param orgId
+     * @param spaceId
+     * @return
+     */
+    @PostMapping(V2_URL + "/orgs-user/{orgId}/user-roles/{spaceId}")
+    public Map<String,Object> getOrgUserRolesForAdmin(HttpServletRequest request,@PathVariable String orgId, @PathVariable String spaceId, @RequestBody UserManagement users){
+        LOGGER.info("@@@@@@@@@컨트롤러");
+        String key= request.getParameter("key");
+        return userManagementService.getOrgUserRolesForAdmin(Integer.parseInt(key),"/orgs-user/"+orgId+"/user-roles/"+spaceId,HttpMethod.POST,users);
+    }
+
 }
