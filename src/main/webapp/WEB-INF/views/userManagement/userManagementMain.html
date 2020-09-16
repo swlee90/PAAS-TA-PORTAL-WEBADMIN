@@ -36,7 +36,7 @@
                         </div>
                     </div>
                     <div class="box-tools">
-                        <button type="button" class="btn btn-block btn-primary btn-sm" id="addUserBtn" name="addUserBtn" onclick="btnAddUser(1,null,null)">
+                        <button type="button" class="btn btn-block btn-primary btn-sm" id="addUserBtn" name="addUserBtn" onclick="btnAddUser()">
                             사용자 등록
                         </button>
                     </div>
@@ -85,7 +85,7 @@
             </div>
         </section>
 
-        <!-- 사용자 등록 Modal Layer-->
+        <!-- Modal Layer-->
         <div class="modal fade" id="addUserModal" data-backdrop="static" data-keyboard="false">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -183,7 +183,7 @@
                     </div>
 
                     <div class="modal-footer">
-                        <!--<button type="button" id="clientSaveBtn" name="modalSaveBtn" class="btn btn-sm btn-primary pull-right" onClick="addUserInsert();" data-dismiss="modal">등록</button>-->
+                        <button type="button" id="clientSaveBtn" name="modalSaveBtn" class="btn btn-sm btn-primary pull-right" onClick="addUserInsert();" data-dismiss="modal">등록</button>
                         <button type="button" id="clientCloseBtn" class="btn btn-sm btn-default pull-left" data-dismiss="modal">취소</button>
                     </div>
 
@@ -203,8 +203,6 @@
     /*<![CDATA[*/
     var V2_URL = "/v2";
     var GET_ORGS_FOR_ADMIN_URL = V2_URL + "/orgs";
-    var GET_USERS_FOR_ADMIN_URL = V2_URL + "/users/";
-    var GET_USERS_ROLE_FOR_ADMIN_RUL = V2_URL + "/orgs-user/";
     var REST_URL = V2_URL + "/usermgnts";
     var REST_URL2 = V2_URL + "/organizations";
     var REST_URL_ACCESS = V2_URL + "/usermgnts/access/";
@@ -322,7 +320,6 @@
                         + '<li role="presentation"><a role="menuitem" href="javascript:void(0);"  onclick="procUserManagementPopup(\'' + REQUEST_TYPE_UPDATE_OPERATING_AUTHORITY + '\', \'' + resultList[i].userId +'\', \'' + resultList[i].userGuid + '\')"> ' + menuText + ' </a></li>'
                         + '<li role="presentation"><a role="menuitem" href="javascript:void(0);"  onclick="procUserManagementPopup(\'' + REQUEST_TYPE_UPDATE_LOGIN_ACTIVE + '\', \'' + resultList[i].userId +'\', \'' + resultList[i].userGuid + '\')"> ' + activeText + ' </a></li>'
                         + '<li role="presentation"><a role="menuitem" href="javascript:void(0);"  onclick="procUserManagementPopup(\'' + REQUEST_TYPE_DELETE_USER_ACCOUNT + '\', \'' + resultList[i].userId + '\', \'' + resultList[i].userGuid + '\')"> 계정 삭제 </a></li>'
-                        /*+ '<li role="presentation"><a role="menuitem" href="javascript:void(0);"  onclick="btnAddUser(2,\'' + resultList[i].userId + '\', \'' + resultList[i].userGuid + '\')"> 권한 수정 </a></li>'*/
                         + '</ul></div>');
                 } else {
                     htmlString.push('<tr id="Managementtable' + i + '" name=" ' + resultList[i].userId + '">'
@@ -339,7 +336,6 @@
                         + '<li role="presentation"><a role="menuitem" href="javascript:void(0);"  onclick="procUserManagementPopup(\'' + REQUEST_TYPE_UPDATE_OPERATING_AUTHORITY + '\', \'' + resultList[i].userId +'\', \'' + resultList[i].userGuid + '\')"> ' + menuText + ' </a></li>'
                         + '<li role="presentation"><a role="menuitem" href="javascript:void(0);"  onclick="procUserManagementPopup(\'' + REQUEST_TYPE_UPDATE_LOGIN_ACTIVE + '\', \'' + resultList[i].userId +'\', \'' + resultList[i].userGuid + '\')"> ' + activeText + ' </a></li>'
                         + '<li role="presentation"><a role="menuitem" href="javascript:void(0);"  onclick="procUserManagementPopup(\'' + REQUEST_TYPE_DELETE_USER_ACCOUNT + '\', \'' + resultList[i].userId + '\', \'' + resultList[i].userGuid + '\')"> 계정 삭제 </a></li>'
-                        /*+ '<li role="presentation"><a role="menuitem" href="javascript:void(0);"  onclick="btnAddUser(2,\'' + resultList[i].userId + '\', \'' + resultList[i].userGuid + '\')"> 권한 수정 </a></li>'*/
                         + '</ul></div>');
                 }
 
@@ -399,7 +395,6 @@
             reqFunction = 'updateUserActive("' + reqUserId+'");';
             reqButton = '수정';
         }
-
         modalInit('사용자 관리', reqMessage, reqFunction, reqButton);
     };
 
@@ -517,141 +512,14 @@
         getUserInfoList(/*[[${T(org.openpaas.paasta.portal.web.admin.common.Constants).USER_MANAGEMENT_PAGE_NO}]]*/ "",key);
     };
 
-    //수정중
-    function btnAddUser(flag,username,userguid) {
+    function btnAddUser() {
+        $("#addUserId").val("");
+        $("#addUserPassword").val("");
+        $("#getOrgList option").remove();
+        $("#getSpaceList option").remove();
         procCallAjax2(GET_ORGS_FOR_ADMIN_URL+"?key="+key,"GET",null ,procCallbackGetOrgs2);
-        if(flag==1){
-            $("button[name=modalSaveBtn]").remove();
-            $("#segmentsOrgModalTitle").html("사용자 등록");
-            $("#addUserId").removeAttr("readonly");
-            $("#addUserPassword").removeAttr("readonly");
-            $("#getOrgList").prop('disabled',false);
-            $("#getSpaceList").prop('disabled',false);
-            $("#addUserId").val("");
-            $("#addUserPassword").val("");
-            $("#getOrgList option").remove();
-            $("#getSpaceList option").remove();
-            $(".modal-footer").append(
-                "<button type=\"button\" id=\"clientSaveBtn\" name=\"modalSaveBtn\" class=\"btn btn-sm btn-primary pull-right\" onClick=\"addUserInsert();\" data-dismiss=\"modal\">등록</button>"
-            );
-            showLayerPopAddUser();
-        }else if(flag==2){
-            $("#segmentsOrgModalTitle").html("사용자 권한 수정");
-            $("button[name=modalSaveBtn]").remove();
-
-            $(".modal-footer").append(
-                "<button type=\"button\" id=\"clientUpdateBtn\" name=\"modalSaveBtn\" class=\"btn btn-sm btn-primary pull-right\" onClick=\"UpdateUser();\" data-dismiss=\"modal\">수정</button>"+
-                 "<input type='hidden' id='userGuid' value="+userguid+">"
-            );
-            $("#addUserId").val(username);
-            $("#addUserId").attr("readonly",true);
-            $("#addUserPassword").attr("readonly",true);
-            procCallAjax2(GET_USERS_FOR_ADMIN_URL+userguid+"/summary"+"?key="+key,"GET",null ,procCallbackGetUserSummary);
-            procCallAjax2(GET_USERS_FOR_ADMIN_URL+userguid+"?key="+key,"GET",null ,procCallbackGetUserActive);
-        }
-    };
-
-    var procCallbackGetUserSummary = function (data,param) {
-        if(data.entity.organizations.length != 0){
-            if(data.entity.organizations[0].entity.spaces.length != 0){
-                var orgguid=data.entity.organizations[0].metadata.guid;
-                $("#getOrgList option[value='"+orgguid+"']").prop("selected",true);
-                getSpacesForAdmin(orgguid);
-            }else{
-                var orgguid=data.entity.organizations[0].metadata.guid;
-                $("#getOrgList option[value='"+orgguid+"']").prop("selected",true);
-            }
-        }
-
-        var orgId=$("#getOrgList option:selected").val();
-        var spaceId=data.entity.organizations[0].entity.spaces[0].metadata.guid;
-
-        var param = {
-            userId: $("#userGuid").val(),
-            userName: $("#addUserId").val()
-        };
-        procCallAjax2(GET_USERS_ROLE_FOR_ADMIN_RUL+orgId+"/user-roles/"+spaceId+"?key="+key,"POST",JSON.stringify(param),procCallbackGetUserRoles);
-    }
-
-    var procCallbackGetUserRoles = function (data,param) {
-        if(data.user_roles[0].roles.length != 0){
-            for(var i=0; i<data.user_roles[0].roles.length;i++){
-                switch (data.user_roles[0].roles[i]) {
-                    case "OrgManager":
-                        $("#orgInput option[value='"+data.user_roles[0].roles[i]+"']").remove();
-                        $("#orgSelect").append(
-                            '<div id ="orgOutput" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 15px;" ><button type="button" class="user_btn colors2"'+
-                            ' style="position: absolute;top: 6px;left: -8px;" onclick="getManagment(\''+data.user_roles[0].roles[i]+'\',1)">'+data.user_roles[0].roles[i]+'</button></div>'+
-                            '<button type="button" id="orgClose" class="close" style="float: left;margin-left: -21px;" onclick="getManagment(\''+data.user_roles[0].roles[i]+'\',1)">\n' +
-                            '                                                    <span aria-hidden="true">×</span></button>'
-                        );
-                        break;
-
-                    case "BillingManager":
-                        $("#orgInput option[value='"+data.user_roles[0].roles[i]+"']").remove();
-                        $("#orgSelect").append(
-                            '<div id ="orgOutput" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 15px;" ><button type="button" class="user_btn colors2"'+
-                            ' style="position: absolute;top: 6px;left: -8px;" onclick="getManagment(\''+data.user_roles[0].roles[i]+'\',1)">'+data.user_roles[0].roles[i]+'</button></div>'+
-                            '<button type="button" id="orgClose" class="close" style="float: left;margin-left: -6px;" onclick="getManagment(\''+data.user_roles[0].roles[i]+'\',1)">\n' +
-                            '                                                    <span aria-hidden="true">×</span></button>'
-                        );
-                        break;
-
-                    case "OrgAuditor":
-                        $("#orgInput option[value='"+data.user_roles[0].roles[i]+"']").remove();
-                        $("#orgSelect").append(
-                            '<div id ="orgOutput" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 15px;" ><button type="button" class="user_btn colors2"'+
-                            ' style="position: absolute;top: 6px;left: -8px;" onclick="getManagment(\''+data.user_roles[0].roles[i]+'\',1)">'+data.user_roles[0].roles[i]+'</button></div>'+
-                            '<button type="button" id="orgClose" class="close" style="float: left;margin-left: -29px;" onclick="getManagment(\''+data.user_roles[0].roles[i]+'\',1)">\n' +
-                            '                                                    <span aria-hidden="true">×</span></button>'
-                        );
-                        break;
-                    case "SpaceManager":
-                        $("#spaceInput option[value='"+data.user_roles[0].roles[i]+"']").remove();
-                        $("#spaceSelect").append(
-                            '<div id ="spaceOutput" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 15px;"><button type="button" class="user_btn colors2"'+
-                            ' style="position: absolute;top: 6px;left: -8px;" onclick="getManagment(\''+data.user_roles[0].roles[i]+'\',2)">'+data.user_roles[0].roles[i]+'</button></div>'+
-                            '<button type="button" id="spaceClose" class="close" style="float: left;margin-left: -8px;" onclick="getManagment(\''+data.user_roles[0].roles[i]+'\',2)">\n' +
-                            '                                                    <span aria-hidden="true">×</span></button>'
-                        );
-                        break;
-
-                    case "SpaceAuditor":
-                        $("#spaceInput option[value='"+data.user_roles[0].roles[i]+"']").remove();
-                        $("#spaceSelect").append(
-                            '<div id ="spaceOutput" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 15px;"><button type="button" class="user_btn colors2"'+
-                            ' style="position: absolute;top: 6px;left: -8px;" onclick="getManagment(\''+data.user_roles[0].roles[i]+'\',2)">'+data.user_roles[0].roles[i]+'</button></div>'+
-                            '<button type="button" id="spaceClose" class="close" style="float: left;margin-left: -15px;" onclick="getManagment(\''+data.user_roles[0].roles[i]+'\',2)">\n' +
-                            '                                                    <span aria-hidden="true">×</span></button>'
-                        );
-                        break;
-
-                    case "SpaceDeveloper":
-                        $("#spaceInput option[value='"+data.user_roles[0].roles[i]+"']").remove();
-                        $("#spaceSelect").append(
-                            '<div id ="spaceOutput" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 15px;"><button type="button" class="user_btn colors2"'+
-                            ' style="position: absolute;top: 6px;left: -8px;" onclick="getManagment(\''+data.user_roles[0].roles[i]+'\',2)">'+data.user_roles[0].roles[i]+'</button></div>'+
-                            '<button type="button" id="spaceClose" class="close" style="float: left;margin-left: 1px;" onclick="getManagment(\''+data.user_roles[0].roles[i]+'\',2)">\n' +
-                            '                                                    <span aria-hidden="true">×</span></button>'
-                        );
-                        break;
-                }
-            }
-        }
-
-        $("#getOrgList").prop('disabled',true);
-        $("#getSpaceList").prop('disabled',true);
         showLayerPopAddUser();
-    }
-
-    var procCallbackGetUserActive = function (data,param) {
-        if(data.entity.active){
-            $("#addUserActive").prop("checked",true);
-        }else{
-            $("#addUserActive").prop("checked",false);
-        }
-        $("#addUserActive").prop('disabled',true);
-    }
+    };
 
     function showLayerPopAddUser() {
         $("#addUserModal").modal("show");
