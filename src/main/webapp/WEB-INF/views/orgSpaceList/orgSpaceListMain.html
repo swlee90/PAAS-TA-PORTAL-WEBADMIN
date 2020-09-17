@@ -461,10 +461,10 @@
                 notifyAlert("warning", "", "내용을 입력해주세요.");
                 return false;
             }else if(orgObj[name] != undefined) {
-                if(orginName == name){
+                if(orginName == name || name.search(/\s/) != -1){
                     var param = {
                         guid: guid,
-                        newOrgName: null,
+                        newOrgName: name,
                         quotaGuid : quota
                     };
                     procCallAjax(V2_URL + "/organization-admin"+"?key="+key, 'PUT', JSON.stringify(param), procCallbackResetPage, $('#layerModalLoadingBar'));
@@ -490,7 +490,7 @@
                 notifyAlert("warning", "", "내용을 입력해주세요.");
                 return false;
             }else if(spaceObj[name] != undefined){
-                if(orginName == name){
+                if(orginName == name || name.search(/\s/) != -1){
                     spaceUpdateForAdmin(orginName,name,guid,quota,spaceQuota);
                 }else{
                     notifyAlert("warning", "", name+" 은(는) 이미 사용중인 이름 입니다.");
