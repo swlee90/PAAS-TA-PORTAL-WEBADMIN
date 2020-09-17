@@ -188,7 +188,6 @@ public class UserManagementController extends Common {
      */
     @PostMapping(V2_URL + "/orgs-user/{orgId}/user-roles/{spaceId}")
     public Map<String,Object> getOrgUserRolesForAdmin(HttpServletRequest request,@PathVariable String orgId, @PathVariable String spaceId, @RequestBody UserManagement users){
-        LOGGER.info("@@@@@@@@@컨트롤러");
         String key= request.getParameter("key");
         return userManagementService.getOrgUserRolesForAdmin(Integer.parseInt(key),"/orgs-user/"+orgId+"/user-roles/"+spaceId,HttpMethod.POST,users);
     }

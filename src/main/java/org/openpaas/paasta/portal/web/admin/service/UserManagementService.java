@@ -143,7 +143,6 @@ public class UserManagementService extends Common {
      * @return
      */
     public Map<String,Object> getOrgUserRolesForAdmin(int key,String reqUrl,HttpMethod httpMethod,UserManagement users){
-        LOGGER.info("@@@@@@@@@서비스");
         return commonService.procCfApiRestTemplate(key,Constants.V3_URL+reqUrl,httpMethod,users);
     }
 }

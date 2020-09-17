@@ -115,6 +115,12 @@
                                             <input type="password" class="form-control" id="addUserPassword" autocomplete="new-password"/>
                                         </div>
                                     </div>
+                                    <div class="form-group required">
+                                        <label for="addUserName" class="col-sm-3 control-label">이름</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" id="addUserName" onkeyup='pattenTest()' maxlength="5"/>
+                                        </div>
+                                    </div>
 
                                     <!--사용자관리 조직지정-->
                                     <div class="form-group">
@@ -560,6 +566,7 @@
         var param = {
             userId: $("#addUserId").val(),
             password: $("#addUserPassword").val(),
+            userName: $("#addUserName").val(),
             active: $("#addUserActive").is(":checked"),
             active2: active2,
             status: 1,
@@ -743,6 +750,11 @@
                 $("#getSpaceList").append ("<option value='"+space.metadata.guid+"'>"+space.entity.name+"</option>");
             });
         }
+    }
+
+    function pattenTest() {
+        var patten = / [\s] | [\{\}\[\]\/@?,;:|\)*~`!^+<>\#$%&\\\=\(\'\"]/gi;
+        $("#addUserName").val($("#addUserName").val().replace(patten, ''));
     }
     /*]]>*/
 </script>
