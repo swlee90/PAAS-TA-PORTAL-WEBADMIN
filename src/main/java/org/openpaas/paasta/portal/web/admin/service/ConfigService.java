@@ -52,14 +52,13 @@ public class ConfigService {
     public Map deleteConfig(int key) {
         Map rs = new HashMap();
         try {
-            configRepository.delete(key);
+            configRepository.deleteByKey(key);
             rs.put("result", true);
         } catch (Exception e) {
             e.printStackTrace();
             rs.put("result", false);
         }
         return rs;
-
     }
 
 
@@ -98,6 +97,6 @@ public class ConfigService {
      * @return model and view
      */
     public ConfigEntity getConfig(int key) {
-        return configRepository.findOne(key);
+        return configRepository.findById(key).get();
     }
 }

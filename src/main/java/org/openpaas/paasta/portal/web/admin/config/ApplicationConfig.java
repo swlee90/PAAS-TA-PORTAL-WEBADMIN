@@ -5,7 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.openpaas.paasta.portal.web.admin.config.security.CustomIntercepter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.context.embedded.EmbeddedServletContainerCustomizer;
+import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
+import org.springframework.boot.web.server.WebServerFactoryCustomizer;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -84,13 +85,11 @@ public class ApplicationConfig extends WebMvcConfigurerAdapter {
     }
 
     @Bean
-    public EmbeddedServletContainerCustomizer containerCustomizer() {
-        return (container -> {
-            container.setSessionTimeout(1000);  // session timeout value
-        });
+    public WebServerFactoryCustomizer<TomcatServletWebServerFactory> containerCustomizer() {
+        TomcatServletWebServerFactory factory = new TomcatServletWebServerFactory();
+        factory.setPort(8090);
+        return server -> server.addContextCustomizers(context -> context.setSessionTimeout(1000));
     }
-
-
 
     @Override
     public void configureAsyncSupport(final AsyncSupportConfigurer configurer) {
