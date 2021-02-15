@@ -87,7 +87,6 @@ public class ApplicationConfig extends WebMvcConfigurerAdapter {
     @Bean
     public WebServerFactoryCustomizer<TomcatServletWebServerFactory> containerCustomizer() {
         TomcatServletWebServerFactory factory = new TomcatServletWebServerFactory();
-        factory.setPort(8090);
         return server -> server.addContextCustomizers(context -> context.setSessionTimeout(1000));
     }
 
