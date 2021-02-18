@@ -141,7 +141,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (apiLoginCount == 0) {
             throw new BadCredentialsException("Incorrect login information or incorrect contact address.");
         }
-        LOGGER.info("adminYN :: " + apiLoginCount);
+        LOGGER.info("adminYN :: " + adminYN);
         if (adminYN == 0) {
             throw new BadCredentialsException("You do not have access..");
         }
