@@ -2394,7 +2394,7 @@
 
             if(appFile !== undefined){
                 // 신규 앱샘플 파일 추가
-                uploadFile(formData,"POST","/v2/thumbnail"+"?key="+key, updateAppFileInfo);
+                uploadFile(formData,"POST","/v2/appsample"+"?key="+key, updateAppFileInfo);
             }else{
                 // 첨부 없음
                 modifyDevEnv();
@@ -2404,9 +2404,9 @@
 
             if(appFile !== undefined){ // 업로드 파일 업데이트
                 // 기존 앱샘플 파일 삭제
-                uploadFile(null,"DELETE","/v2/thumbnail/"+ BEFORE_SAMPLE_APP_NAME+"?key="+key, null);
+                uploadFile(null,"DELETE","/v2/appsample/"+ BEFORE_SAMPLE_APP_NAME+"?key="+key, null);
                 // 신규 앱샘플 파일 추가
-                uploadFile(formData,"POST","/v2/thumbnail"+"?key="+key, updateAppFileInfo);
+                uploadFile(formData,"POST","/v2/appsample"+"?key="+key, updateAppFileInfo);
             }else{ // 첨부 없음
                 FILE_INFO.appSampleFileName  = BEFORE_SAMPLE_APP_LABEL_NAME;
                 FILE_INFO.appSampleFilePath  = BEFORE_SAMPLE_APP_PATH;
