@@ -198,6 +198,52 @@
             </div>
             <!-- /.modal-dialog -->
         </div>
+
+        <div class="modal fade" id="initPwdModal" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span></button>
+                        <h4 class="modal-title" id="segmentsInitPwdModalTitle">비밀번호 초기화</h4>
+                    </div>
+
+                    <div class="modal-body">
+
+                        <div class="box" style="margin-bottom: 10px; border-top: 0px; box-shadow: 0 0px 0px">
+                            <div id="#layerModalLoadingBar2" class="overlay hide"><i class="fa fa-refresh fa-spin"></i>
+                            </div>
+                            <form id="securityGroupForm2" class="form-horizontal">
+                                <div class="box-body">
+                                    <div class="form-group required">
+                                        <label for="addUserPassword" class="col-sm-3 control-label">비밀번호</label>
+                                        <div class="col-sm-9">
+                                            <input type="password" class="form-control" id="newPassword" placeholder="새 비밀번호를 입력해주세요."/>
+                                            <div><p class="text-left" style="font-weight: bold; color: red;">* 영문,숫자를 혼합하여 6~20자 이내 공백 미포함</p></div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group required">
+                                        <label for="addUserPassword" class="col-sm-3 control-label">비밀번호 확인</label>
+                                        <div class="col-sm-9">
+                                            <input type="password" class="form-control" id="newPasswordConfirm" placeholder="비밀번호를 다시 한 번 입력해주세요."/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" id="pwdSaveBtn" name="modalSaveBtn" class="btn btn-sm btn-primary pull-right" onClick="initPwdSave();" data-dismiss="modal">변경</button>
+                        <button type="button" id="pwdCancelBtn" class="btn btn-sm btn-default pull-left" data-dismiss="modal">취소</button>
+                    </div>
+
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
     </div>
 
     <footer></footer>
@@ -322,7 +368,8 @@
                         + '<div class="dropdown">'
                         + '<label class="fa fa-gears" id="dropdownMenu' + i + '" ' + 'data-toggle="dropdown" aria-expanded="false" aria-hidden="true" style="cursor: pointer;"></label>'
                         + '<ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdownMenu' + i + '">'
-                        + '<li role="presentation"><a role="menuitem" href="javascript:void(0);"  onclick="procUserManagementPopup(\'' + REQUEST_TYPE_RESET_PASSWORD + '\', \'' + resultList[i].userId +'\', \'' + resultList[i].userGuid + '\')"> 비밀번호 초기화 </a></li>'
+                        // + '<li role="presentation"><a role="menuitem" href="javascript:void(0);"  onclick="procUserManagementPopup(\'' + REQUEST_TYPE_RESET_PASSWORD + '\', \'' + resultList[i].email +'\', \'' + resultList[i].userGuid + '\')"> 비밀번호 초기화 </a></li>'
+                        + '<li role="presentation"><a role="menuitem" href="javascript:void(0);"  onclick="btnInitUserPwd(\'' + resultList[i].userId + '\')"> 비밀번호 초기화 </a></li>'
                         + '<li role="presentation"><a role="menuitem" href="javascript:void(0);"  onclick="procUserManagementPopup(\'' + REQUEST_TYPE_UPDATE_OPERATING_AUTHORITY + '\', \'' + resultList[i].userId +'\', \'' + resultList[i].userGuid + '\')"> ' + menuText + ' </a></li>'
                         + '<li role="presentation"><a role="menuitem" href="javascript:void(0);"  onclick="procUserManagementPopup(\'' + REQUEST_TYPE_UPDATE_LOGIN_ACTIVE + '\', \'' + resultList[i].userId +'\', \'' + resultList[i].userGuid + '\')"> ' + activeText + ' </a></li>'
                         + '<li role="presentation"><a role="menuitem" href="javascript:void(0);"  onclick="procUserManagementPopup(\'' + REQUEST_TYPE_DELETE_USER_ACCOUNT + '\', \'' + resultList[i].userId + '\', \'' + resultList[i].userGuid + '\')"> 계정 삭제 </a></li>'
@@ -338,7 +385,8 @@
                         + '<div class="dropdown">'
                         + '<label class="fa fa-gears" id="dropdownMenu' + i + '" ' + 'data-toggle="dropdown" aria-expanded="false" aria-hidden="true" style="cursor: pointer;"></label>'
                         + '<ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdownMenu' + i + '">'
-                        + '<li role="presentation"><a role="menuitem" href="javascript:void(0);"  onclick="procUserManagementPopup(\'' + REQUEST_TYPE_RESET_PASSWORD + '\', \'' + resultList[i].userId +'\', \'' + resultList[i].userGuid + '\')"> 비밀번호 초기화 </a></li>'
+                        // + '<li role="presentation"><a role="menuitem" href="javascript:void(0);"  onclick="procUserManagementPopup(\'' + REQUEST_TYPE_RESET_PASSWORD + '\', \'' + resultList[i].email +'\', \'' + resultList[i].userGuid + '\')"> 비밀번호 초기화 </a></li>'
+                        + '<li role="presentation"><a role="menuitem" href="javascript:void(0);"  onclick="btnInitUserPwd(\'' + resultList[i].userId + '\')"> 비밀번호 초기화 </a></li>'
                         + '<li role="presentation"><a role="menuitem" href="javascript:void(0);"  onclick="procUserManagementPopup(\'' + REQUEST_TYPE_UPDATE_OPERATING_AUTHORITY + '\', \'' + resultList[i].userId +'\', \'' + resultList[i].userGuid + '\')"> ' + menuText + ' </a></li>'
                         + '<li role="presentation"><a role="menuitem" href="javascript:void(0);"  onclick="procUserManagementPopup(\'' + REQUEST_TYPE_UPDATE_LOGIN_ACTIVE + '\', \'' + resultList[i].userId +'\', \'' + resultList[i].userGuid + '\')"> ' + activeText + ' </a></li>'
                         + '<li role="presentation"><a role="menuitem" href="javascript:void(0);"  onclick="procUserManagementPopup(\'' + REQUEST_TYPE_DELETE_USER_ACCOUNT + '\', \'' + resultList[i].userId + '\', \'' + resultList[i].userGuid + '\')"> 계정 삭제 </a></li>'
@@ -758,6 +806,69 @@
             $(this).val($(this).val().replace(patten, ''));
         });
     }
+
+    function isBlank(value) {
+        if (value == undefined || value == null || value == "") {
+            return true;
+        }
+        return false;
+    }
+
+    function regexPwd(value) {
+        var patten = /^[A-Za-z0-9+]{6,20}$/;
+        if (!patten.test(value)) {
+            return true;
+        }
+    }
+
+    function showLayerPopInitPwd() {
+        $("#initPwdModal").modal("show");
+    };
+
+    var USER_ID;
+
+    function btnInitUserPwd(userId) {
+        USER_ID = userId;
+        showLayerPopInitPwd();
+    };
+
+    function initPwdSave() {
+        key = $("#apiUrls").val();
+
+        var password = $("#newPassword").val();
+
+        // 비밀번호 (password)
+        if (isBlank(password)) {
+            notifyAlert("warning", "", "비밀번호를 입력하세요.");
+            return false;
+        }
+        // 비밀번호 정규식 검사 (password regular expression check)
+        if (regexPwd(password)) {
+            notifyAlert("warning", "", "비밀번호는 영문,숫자를 혼합하여 6~20자 이내 공백을 미포함합니다.");
+            return false;
+        }
+        // 비밀번호 확인 (Confirm Password)
+        if (isBlank($("#newPasswordConfirm").val())) {
+            notifyAlert("warning", "", "비밀번호를 확인해주세요.");
+            return false;
+        }
+        if(password !== $('#newPasswordConfirm').val()){
+            notifyAlert("warning", "", "비밀번호를 한 번 더 확인해주세요.");
+            return false;
+        }
+
+        var param = {
+            userId: USER_ID,
+            password: password
+        };
+
+        procCallAjax(REST_URL + "/password"+"?key="+key, 'POST', JSON.stringify(param), procCallbackInitPassword, $('#layerModalLoadingBar'));
+
+    };
+
+    var procCallbackInitPassword = function(data) {
+    };
+
     /*]]>*/
 </script>
 </body>

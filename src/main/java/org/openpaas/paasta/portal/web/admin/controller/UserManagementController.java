@@ -78,6 +78,21 @@ public class UserManagementController extends Common {
         return userManagementService.setResetPassword(Integer.parseInt(key), "/users/password/email", HttpMethod.POST, map);
     }
 
+
+    /**
+     * 초기 비밀번호를 모를 경우 새 비밀번호로 초기화한다.
+     *
+     * @param request
+     * @param map
+     * @return
+     */
+    @PostMapping(V2_URL + "/usermgnts/password")
+    @ResponseBody
+    public Map<String, Object> setInitPassword(HttpServletRequest request, @RequestBody Map map) {
+        String key = request.getParameter("key");
+        return userManagementService.setInitPassword(Integer.parseInt(key), "/users/password/reset", HttpMethod.POST, map);
+    }
+
     /**
      * 운영권한을 수정한다.
      *

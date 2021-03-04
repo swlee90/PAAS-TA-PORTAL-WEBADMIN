@@ -54,6 +54,18 @@ public class UserManagementService extends Common {
         return commonService.procCommonApiRestTemplate(key,Constants.V2_URL + reqUrl, httpMethod, param);
     }
 
+    /**
+     * 초기 비밀번호를 모를 경우 새 비밀번호로 초기화한다.
+     *
+     * @param key
+     * @param reqUrl
+     * @param httpMethod
+     * @param param
+     * @return
+     */
+    public Map<String, Object> setInitPassword(int key, String reqUrl, HttpMethod httpMethod, Object param) {
+        return commonService.procCfApiRestTemplate(key,Constants.V2_URL + reqUrl, httpMethod, param);
+    }
 
     /**
      * 운영권한을 부여한다.
