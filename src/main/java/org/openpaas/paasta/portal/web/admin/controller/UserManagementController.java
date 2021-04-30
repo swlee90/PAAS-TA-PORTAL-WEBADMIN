@@ -1,8 +1,8 @@
 package org.openpaas.paasta.portal.web.admin.controller;
 
-import org.codehaus.jettison.json.JSONArray;
-import org.codehaus.jettison.json.JSONObject;
+
 import org.openpaas.paasta.portal.web.admin.common.Common;
+import org.openpaas.paasta.portal.web.admin.common.Constants;
 import org.openpaas.paasta.portal.web.admin.common.User;
 import org.openpaas.paasta.portal.web.admin.model.UserManagement;
 import org.slf4j.Logger;
@@ -13,10 +13,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
-import java.util.Collection;
+import java.util.HashMap;;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 
 /**
@@ -57,11 +56,11 @@ public class UserManagementController extends Common {
     }
 
 
-    @GetMapping(V2_URL + "/usermgnts/{userid}")
+    @PostMapping(V2_URL + "/usermgnts/{userid}")
     @ResponseBody
     public Map<String, Object> getUserInfoList(@PathVariable String userid, HttpServletRequest request) {
         String key = request.getParameter("key");
-        return userManagementService.getUserInfoList(Integer.parseInt(key),"/usermgnts/" + userid, HttpMethod.GET, null);
+        return userManagementService.getUserInfoList(Integer.parseInt(key),"/usermgnts/" + userid, HttpMethod.POST, null);
     }
 
 
@@ -135,6 +134,7 @@ public class UserManagementController extends Common {
         return userManagementService.addUser(Integer.parseInt(key),HttpMethod.POST, param);
     }
 
+
     /**
      * 유저 이름으로 조직에 연결
      *
@@ -176,9 +176,12 @@ public class UserManagementController extends Common {
      * @return
      */
     @GetMapping(V2_URL+"/users/{userid}/summary")
-    public Map<String,Object> GetUserSummary(@PathVariable String userid,HttpServletRequest request){
+    public Map<String,Object> GetUserSummary(@PathVariable String userid, HttpServletRequest request){
         String key= request.getParameter("key");
         return userManagementService.GetUserSummary(Integer.parseInt(key),"/users/"+userid+"/summary",HttpMethod.GET);
+
+
+
     }
 
     /**
@@ -207,4 +210,31 @@ public class UserManagementController extends Common {
         return userManagementService.getOrgUserRolesForAdmin(Integer.parseInt(key),"/orgs-user/"+orgId+"/user-roles/"+spaceId,HttpMethod.POST,users);
     }
 
+    /**
+     * 사용자 정보를 불러온다.
+     * 2021-04-15 Yoona
+     * @param userid
+     * @return Map
+     */
+    @GetMapping(V2_URL + "/usermgnts/info/{userid}")
+    @ResponseBody
+    public Map<String, Object> infoUser(@PathVariable String userid, HttpServletRequest request, @ModelAttribute UserManagement user) {
+        String key = request.getParameter("key");
+        return  commonService.procCommonApiRestTemplate(Integer.parseInt(key), Constants.V2_URL + "/user/"+userid, HttpMethod.GET, user);
+
+    }
+
+    /**
+     * 사용자 정보(조직과 공간)를 수정한다.
+     * 2021-04-26 Yoona
+     * @param userid
+     * @return Map map
+     */
+    @PutMapping(V2_URL + "/usermgnts/info/{userid}")
+    @ResponseBody
+    public Map<String, Object> updateUser(@PathVariable String userid, HttpServletRequest request, @RequestBody Map map) throws Exception {
+        String key = request.getParameter("key");
+        return userManagementService.updateUser(Integer.parseInt(key), "/user"+"/"+userid, HttpMethod.PUT, map);
+
+    }
 }
