@@ -159,14 +159,16 @@ public class UserManagementService extends Common {
         return commonService.procCfApiRestTemplate(key, Constants.V3_URL + reqUrl, httpMethod, users);
     }
 
-
     /**
-     * 사용자 정보(조직과 공간)를 수정한다.
+     * 사용자 정보를 수정한다.
+     *
      * @param param
      * @return map
      * 2021-04-26 Yoona
      */
-    public Map<String, Object> updateUser (int key, String reqUrl, HttpMethod httpMethod, Object param) {
-        return  commonService.procCommonApiRestTemplate(key,Constants.V2_URL + reqUrl , httpMethod,param);
-      }
+    public Map<String, Object> updateUser(int key, String reqUrl, HttpMethod httpMethod, Object param) {
+        return commonService.procCommonApiRestTemplate(key, Constants.V2_URL + reqUrl, httpMethod, param);
     }
+
+}
+

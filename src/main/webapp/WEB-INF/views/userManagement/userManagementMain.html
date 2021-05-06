@@ -263,26 +263,38 @@
                             </div>
                             <form id="securityGroupForm3" class="form-horizontal">
                                 <div class="box-body">
-
-                                    <div class="form-group required">
-                                        <label for="userId" class="col-sm-3 control-label">아이디</label>
+                                        <!-- id = guid -->
+                                    <div class="form-group">
+                                        <label for="userGuid" class="col-sm-3 control-label"></label>
                                         <div class="col-sm-9">
-                                            <input type="text" class="form-control" id="userId" readonly="readonly"/>
+                                            <input type="hidden" class="form-control" id="userGuid" readonly="readonly"/>
                                         </div>
                                     </div>
                                     <div class="form-group required">
-                                        <label for="userName" class="col-sm-3 control-label">이름</label>
+                                        <label for="userName" class="col-sm-3 control-label">아이디</label>
                                         <div class="col-sm-9">
-                                            <input type="text" class="form-control" id="userName"  maxlength="50" readonly="readonly"/>
+                                            <input type="text" class="form-control" id="userName" readonly="readonly"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group required">
+                                        <label for="userEmail" class="col-sm-3 control-label">이메일</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" id="userEmail"  maxlength="50" readonly="readonly"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group required">
+                                        <label for="userCreated" class="col-sm-3 control-label">가입일</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" id="userCreated"  maxlength="50" readonly="readonly"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group required">
+                                        <label for="userLastmodified" class="col-sm-3 control-label">최종접속일</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" id="userLastmodified"  maxlength="50" readonly="readonly"/>
                                         </div>
                                     </div>
                                     <!--Address-->
-                                    <div class="form-group required">
-                                        <label for="userAddress" class="col-sm-3 control-label">Address</label>
-                                        <div class="col-sm-9">
-                                            <input type="text" class="form-control" id="userAddress" readonly="readonly"/>
-                                        </div>
-                                    </div>
                                     <!--Active 설정 (승인 여부)-->
                                     <div class="form-group">
                                         <label for="updateUserActive" class="col-sm-3 control-label">Active 설정 (승인 여부)</label>
@@ -292,7 +304,7 @@
                                     </div>
                                     <!--사용자관리 조직지정-->
                                     <div class="form-group">
-                                        <label for="userId" class="col-sm-3 control-label">Org</label>
+                                        <label for="userName" class="col-sm-3 control-label">Org</label>
                                         <div class="col-sm-9">
                                             <select class="form-control" id="getOrgList2">
                                                 <!--<option>테스트1</option>-->
@@ -303,7 +315,7 @@
                                     </div>
                                     <!--사용자관리 공간지정-->
                                     <div class="form-group">
-                                        <label for="userId" class="col-sm-3 control-label">Space</label>
+                                        <label for="userName" class="col-sm-3 control-label">Space</label>
                                         <div class="col-sm-9">
                                             <select class="form-control" id="getSpaceList2">
                                                 <!--<option>테스트1</option>-->
@@ -760,20 +772,19 @@
             }
         };
 
-
-        //user의 아이디를 클릭하면 사용자 수정 모달이 띄워진다.
+        //user의 id를 불러온다.
         $(document).on("mouseup",'tr td[id=userList]',function (e) {
 
-            var userId =$(e.target).data('value');
-            $("#userId").val(userId);
+            var username =$(e.target).data('value');
+            $("#userName").val(username);
 
-            console.log(userId);
-
-            //순서 다시 위의 함수랑 변경하기
             $("#getOrgList2 option").remove();
             $("#getSpaceList2 option").remove();
 
-            procCallAjax(REST_URL +"/info/"+userId+"?key="+key,"GET",null, procCallbackUserInfo, $("#layerModalLoadingBar"));
+            /*uaa db의 사용자 정보를 가져온다.*/
+            procCallAjax(REST_URL +"/"+username+"/uaa"+"?key="+key,"GET",null, procCallbackUserInfo, $("#layerModalLoadingBar"));
+            /*포탈 db의 사용자 정보를 가져온다.*/
+          /*  procCallAjax(REST_URL +"/info/"+username+"?key="+key,"GET",null, procCallbackUserInfo, $("#layerModalLoadingBar"));*/
 
             showLayerPopUpdateUser();
         });
@@ -804,106 +815,91 @@
         }
 
 
-        //유저의 정보를 가져온다.
+        // uaa 유저의 정보를 가져온다.
         var procCallbackUserInfo = function(data) {
-            console.log(data);
-            var getUser = JSON.stringify(data);
-            var getUserOne = JSON.parse(getUser).User;
+            console.log("데이터" + data);
 
+            console.log(JSON.stringify(data));
+            console.log(JSON.stringify(data.id));
+            var uaa = JSON.stringify(data);
+            var dataUaa = JSON.parse(uaa);
+            console.log(dataUaa);
 
+          /*  var getUserOne = JSON.parse(getUser).User;*/
 
             var options = "";
 
-            var name = getUserOne.userName;
+            var guid = dataUaa.id;
+            if (guid != undefined && guid != "") if (guid != "") options += "--name " + guid + " ";
+            $("#userGuid").val(guid);
+
+            var name = dataUaa.userName;
             if (name != undefined && name != "") if (name != "") options += "--name " + name + " ";
             $("#userName").val(name);
 
-            var id = getUserOne.userId;
-            if (id != undefined) if (id != "") {
-                options += "--scope " + id + " ";
-                $("#userId").val(id);
+            var email = dataUaa.email;
+            if (email != undefined) if (email != "") {
+                options += "--email" + email + " ";
+                $("#userEmail").val(email);
             }
-            var status = getUserOne.status;
-            if (status != undefined) if (status != "") {
-                options += "--status" + status + " ";
+
+            var authorities = dataUaa.authorities;
+            if (authorities != undefined) if (authorities != "") {
+                options += "--authorities" + authorities + " ";
             }
-            var adminYn = getUserOne.adminYn;
-            if (adminYn != undefined) if (adminYn != "") {
-                options += "--adminYn" + adminYn + " ";
+            /*가입일*/
+            var created = dataUaa.created;
+            if (created != undefined) if (created != "") {
+                options += "--created" + created + " ";
+                $("#userCreated").val(created.substring(0,10));
             }
-            var address = getUserOne.address;
-            if (address != undefined) if (address != "") {
-                options += "--address" + address + " ";
-                $("#userAddress").val(address);
+            /*최종 접속일*/
+            var lastmodified = dataUaa.lastmodified;
+            if (lastmodified != undefined) if (lastmodified != "") {
+                options += "--lastmodified" + lastmodified + " ";
+                $("#userLastmodified").val(lastmodified.substring(0,10));
             }
-            var zipCode = getUserOne.zipCode;
-            if (zipCode != undefined) if (zipCode != "") {
-                options += "--zipCode" + zipCode + " ";
-            }
-            var userGuid = getUserOne.userGuid;
-            if (userGuid != undefined) if (userGuid != "") {
-                options += "--userGuid" + userGuid + " ";
-            }
-            var tellPhone = getUserOne.tellPhone;
-            if (tellPhone != undefined) if (tellPhone != "") {
-                options += "--tellPhone" + tellPhone + " ";
-            }
-            var searchKeyword = getUserOne.searchKeyword;
-            if (searchKeyword != undefined) if (searchKeyword != "") {
-                options += "--searchKeyword" + searchKeyword + " ";
-            }
-            var refreshToken = getUserOne.refreshToken;
-            if (refreshToken != undefined) if (refreshToken != "") {
-                options += "--refreshToken" + refreshToken + " ";
-            }
-            var imgPath = getUserOne.imgPath;
-            if (imgPath != undefined) if (imgPath != "") {
-                options += "--imgPath" + imgPath + " ";
-            }
-            var authAccessTime = getUserOne.authAccessTime;
-            if (authAccessTime != undefined) if (authAccessTime != "") {
-                options += "--authAccessTime" + authAccessTime + " ";
-            }
-            var authAccessCnt = getUserOne.authAccessCnt;
-            if (authAccessCnt != undefined) if (authAccessCnt != "") {
-                options += "--authAccessCnt" + authAccessCnt + " ";
+
+            /*비밀번호 최종변경일*/
+            var passwdLastmodified = dataUaa.passwdLastmodified;
+            if (passwdLastmodified != undefined) if (passwdLastmodified != "") {
+                options += "--passwdLastmodified" + passwdLastmodified + " ";
             }
             var chk = ($("#updateUserActive").is(":checked"));
 
-            var active = getUserOne.active; // "Y" or "N"
-            if(chk) $("#updateUserActive").prop('checked', true);
-            else $("#updateUserActive").prop('checked', false);
+            var active = dataUaa.active; // "Y" or "N"
+            if(active == "0") $("#updateUserActive").prop('checked', true);
+
+            /*else $("#updateUserActive").prop('checked', true);*/
 
             procCallAjax2(GET_ORGS_FOR_ADMIN_URL + "?key=" + key, "GET", null, procCallbackGetOrgs3);
 
 
    };
 
-        //수정 버튼 클릭시 발생
+        //수정 버튼 클릭시 호출
         function updateUser() {
-            var userId = $("#userId").val();
-            var userName = $("#userName").val();
 
+            var userId = $("#userName").val();
             var param = {
-                userId : userId,
-                userName: userName
-            };
+                userId: userId
+            }
 
             arr=[];
             $("#selectOS2 button").each(function () {
                 arr.push($(this).text());
             });
 
-            procCallAjax(REST_URL +"/info"+"/"+ userId+ "?key="+key, "PUT", JSON.stringify(param), procCallbackUpdateUserInsert, null)
+            procCallAjax(REST_URL +"/info"+"/"+ userId+ "?key="+key, "PUT", JSON.stringify(param), procCallbackUpdateUserInsert, $('#layerModalLoadingBar'))
         };
 
-        //업데이트
+
         var procCallbackUpdateUserInsert = function(data) {
             if(data.result) {
                 var guid = $("#getOrgList2 option:selected").val();
 
                 var param2 = {
-                    username : $("#userId").val(),
+                    username : $("#userName").val(),
                     spaceguid : $("#getSpaceList2 option:selected").val(),
                     role : arr
                 };
@@ -1192,6 +1188,7 @@
         function getSpacesForAdmin2(orgId){
             procCallAjax2(GET_ORGS_FOR_ADMIN_URL+"/"+orgId+"/spaces"+"?key="+key,"GET" ,null ,procCallbackGetSpace2);
         }
+
 
         //사용자 수정 sapceList
         var procCallbackGetSpace2 = function(data, param) {
