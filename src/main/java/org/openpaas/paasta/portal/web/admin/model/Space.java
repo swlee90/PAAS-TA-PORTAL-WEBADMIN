@@ -21,26 +21,26 @@ public class Space {
     private UUID guid;
     private String name;
 
-    private int serviceCount = 0;
+    private Integer serviceCount = 0;
 
-    private int appCount = 0;
+    private Integer appCount = 0;
 
-    private int appCountStarted = 0;
-    private int appCountStopped = 0;
-    private int appCountCrashed = 0;
+    private Integer appCountStarted = 0;
+    private Integer appCountStopped = 0;
+    private Integer appCountCrashed = 0;
 
-    private int memDevTotal;
+    private Integer memDevTotal;
 
-    private int memProdTotal;
+    private Integer memProdTotal;
 
-    private int memoryUsage;
-    private int memoryLimit;
+    private Integer memoryUsage;
+    private Integer memoryLimit;
 
     private List<App> apps = new ArrayList<App>();
 
     private List<Service> services = new ArrayList<Service>();
 
-    public Space(String orgName, String spaceName, String newSpaceName, String orgGuid, String spaceQuotaGuid, UUID guid, String name, int serviceCount, int appCount, int appCountStarted, int appCountStopped, int appCountCrashed, int memDevTotal, int memProdTotal, int memoryUsage, int memoryLimit, List<App> apps, List<Service> services) {
+    public Space(String orgName, String spaceName, String newSpaceName, String orgGuid, String spaceQuotaGuid, UUID guid, String name, Integer serviceCount, Integer appCount, Integer appCountStarted, Integer appCountStopped, Integer appCountCrashed, Integer memDevTotal, Integer memProdTotal, Integer memoryUsage, Integer memoryLimit, List<App> apps, List<Service> services) {
         this.orgName = orgName;
         this.spaceName = spaceName;
         this.newSpaceName = newSpaceName;
@@ -117,75 +117,75 @@ public class Space {
         this.name = name;
     }
 
-    public int getServiceCount() {
+    public Integer getServiceCount() {
         return serviceCount;
     }
 
-    public void setServiceCount(int serviceCount) {
+    public void setServiceCount(Integer serviceCount) {
         this.serviceCount = serviceCount;
     }
 
-    public int getAppCount() {
+    public Integer getAppCount() {
         return appCount;
     }
 
-    public void setAppCount(int appCount) {
+    public void setAppCount(Integer appCount) {
         this.appCount = appCount;
     }
 
-    public int getAppCountStarted() {
+    public Integer getAppCountStarted() {
         return appCountStarted;
     }
 
-    public void setAppCountStarted(int appCountStarted) {
+    public void setAppCountStarted(Integer appCountStarted) {
         this.appCountStarted = appCountStarted;
     }
 
-    public int getAppCountStopped() {
+    public Integer getAppCountStopped() {
         return appCountStopped;
     }
 
-    public void setAppCountStopped(int appCountStopped) {
+    public void setAppCountStopped(Integer appCountStopped) {
         this.appCountStopped = appCountStopped;
     }
 
-    public int getAppCountCrashed() {
+    public Integer getAppCountCrashed() {
         return appCountCrashed;
     }
 
-    public void setAppCountCrashed(int appCountCrashed) {
+    public void setAppCountCrashed(Integer appCountCrashed) {
         this.appCountCrashed = appCountCrashed;
     }
 
-    public int getMemDevTotal() {
+    public Integer getMemDevTotal() {
         return memDevTotal;
     }
 
-    public void setMemDevTotal(int memDevTotal) {
+    public void setMemDevTotal(Integer memDevTotal) {
         this.memDevTotal = memDevTotal;
     }
 
-    public int getMemProdTotal() {
+    public Integer getMemProdTotal() {
         return memProdTotal;
     }
 
-    public void setMemProdTotal(int memProdTotal) {
+    public void setMemProdTotal(Integer memProdTotal) {
         this.memProdTotal = memProdTotal;
     }
 
-    public int getMemoryUsage() {
+    public Integer getMemoryUsage() {
         return memoryUsage;
     }
 
-    public void setMemoryUsage(int memoryUsage) {
+    public void setMemoryUsage(Integer memoryUsage) {
         this.memoryUsage = memoryUsage;
     }
 
-    public int getMemoryLimit() {
+    public Integer getMemoryLimit() {
         return memoryLimit;
     }
 
-    public void setMemoryLimit(int memoryLimit) {
+    public void setMemoryLimit(Integer memoryLimit) {
         this.memoryLimit = memoryLimit;
     }
 

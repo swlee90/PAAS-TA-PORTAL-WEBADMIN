@@ -251,12 +251,14 @@
 </div>
 <script layout:fragment="custom-script">
     var V2_URL = "/v2";
+    var V3_URL = "/v3";
     var GET_ORGS_FOR_ADMIN_URL = V2_URL + "/orgs";
     var GET_SPACES_FOR_ADMIN_URL = V2_URL + "/spaces2";
     var OrgAndSpace = "/OrgAndSpace";
     var Space = "/Space";
     var domainNames;
     var currentOrg;
+    var spaceName;
     var currentOrgId;
     var currentOrgNum;
     var spaces;
@@ -270,6 +272,7 @@
     var totalRoutesSpace;
     var paidServicesSpace;
     var spaceQuotaText;
+    var userEmail;
 
     var ORG_SOURCE_LIST;
     var SPACE_SOURCE_LIST;
@@ -671,7 +674,7 @@
                 $("#spaceTable").append (
                         "<tr id='orgSpaceViewArea-table-content-space-no"+(eventId+1)+"'>"+
                         "<td>"+(eventId+1)+"</td>"+
-                        "<td>" + space.entity.name + "&nbsp; <a href='#none' onClick=\"procGetSpaceSummary('"+ space.metadata.guid +"','" + space.entity.space_quota_definition_guid + "')\" style='font-size:10px' data-toggle='modal' data-target='#modal-default'>[상세정보]</a></td>" +
+                        "<td id='space' data-value="+space.metadata.guid+">" + space.entity.name + "&nbsp; <a href='#none' onClick=\"procGetSpaceSummary('"+ space.metadata.guid +"','" + space.entity.space_quota_definition_guid + "')\" style='font-size:10px' data-toggle='modal' data-target='#modal-default'>[상세정보]</a></td>" +
                         '<td>'+
                         '<div>'+
                     '<label class="fa fa-gears" style="cursor: pointer;" href="#none" data-toggle="modal" data-target="#devEnvFormModal2" onClick="procManagement(\''+space.metadata.guid+'\',\''+space.entity.name+'\',\''+space.entity.space_quota_definition_guid+'\',2)"></label>'+
@@ -737,6 +740,11 @@
 
         procCallAjax2(V2_URL + "/spaces/"+spaceId+"/summary"+"?key="+key,"GET", null, procCallbackGetSpaceSummary);
         $("modal-default .modal-footer").html("<button type='button' class='btn btn-primary' data-dismiss='modal'>확인</button>");
+
+        if(spaceId != "null"){ //spaceId가 존재하면 ( null이 아니면)
+            procCallAjax(V2_URL +"/spaces"+"/"+spaceId+"/user-roles"+"?key="+key,"GET",null, procCallbackSpaceRoles, $("#layerModalLoadingBar"));
+
+        }
     };
 
 
@@ -783,6 +791,8 @@
                 "<br><b>Domains</b> : " + domainNames +
                 "<br><b>Services</b> : " + services +
                 "<br><b>Quota</b> : " + spaceQuotaText);
+
+        spaceName = data.name;
     }
 
 
@@ -997,6 +1007,39 @@
         }
     };
 
+    $(document).on("mouseup",'tr td[id=space]',function (e) {
+
+        /*공간에 포함된 유저들의 목록을 가져온다.*/
+        var spaceid =$(e.target).data('value');
+
+        var page = 1;
+
+        procCallAjax(V2_URL +"/spaces"+"/"+spaceid+"/user-roles"+"?key="+key,"GET",null, procCallbackSpaceRoles, $("#layerModalLoadingBar"));
+
+    });
+
+    var procCallbackSpaceRoles = function (data) {
+
+        var stringify = JSON.stringify(data);
+        var parseData = JSON.parse(stringify);
+        var dataRoles = parseData.result.userRoles.user_roles;
+
+        userEmail  = "";
+           user_roles = "";
+
+        for (var i = 0; i < dataRoles.length; i++) {
+            if (dataRoles[i].user_email!==null) userEmail += " " + "<br>" + dataRoles[i].user_email + ":" + "["+ dataRoles[i].roles +"]";
+            }
+
+            $("#modalbody").html(
+                "<b>Org</b> : " + currentOrg +
+                "<br><b>Space</b> : " + spaceName +
+                "<br><b>Apps</b> : " + apps +
+                "<br><b>Domains</b> : " + domainNames +
+                "<br><b>Services</b> : " + services +
+                "<br><b>Quota</b> : " + spaceQuotaText+
+                "<br><b>User</b> : " + userEmail);
+        }
     /*]]>*/
 </script>
 </body>

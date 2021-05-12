@@ -4,6 +4,7 @@ import org.openpaas.paasta.portal.web.admin.common.Common;
 import org.openpaas.paasta.portal.web.admin.common.Constants;
 import org.openpaas.paasta.portal.web.admin.common.User;
 import org.openpaas.paasta.portal.web.admin.model.Org;
+import org.openpaas.paasta.portal.web.admin.model.Quota;
 import org.openpaas.paasta.portal.web.admin.model.Space;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -252,4 +253,21 @@ public class OrgSpaceListController extends Common {
     public List<User> configs(){
         return getServerInfos();
     }
+
+
+    /**
+     * 공간에 속한 유저들의 역할을 불러온다.
+     *
+     * @param spaceid
+     * 2021-05-10
+     * @return Map (자바 Map 클래스)
+     */
+    @GetMapping(V2_URL+"/spaces/{spaceid}/user-roles")
+    @ResponseBody
+    public Map<String, Object> getSpaceRoles(@PathVariable String spaceid, HttpServletRequest request) {
+        String key = request.getParameter("key");
+        LOGGER.info(spaceid);
+        return commonService.procCfApiRestTemplate(Integer.parseInt(key), Constants.V3_URL + "/spaces/" +spaceid+ "/user-roles2", HttpMethod.GET,null);
+    }
+
 }
