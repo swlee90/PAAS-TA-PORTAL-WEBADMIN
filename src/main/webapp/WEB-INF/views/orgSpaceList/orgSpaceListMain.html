@@ -273,6 +273,13 @@
     var paidServicesSpace;
     var spaceQuotaText;
     var userEmail;
+    var orgRoles;
+    var orgQuotaName;
+    var orgTotalRoutes;
+    var orgMemoryLimit;
+    var orgServiceTotal;
+    var orgTotalServices;
+    var orgAllServices;
 
     var ORG_SOURCE_LIST;
     var SPACE_SOURCE_LIST;
@@ -368,7 +375,7 @@
             orgName.sort();
             for (var i = 0; i < data.resources.length; i++) {
                 $("#orgTable").append (
-                    "<tr id='orgSpaceViewArea-table-content-org-no" + (i + 1) + "' name='" + orgName[i].toString().toLowerCase() + "' >" +
+                    "<tr id='orgSpaceViewArea-table-content-org-no" + (i + 1) + "' name='" + orgName[i].toString().toLowerCase() + "'>" +
                     "<td>" + (i + 1) + "</td>" +
                     "<td><a style='color: black' href='#none' id='orgNameList' onClick=\"getSpacesForAdmin('" + idMap.get(orgName[i]) + "','" + orgName[i] + "','" + (i+1) + "')\">" + orgName[i] + "</a> &nbsp;<a href='#none' onClick=\"procGetOrgSummary('" + idMap.get(orgName[i]) + "','" +  QuotaMap.get(orgName[i]) + "')\" style='font-size:10px;' data-toggle='modal' data-target='#modal-default'>[상세정보]</a></td>" +
                     "<label><input name='groupTable-checkbox' id='groupTable-checkbox-no-"+(i+1)+"' value='"+(i+1)+"' class='checkbox-inline' type='checkbox' style='display: none'></label>"+
@@ -696,6 +703,10 @@
         //procCallAjax2(V2_URL + "/orgs/"+quotaid+"/quota","GET", null, procCallbackGetOrgQuota);
         //procCallAjax2(V2_URL + "/orgs/"+orgid+"/quota","GET", null, procCallbackGetOrgQuota);
         procCallAjax2(V2_URL + "/orgs/"+OrgId+"/summary"+"?key="+key, "GET",null, procCallbackGetOrgSummary);
+
+        if(orgid!=null){
+            procCallAjax(GET_ORGS_FOR_ADMIN_URL+"/"+orgid+"/user-roles/"+"?key="+key,"GET" ,null ,procCallbackGetUserOrgRoles);
+        }
         $("#modal-default .modal-footer").html("<button type='button' class='btn btn-primary' data-dismiss='modal'>확인</button>");
     };
 
@@ -724,6 +735,15 @@
         $("#modalbody").html("<b>Domains</b> : " + domainNames +
                 "<br><b>Quota</b> : " + data.quota.name + " (" + data.quota.memoryLimit + "M memory limit, " + data.quota.totalRoutes + " routes, " + data.all_serviceTotal + "/" + data.quota.totalServices + " services)" +
                 "<br><b>Spaces</b> : " + spaces);
+
+        orgQuotaName = data.quota.name;
+        orgTotalRoutes = data.quota.totalRoutes;
+        orgMemoryLimit = data.quota.memoryLimit;
+        orgServiceTotal = data.quota.totalRoutes;
+        orgTotalServices =  data.quota.totalServices;
+        orgAllServices = data.all_serviceTotal;
+
+
     }
 
 
@@ -739,14 +759,14 @@
         }
 
         procCallAjax2(V2_URL + "/spaces/"+spaceId+"/summary"+"?key="+key,"GET", null, procCallbackGetSpaceSummary);
-        $("modal-default .modal-footer").html("<button type='button' class='btn btn-primary' data-dismiss='modal'>확인</button>");
 
         if(spaceId != "null"){ //spaceId가 존재하면 ( null이 아니면)
             procCallAjax(V2_URL +"/spaces"+"/"+spaceId+"/user-roles"+"?key="+key,"GET",null, procCallbackSpaceRoles, $("#layerModalLoadingBar"));
 
+        $("modal-default .modal-footer").html("<button type='button' class='btn btn-primary' data-dismiss='modal'>확인</button>");
+
         }
     };
-
 
     // GET SPACE SUMMARY CALLBACK
     var procCallbackGetSpaceQuota = function(data, param) {
@@ -1007,39 +1027,80 @@
         }
     };
 
-    $(document).on("mouseup",'tr td[id=space]',function (e) {
 
-        /*공간에 포함된 유저들의 목록을 가져온다.*/
+  /*  $(document).on("mouseup",'tr td[id=space]',function (e) {
+        /!*공간에 포함된 유저들의 목록을 가져온다.*!/
         var spaceid =$(e.target).data('value');
-
-        var page = 1;
-
         procCallAjax(V2_URL +"/spaces"+"/"+spaceid+"/user-roles"+"?key="+key,"GET",null, procCallbackSpaceRoles, $("#layerModalLoadingBar"));
 
-    });
+    });*/
 
+    /*조직의 상세정보에서 User들의 SpaceRole을 조회한다*/
     var procCallbackSpaceRoles = function (data) {
 
         var stringify = JSON.stringify(data);
         var parseData = JSON.parse(stringify);
         var dataRoles = parseData.result.userRoles.user_roles;
 
-        userEmail  = "";
-           user_roles = "";
+        userEmail = "";
 
         for (var i = 0; i < dataRoles.length; i++) {
-            if (dataRoles[i].user_email!==null) userEmail += " " + "<br>" + dataRoles[i].user_email + ":" + "["+ dataRoles[i].roles +"]";
+
+                $("#spaceRoles").html(dataRoles[i].roles)
+
+                    /*Array에서 권한을 나누어서 찾는다.*/
+                    var str = dataRoles[i].roles;
+                    var spaceDeveloper = str.filter(roles => roles === "SpaceDeveloper") + "&nbsp;&nbsp;&nbsp;&nbsp;";
+                    var spaceManager = str.filter(roles => roles === "SpaceManager") + "&nbsp;&nbsp;&nbsp;&nbsp;";
+                    var spaceAuditor = str.filter(roles => roles === "SpaceAuditor") + "&nbsp;&nbsp;&nbsp;&nbsp;";
+                    var strNull = str.filter(roles => roles === null) + "없음";
+
+                /*유저의 SpaceRole을 조회한다.*/
+            if (dataRoles[i].user_email !== null && dataRoles[i].roles.length < 1) {
+                userEmail += " " + "<br>" + dataRoles[i].user_email + "&nbsp;:&nbsp;" + strNull;
+            }else{
+
+                if(dataRoles[i].user_email !== null) userEmail += " " + "<br>" + dataRoles[i].user_email + "&nbsp;:&nbsp;" + spaceDeveloper + spaceManager + spaceAuditor;
             }
 
-            $("#modalbody").html(
-                "<b>Org</b> : " + currentOrg +
-                "<br><b>Space</b> : " + spaceName +
-                "<br><b>Apps</b> : " + apps +
-                "<br><b>Domains</b> : " + domainNames +
-                "<br><b>Services</b> : " + services +
-                "<br><b>Quota</b> : " + spaceQuotaText+
-                "<br><b>User</b> : " + userEmail);
-        }
+            $("#modalbody").html("<b>Org</b> : " + currentOrg + "<br><b>Space</b> : " + spaceName + "<br><b>Apps</b> : " + apps +
+                    "<br><b>Domains</b> : " + domainNames + "<br><b>Services</b> : " + services + "<br><b>Quota</b> : " + spaceQuotaText +
+                    "<br><b>User</b> :" + userEmail);
+             }
+          }
+
+
+
+    /*조직의 상세정보에서 User들의 OrgRole을 조회한다*/
+    var procCallbackGetUserOrgRoles = function (data) {
+        var stringify2 = JSON.stringify(data);
+        var parseData2 = JSON.parse(stringify2);
+        var dataRoles2 = parseData2.user_roles;
+        console.log(dataRoles2)
+
+        orgRoles = "";
+
+        for (var i = 0; i < dataRoles2.length; i++) {
+
+            var str = dataRoles2[i].roles;
+            var orgAuditor = str.filter(roles => roles === "OrgAuditor") + "&nbsp;&nbsp;&nbsp;&nbsp;";
+            var orgManager = str.filter(roles => roles === "OrgManager") + "&nbsp;&nbsp;&nbsp;&nbsp;";
+            var billingManager = str.filter(roles => roles === "BillingManager") + "&nbsp;&nbsp;&nbsp;&nbsp;";
+            var strNull = str.filter(roles => roles === null) + "없음";
+
+
+            if (dataRoles2[i].user_email !== null && dataRoles2[i].roles.length < 1){
+                orgRoles += " " + "<br>" + dataRoles2[i].user_email + "&nbsp;:&nbsp;" + strNull;
+            }else{
+
+                if(dataRoles2[i].user_email !== null) orgRoles += " " + "<br>" + dataRoles2[i].user_email + "&nbsp;:&nbsp;" + orgAuditor + orgManager + billingManager;
+            }
+            $("#modalbody").html("<b>Domains</b> : " + domainNames +
+                "<br><b>Quota</b> : " + orgQuotaName + " (" + orgMemoryLimit + "M memory limit, " + orgTotalRoutes + " routes, " + orgAllServices + "/" + orgTotalServices + " services)" +
+                "<br><b>Spaces</b> : " + spaces + "<br><b>User</b>:"+ orgRoles);
+
+              }
+            }
     /*]]>*/
 </script>
 </body>
