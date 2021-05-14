@@ -809,7 +809,7 @@
                     idMap.set(orgName[i],data.resources[i].metadata.guid);
                 }
                 orgName.sort();
-                    $("#getOrgList2").append ("<option value='"+orgNull+"'></option>");
+                    $("#getOrgList2").append ("<option value='"+orgNull+"'>조직을 선택해 주세요</option>");
                 for (var i = 0; i < data.resources.length; i++) {
                     $("#getOrgList2").append ("<option value='"+idMap.get(orgName[i])+"'>"+orgName[i]+"</option>");
                 }
@@ -1201,7 +1201,7 @@
             } else {
                 $('#getSpaceList2').val("");
                 $('#getSpaceList2').text("");
-                $("#getSpaceList2").append ("<option value='"+spaceNull+"'></option>");
+                $("#getSpaceList2").append ("<option value='"+spaceNull+"'>권한을 선택해 주세요.</option>");
                 $.each(data.spaceList.resources, function (eventId, space) {
                     $("#getSpaceList2").append ("<option value='"+space.metadata.guid+"'>"+space.entity.name+"</option>");
                 });
