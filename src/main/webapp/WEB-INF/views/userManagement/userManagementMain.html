@@ -263,7 +263,7 @@
                             </div>
                             <form id="securityGroupForm3" class="form-horizontal">
                                 <div class="box-body">
-                                        <!-- id = guid -->
+                                    <!-- id = guid -->
                                     <div class="form-group">
                                         <label for="userGuid" class="col-sm-3 control-label"></label>
                                         <div class="col-sm-9">
@@ -292,48 +292,39 @@
                                     <div class="form-group">
                                         <label for="userName" class="col-sm-3 control-label">Org</label>
                                         <div class="col-sm-9">
-                                            <select multiple="" class="form-control" id="getOrgList2">
-                                                <!--<option>테스트1</option>-->
+                                            <select class="form-control" id="getOrgList2" onchange="getUserOrgRoles()">
+
                                             </select>
                                         </div>
-                                        <!--<span id="orgexplanation2" style="margin-left: 27%;color: red;font-weight: bold">
-                                               </span>-->
+                                    </div>
+
                                     </div>
                                     <!--사용자관리 공간지정-->
                                     <div class="form-group">
                                         <label for="userName" class="col-sm-3 control-label">Space</label>
-                                        <div class="col-sm-9">
-                                            <select multiple="" class="form-control" id="getSpaceList2">
+                                             <div class="col-sm-9">
+                                            <select class="form-control" id="getSpaceList2" onchange="getUserSpaceRoles()">
                                                 <!--<option>테스트1</option>-->
                                             </select>
                                         </div>
                                     </div>
 
-                                    <!--추가-->
-                                   <!-- <div class="col-sm-1" style="text-align:center; margin-top:20px">&lt;!&ndash;margin:20px 1.0% 0px 0.0%;&ndash;&gt;
-                                        <div>
-                                            <span type="button" class="glyphicon glyphicon-chevron-right" style="font-size:22px;color:#ababab; cursor: pointer;"
-                                                  onClick="procCallbackGetOrgs3(document.getElementById('getOrgList2'), document.getElementById('getSpaceList2'))">
-                                            </span>
-                                        </div>
-                                    </div>-->
-                                       <!-- <div>
-                                            <span type="button" class="glyphicon glyphicon-chevron-left" style="font-size:22px;color:#818181; cursor: pointer;"
-                                                  onClick="SelectMoveRows(document.getElementById('spaceInput2'), document.getElementById('orgSelect2'))">
-                                            </span>
-                                        </div>-->
-                                <!--추가-->
+                                    <!--Space Role 텍스트 추가-->
                                     <div id="selectOS2">
                                         <div class="form-group" style="height:35px;" id="orgSelect2">
                                             <label for="orgInput2" class="col-sm-3 col-xs-12 control-label">조직 권한</label>
                                             <div class="col-sm-4 col-xs-3">
-                                                <select  class="form-control" id="orgInput2">
+                                                <select class="form-control" id="orgInput2">
                                                     <option value="N">조직 권한을 선택해주세요.</option>
                                                     <option value="OrgManager">OrgManager</option>
                                                     <option value="BillingManager">BillingManager</option>
                                                     <option value="OrgAuditor">OrgAuditor</option>
                                                 </select>
                                             </div>
+                                            <!--<div id ="orgOutput" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 15px;" ><button type="button" class="user_btn colors2" style="position: absolute;top: 6px;left: -8px;" >\
+                                                    vavavava<button type="button" id="close" class="close" style="float: left;margin-left: 54px;">
+                                                    <span aria-hidden="true">×</span></button>
+                                            </button></div>-->
                                         </div>
 
                                         <div class="form-group" style="height:35px;" id="spaceSelect2">
@@ -347,7 +338,6 @@
                                                 </select>
                                             </div>
                                         </div>
-                                    </div>
                                         <!--Active 설정 (승인 여부)-->
                                         <div class="form-group">
                                             <label for="updateUserActive" class="col-sm-3 control-label">Active 설정 (승인 여부)</label>
@@ -356,24 +346,24 @@
                                             </div>
                                         </div>
                                     </div>
-                             </form>
-                          </div>
+                            </form>
+                        </div>
+                    </div>
 
                     <div class="modal-footer">
                         <button type="button" id="clientSaveBtn2" name="modalSaveBtn" class="btn btn-sm btn-primary pull-right" onClick="updateConfirm();" data-dismiss="modal">수정</button>
                         <button type="button" id="clientCloseBtn2" class="btn btn-sm btn-default pull-left" data-dismiss="modal">취소</button>
                     </div>
 
-                    </div>
-                    <!-- /.modal-content -->
                 </div>
-                <!-- /.modal-dialog -->
+                <!-- /.modal-content -->
             </div>
-
+            <!-- /.modal-dialog -->
         </div>
+
+        <footer></footer>
+    </div>
     <script th:inline="javascript" type="text/javascript" layout:fragment="custom-script">
-
-
 
         /*<![CDATA[*/
         var V2_URL = "/v2";
@@ -389,11 +379,17 @@
         var REQUEST_TYPE_DELETE_USER_ACCOUNT = "DELETE_USER_ACCOUNT";
         var REQUEST_TYPE_UPDATE_USER_INFO = "UPDATE_INFO_ACCOUNT";
         var usersObj = new Object();
+        var str;
+        var orgAuditor;
+        var orgManager;
+        var billingManager;
+        var spaceDeveloper;
+        var spaceManager;
+        var spaceAuditor;
 
         var arr = new Array();
 
-        var restOrgGuid;
-        var restOrgName;
+
 
         // GET LIST
         var getUserInfoList = function (reqPageNo) {
@@ -483,7 +479,7 @@
                     if (resultList[i].active == /*[[${T(org.openpaas.paasta.portal.web.admin.common.Constants).USE_YN_Y}]]*/ "") activeText = '가입 해제';
                     if (resultList[i].active == 'Y') {
                         htmlString.push('<tr id="Managementtable' + i + '" name=" '+ resultList[i].userId +'" >'
-                            + '<td class="col-md-4 ' + boldClass + '" style="cursor: pointer" id="userList" data-value ="'+ resultList[i].userId +'">' + resultList[i].userId + '</td>'
+                            + '<td class="col-md-4 ' + boldClass + '" style="cursor:pointer" id="userList" data-value ="'+ resultList[i].userId +'">' + resultList[i].userId + '</td>'
                             + '<td class="col-md-2 ' + boldClass + '" id="userNameList" data-value ="'+ resultList[i].userName +'">' + resultList[i].userName + '</td>'
                             + '<td class="col-md-2 ' + boldClass + '" >' + telephone + '</td>'
                             + '<td class="col-md-1 tac ' + boldClass + '">' + resultList[i].adminYn + '</td>'
@@ -500,7 +496,7 @@
                             + '</ul></div>');
                     } else {
                         htmlString.push('<tr id="Managementtable' + i + '" name="'+ resultList[i].userId +'">'
-                            + '<td class="col-md-4 ' + boldClass + '" style="cursor: pointer" id="userList" data-value="'+ resultList[i].userId +'">' + resultList[i].userId + '</td>'
+                            + '<td class="col-md-4 ' + boldClass + '" style="cursor:pointer" id="userList" data-value="'+ resultList[i].userId +'">' + resultList[i].userId + '</td>'
                             + '<td class="col-md-2 ' + boldClass + '" id="userNameList" data-value ="'+ resultList[i].userName +'">' + resultList[i].userName + '</td>'
                             + '<td class="col-md-2 ' + boldClass + '">' + telephone + '</td>'
                             + '<td class="col-md-1 tac ' + boldClass + '">' + resultList[i].adminYn + '</td>'
@@ -789,7 +785,7 @@
             /*uaa db의 사용자 정보를 가져온다.*/
             procCallAjax(REST_URL +"/"+username+"/uaa"+"?key="+key,"GET",null, procCallbackUserInfo, $("#layerModalLoadingBar"));
             /*포탈 db의 사용자 정보를 가져온다.*/
-          /*  procCallAjax(REST_URL +"/info/"+username+"?key="+key,"GET",null, procCallbackUserInfo, $("#layerModalLoadingBar"));*/
+            /*  procCallAjax(REST_URL +"/info/"+username+"?key="+key,"GET",null, procCallbackUserInfo, $("#layerModalLoadingBar"));*/
 
             showLayerPopUpdateUser();
         });
@@ -807,11 +803,13 @@
             } else {
                 var orgName = new Array();
                 var idMap = new Map();
+                var orgNull = null;
                 for (var i = 0; i < data.resources.length; i++) {
                     orgName[i] = data.resources[i].entity.name;
                     idMap.set(orgName[i],data.resources[i].metadata.guid);
                 }
                 orgName.sort();
+                    $("#getOrgList2").append ("<option value='"+orgNull+"'></option>");
                 for (var i = 0; i < data.resources.length; i++) {
                     $("#getOrgList2").append ("<option value='"+idMap.get(orgName[i])+"'>"+orgName[i]+"</option>");
                 }
@@ -822,9 +820,11 @@
 
         // uaa 유저의 정보를 가져온다.
         var procCallbackUserInfo = function(data) {
+
             var uaa = JSON.stringify(data);
             var dataUaa = JSON.parse(uaa);
-          /*  var getUserOne = JSON.parse(getUser).User;*/
+
+            /*  var getUserOne = JSON.parse(getUser).User;*/
 
             var options = "";
 
@@ -869,19 +869,8 @@
             procCallAjax2(GET_ORGS_FOR_ADMIN_URL + "?key=" + key, "GET", null, procCallbackGetOrgs3);
 
 
-   };
+        };
 
-        var updateModal = function(){
-            procUserManagementPopup(REQUEST_TYPE_UPDATE_USER_INFO);
-        }
-
-        /*function updateConfirm() {
-
-            if (updateModal() == true) {
-                updateUserInfo();
-            }
-        }
-*/
         function updateConfirm() {
 
             key = $("#apiUrls").val();
@@ -924,6 +913,9 @@
         $(document).on("change keyup","select[id=getOrgList2]",function(){
             var orgId = $('#getOrgList2').val();
             getSpacesForAdmin2(orgId);
+
+            $("#orgOutput2").remove();
+            $("#spaceOutput2").remove();
         });
 
         // ON LOAD
@@ -1058,6 +1050,7 @@
 
         //orgList
         $(document).on("change keyup","select[id=getOrgList]",function(){
+
             var orgId = $('#getOrgList').val()
             getSpacesForAdmin(orgId);
         })
@@ -1165,7 +1158,7 @@
             if(flag==1){
                 $("#selectOS2 #orgOutput2>button").each(function () {
                     if($(this).text() == val){
-                        $(this).parent().parent().children().find('select').append("<option value='"+val+"'>"+val+"</option>");
+                        $("#orgInput2 option[value='"+val+"']").attr('disabled',false);
                         $(this).parent().remove();
                         $("#orgClose2").remove();
                     }
@@ -1173,7 +1166,7 @@
             }else if(flag==2){
                 $("#selectOS2 #spaceOutput2>button").each(function () {
                     if($(this).text() == val){
-                        $(this).parent().parent().children().find('select').append("<option value='"+val+"'>"+val+"</option>");
+                        $("#spaceInput2 option[value='"+val+"']").attr('disabled',false);
                         $(this).parent().remove();
                         $("#spaceClose2").remove();
                     }
@@ -1199,6 +1192,8 @@
 
         //사용자 수정 sapceList
         var procCallbackGetSpace2 = function(data, param) {
+
+            var spaceNull = null;
             if(data.spaceList.resources.length === 0){
                 $('#getSpaceList2').val("");
                 $('#getSpaceList2').text("");
@@ -1206,6 +1201,7 @@
             } else {
                 $('#getSpaceList2').val("");
                 $('#getSpaceList2').text("");
+                $("#getSpaceList2").append ("<option value='"+spaceNull+"'></option>");
                 $.each(data.spaceList.resources, function (eventId, space) {
                     $("#getSpaceList2").append ("<option value='"+space.metadata.guid+"'>"+space.entity.name+"</option>");
                 });
@@ -1282,6 +1278,140 @@
 
         var procCallbackInitPassword = function(data) {
         };
+
+        /*2021-05-12 추가 : OrgName으로 유저의 조직Roles을 조회한다.*/
+        function getUserOrgRoles() {
+            var orgId = $("#getOrgList2 option:selected").val();
+            procCallAjax(GET_ORGS_FOR_ADMIN_URL+"/"+orgId+"/user-roles/"+"?key="+key,"GET" ,null ,procCallbackGetUserRoles);
+
+            orgOutputDel();
+        }
+
+        /*orgSelect->orgOutput 부분삭제*/
+
+        function orgOutputDel() {
+            $("#selectOS2 #orgClose2>span").remove();
+            $("#selectOS2 #orgOutput2>span").remove();
+            $("#selectOS2 #orgOutput2").remove();
+
+            spaceOutputDel();
+        }
+
+
+        /*사용자수정 -> 공간에 대한 유저의 권한을 불러온다.  */
+        var procCallbackGetUserRoles = function (data) {
+            var getList = JSON.stringify(data);
+            var getRoleList = JSON.parse(getList);
+            var getUserRole = getRoleList.user_roles;
+            var name =  $("#userName").val();
+
+            for (var i=0; i<getUserRole.length; i++) {
+
+                if (name == getUserRole[i].user_email) {
+
+                    var str = getUserRole[i].roles;
+                    var orgAuditor = str.filter(roles => roles === "OrgAuditor");
+                    var orgManager = str.filter(roles => roles === "OrgManager");
+                    var billingManager = str.filter(roles => roles === "BillingManager");
+
+                    /* if(str)$("#orgRoles").html("<br>"+orgAuditor+"<br>" + "<br>"+orgManager+"<br>" + "<br>"+billingManager+"<br>")*/
+
+                    if (str.length > 0) $("#orgSelect2").append(
+                        '<div id ="orgOutput2" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 15px;" ><button type="button" class="user_btn colors2"' +
+                        ' style="position: absolute;top: 6px;left: -8px;" onclick="getManagment2(\'' + orgManager + '\',1)">' + orgManager + '</button></div>' +
+                        '<button type="button" id="orgClose2" class="close" style="float: left;margin-left: -21px;" onclick="getManagment2(\'' + orgManager + '\',1)">\n' +
+                        '                                                    <span aria-hidden="true">×</span></button>' +
+                        '<div id ="orgOutput2" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 15px;" ><button type="button" class="user_btn colors2"' +
+                        ' style="position: absolute;top: 6px;left: -8px;" onclick="getManagment2(\'' + billingManager + '\',1)">' + billingManager + '</button></div>' +
+                        '<button type="button" id="orgClose2" class="close" style="float: left;margin-left: -21px;" onclick="getManagment2(\'' + billingManager + '\',1)">\n' +
+                        '                                                    <span aria-hidden="true">×</span></button>'
+                        + '<div id ="orgOutput2" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 15px;" ><button type="button" class="user_btn colors2"' +
+                        ' style="position: absolute;top: 6px;left: -8px;" onclick="getManagment2(\'' + orgAuditor + '\',1)">' + orgAuditor + '</button></div>' +
+                        '<button type="button" id="orgClose2" class="close" style="float: left;margin-left: -21px;" onclick="getManagment2(\'' + orgAuditor + '\',1)">\n' +
+                        '                                                    <span aria-hidden="true">×</span></button>'
+                    )
+                    if (orgAuditor.length > 0) {
+                        $("select option[value=OrgAuditor]").attr('disabled', true);
+                    }if (orgManager.length > 0) {
+                        $("select option[value=OrgManager]").attr('disabled', true);
+                    }if (billingManager.length > 0) {
+                        $("select option[value=BillingManager]").attr('disabled', true);
+                    }
+                }
+            }
+        }
+
+        /*   var str;
+        var orgAuditor;
+        var orgManager;
+        var billingManager;
+        var spaceDeveloper;
+        var spaceManager;
+        var spaceAuditor;*/
+
+        /*2021-05-12 추가 : space id로 유저의 공간Roles을 조회한다.*/
+        function getUserSpaceRoles(){
+
+            var spaceid = $("#getSpaceList2 option:selected").val();
+            procCallAjax(V2_URL +"/spaces"+"/"+spaceid+"/user-roles"+"?key="+key,"GET",null, procCallbackGetSpaceRoles, $("#layerModalLoadingBar"));
+
+            spaceOutputDel();
+        }
+
+        /*spaceSelect->spaceOutput 부분삭제*/
+        function spaceOutputDel() {
+            $("#selectOS2 #spaceClose2>button").remove();
+            $("#selectOS2 #spaceOutput2>button").remove();
+            $("#selectOS2 #spaceOutput2>span").remove();
+            $("#selectOS2 #spaceClose2").remove();
+            $("#selectOS2 #spaceOutput2").remove();
+
+        }
+
+        /*사용자수정 -> 공간에 대한 유저의 권한을 불러온다.  */
+        var procCallbackGetSpaceRoles = function (data) {
+            var stringify = JSON.stringify(data);
+            var parseData = JSON.parse(stringify);
+            var dataRoles = parseData.result.userRoles.user_roles;
+            var name = $("#userName").val();
+
+            for (var i = 0; i < dataRoles.length; i++) {
+
+                if (name == dataRoles[i].user_email) {
+
+                    /*space Role의 array에서 권한을 나누어서 찾는다.*/
+                    var str = dataRoles[i].roles;
+                    var spaceDeveloper = str.filter(roles => roles === "SpaceDeveloper");
+                    var spaceManager = str.filter(roles => roles === "SpaceManager");
+                    var spaceAuditor = str.filter(roles => roles === "SpaceAuditor");
+
+
+                    if (str.length > 0) $("#spaceSelect2").append(
+                        '<div id ="spaceOutput2" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 15px;" ><button type="button" class="user_btn colors2"' +
+                        ' style="position: absolute;top: 6px;left: -8px;" onclick="getManagment2(\'' + spaceManager + '\',1)">' + spaceManager + '</button></div>' +
+                        '<button type="button" id="spaceClose2" class="close" style="float: left;margin-left: -21px;" onclick="getManagment2(\'' + spaceManager + '\',2)">\n' +
+                        '                                                    <span aria-hidden="true">×</span></button>' +
+                        '<div id ="spaceOutput2" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 15px;" ><button type="button" class="user_btn colors2"' +
+                        ' style="position: absolute;top: 6px;left: -8px;" onclick="getManagment2(\'' + spaceDeveloper + '\',1)">' + spaceDeveloper + '</button></div>' +
+                        '<button type="button" id="spaceClose2" class="close" style="float: left;margin-left: -21px;" onclick="getManagment2(\'' + spaceDeveloper + '\',2)">\n' +
+                        '                                                    <span aria-hidden="true">×</span></button>'
+                        + '<div id ="spaceOutput2" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 15px;" ><button type="button" class="user_btn colors2"' +
+                        ' style="position: absolute;top: 6px;left: -8px;" onclick="getManagment2(\'' + spaceAuditor + '\',1)">' + spaceAuditor + '</button></div>' +
+                        '<button type="button" id="spaceClose2" class="close" style="float: left;margin-left: -21px;" onclick="getManagment2(\'' + spaceAuditor + '\',2)">\n' +
+                        '                                                    <span aria-hidden="true">×</span></button>')
+                    if (spaceManager.length > 0) {
+                        $("select option[value=SpaceManager]").attr('disabled', true);
+                    }
+                    if (spaceDeveloper.length > 0) {
+                        $("select option[value=SpaceDeveloper]").attr('disabled', true);
+                    }
+                    if (spaceAuditor.length > 0) {
+                        $("select option[value=SpaceAuditor]").attr('disabled', true);
+                    }
+                }
+            }
+        }
+
 
         /*]]>*/
     </script>
