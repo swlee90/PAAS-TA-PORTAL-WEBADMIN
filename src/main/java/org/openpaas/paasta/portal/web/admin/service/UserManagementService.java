@@ -1,5 +1,6 @@
 package org.openpaas.paasta.portal.web.admin.service;
 
+import org.apache.tomcat.util.bcel.Const;
 import org.openpaas.paasta.portal.web.admin.common.Common;
 import org.openpaas.paasta.portal.web.admin.common.Constants;
 import org.openpaas.paasta.portal.web.admin.common.UserList;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
@@ -163,11 +165,21 @@ public class UserManagementService extends Common {
      * 사용자 정보를 수정한다.
      *
      * @param param
-     * @return map
+     * @return Map
      * 2021-04-26 Yoona
      */
     public Map<String, Object> updateUser(int key, String reqUrl, HttpMethod httpMethod, Object param) {
         return commonService.procCommonApiRestTemplate(key, Constants.V2_URL + reqUrl, httpMethod, param);
+    }
+
+    /**
+     * 사용자의 권한을 삭제한다
+     *
+     * @param param
+     * @return Map
+     */
+    public Map<String, Object> deleteUserRoles(int key, String reqUrl, HttpMethod httpMethod, Object param) {
+        return commonService.procCfApiRestTemplate(key, Constants.V2_URL + reqUrl, httpMethod, param);
     }
 
 }

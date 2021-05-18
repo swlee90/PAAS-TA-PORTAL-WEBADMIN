@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -253,6 +254,7 @@ public class UserManagementController extends Common {
         String key = request.getParameter("key");
         return commonService.procCommonApiRestTemplate(Integer.parseInt(key), Constants.V2_URL + "/user/"+username+"/uaa", HttpMethod.GET, user);
     }
+
     /**
      * uaa 상세 정보를 수정한다.
      * 2021-04-26 Yoona
@@ -265,6 +267,20 @@ public class UserManagementController extends Common {
     public Map<String, Object> updateUaa(@PathVariable String username, HttpServletRequest request, @RequestBody Map map) throws Exception {
         String key = request.getParameter("key");
         return userManagementService.updateUser(Integer.parseInt(key), "/user/"+username+"/uaa", HttpMethod.PUT, map);
+
+    }
+
+    /**
+     * 사용자 수정에서 권한을 삭제한다.
+     *
+     * @param orgId
+     * @return Map
+     */
+    @DeleteMapping(V2_URL + "/usermgnts/{orgId}/user-roles")
+    @ResponseBody
+    public Map<String, Object> deleteUserRoles(@PathVariable String orgId, HttpServletRequest request,Map param) throws Exception {
+        String key= request.getParameter("key");
+        return userManagementService.deleteUserRoles(Integer.parseInt(key),"/orgs/"+orgId+"/user-roles", HttpMethod.DELETE, param);
 
     }
 }

@@ -267,7 +267,7 @@
                                     <div class="form-group">
                                         <label for="userGuid" class="col-sm-3 control-label"></label>
                                         <div class="col-sm-9">
-                                            <input type="hidden" class="form-control" id="userGuid" readonly="readonly"/>
+                                            <input type="hidden" class="form-control" id="userGuid"/>
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -380,14 +380,8 @@
         var REQUEST_TYPE_UPDATE_USER_INFO = "UPDATE_INFO_ACCOUNT";
         var usersObj = new Object();
         var str;
-        var orgAuditor;
-        var orgManager;
-        var billingManager;
-        var spaceDeveloper;
-        var spaceManager;
-        var spaceAuditor;
-
         var arr = new Array();
+        var del = new Array();
 
 
 
@@ -871,14 +865,23 @@
 
         };
 
-        function updateConfirm() {
+        //수정전에 유저의 권한들을 삭제한다.
 
+        var procCallbackDeleteUserRoles = function(param, data) {
+
+            if (RESULT_STATUS_FAIL == param.RESULT) {
+            }
+            procInitPage();
+        }
+
+
+        function updateConfirm() {
             key = $("#apiUrls").val();
 
             var userId = $("#userName").val();
             var param = {
                 userId: userId
-            }
+              }
 
             arr=[];
             $("#selectOS2 button").each(function () {
@@ -1277,6 +1280,7 @@
         };
 
         var procCallbackInitPassword = function(data) {
+
         };
 
         /*2021-05-12 추가 : OrgName으로 유저의 조직Roles을 조회한다.*/
@@ -1288,12 +1292,12 @@
         }
 
         /*orgSelect->orgOutput 부분삭제*/
-
         function orgOutputDel() {
-            $("#selectOS2 #orgClose2>span").remove();
-            $("#selectOS2 #orgOutput2>span").remove();
+            $("#selectOS2 #orgClose2").remove();
             $("#selectOS2 #orgOutput2").remove();
-
+            $("#selectOS2 #orgClose2>button").remove();
+            $("#selectOS2 #orgOutput2>button").remove();
+            $("#selectOS2 #orgClose2>span").remove();
             spaceOutputDel();
         }
 
@@ -1333,12 +1337,19 @@
                         ' style="position: absolute;top: 6px;left: -8px;" onclick="getSelected(\'' + orgAuditor + '\',1)">' + orgAuditor + '</button></div>' +
                         '<button type="button" id="orgClose2" class="close" style="float: left;margin-left: -21px;" onclick="getSelected(\'' + orgAuditor + '\',1)">\n' +
                         '                                                    <span aria-hidden="true">×</span></button>')
-                    if (orgAuditor.length > 0) {
+               /*     if (orgAuditor.length > 0) {
                         $("select option[value=OrgAuditor]").attr('disabled', true);
                     }if (orgManager.length > 0) {
                         $("select option[value=OrgManager]").attr('disabled', true);
                     }if (billingManager.length > 0) {
                         $("select option[value=BillingManager]").attr('disabled', true);
+                    }*/
+                    if (orgAuditor.length > 0) {
+                        $("select option[value=OrgAuditor]").remove();
+                    }if (orgManager.length > 0) {
+                        $("select option[value=OrgManager]").remove();
+                    }if (billingManager.length > 0) {
+                        $("select option[value=BillingManager]").remove();
                     }
                 }
             }
@@ -1407,31 +1418,41 @@
                         '<button type="button" id="spaceClose2" class="close" style="float: left;margin-left: -21px;" onclick="getSelected(\'' + spaceAuditor + '\',2)">\n' +
                         '                                                    <span aria-hidden="true">×</span></button>')
                     if (spaceManager.length > 0) {
-                        $("select option[value=SpaceManager]").attr('disabled', true);
+                        $("select option[value=SpaceManager]").remove();
                     }
                     if (spaceDeveloper.length > 0) {
-                        $("select option[value=SpaceDeveloper]").attr('disabled', true);
+                        $("select option[value=SpaceDeveloper]").remove();
                     }
                     if (spaceAuditor.length > 0) {
-                        $("select option[value=SpaceAuditor]").attr('disabled', true);
+                        $("select option[value=SpaceAuditor]").remove();
                     }
                 }
             }
         }
 
         function getSelected(val,flag){
+            var orgId = $("#getOrgList2 option:selected").val(); //guid //userguid 가져오기.
+            var userId = $("#userGuid").val();
+
             if(flag==1){
                 $("#selectOS2 #orgOutput2>button").each(function () {
                     if($(this).text() == val){
-                        $("#orgInput2 option[value='"+val+"']").attr('disabled',false);
+                        $(this).parent().parent().children().find('select').append("<option value='"+val+"'>"+val+"</option>");
                         $(this).parent().remove();
                         $("#orgClose2").remove();
+                        var param = {
+                            orgId: orgId,
+                            userId: userId,
+                            role: val
+                        }
+                        procCallAjax(REST_URL +"/"+orgId+"/user-roles"+"?key="+key, "DELETE" ,JSON.stringify(param), procCallbackDeleteUserRoles);
                     }
                 });
+
             }else if(flag==2){
                 $("#selectOS2 #spaceOutput2>button").each(function () {
                     if($(this).text() == val){
-                        $("#spaceInput2 option[value='"+val+"']").attr('disabled',false);
+                        $(this).parent().parent().children().find('select').append("<option value='"+val+"'>"+val+"</option>");
                         $(this).parent().remove();
                         $("#spaceClose2").remove();
                     }
