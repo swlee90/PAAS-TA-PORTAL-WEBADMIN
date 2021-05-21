@@ -4,19 +4,15 @@ package org.openpaas.paasta.portal.web.admin.controller;
 import org.openpaas.paasta.portal.web.admin.common.Common;
 import org.openpaas.paasta.portal.web.admin.common.Constants;
 import org.openpaas.paasta.portal.web.admin.common.User;
-import org.openpaas.paasta.portal.web.admin.common.UserList;
 import org.openpaas.paasta.portal.web.admin.model.UserManagement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;;
 import java.util.List;
 import java.util.Map;
 
@@ -271,16 +267,44 @@ public class UserManagementController extends Common {
     }
 
     /**
-     * 사용자 수정에서 권한을 삭제한다.
+     * 사용자 수정에서 조직과 공간권한을 전체 삭제한다.
      *
      * @param orgId
      * @return Map
      */
-    @DeleteMapping(V2_URL + "/usermgnts/{orgId}/user-roles")
+    @DeleteMapping(V2_URL + "/orgs/{orgId}/user-roles/{userId}")
     @ResponseBody
-    public Map<String, Object> deleteUserRoles(@PathVariable String orgId, HttpServletRequest request,Map param) throws Exception {
+    public Map<String, Object> deleteAllUserRoles(@PathVariable String orgId,@PathVariable String userId, HttpServletRequest request, @RequestBody Object param) throws Exception {
         String key= request.getParameter("key");
-        return userManagementService.deleteUserRoles(Integer.parseInt(key),"/orgs/"+orgId+"/user-roles", HttpMethod.DELETE, param);
-
+        return userManagementService.deleteUserRoles(Integer.parseInt(key),"/orgs/"+orgId+"/member?userId="+userId, HttpMethod.DELETE, null);
     }
+
+    /**
+     * 사용자 수정에서 선택한 조직권한을 삭제한다.
+     *
+     * @param orgId
+     * @return Map
+     */
+    @DeleteMapping(V2_URL + "/orgs/{orgId}/user-roles/{userId}/{role}")
+    @ResponseBody
+    public Map<String, Object> deleteOrgRoles(@PathVariable String orgId,@PathVariable String userId,@PathVariable String role, HttpServletRequest request, @RequestBody Object param) throws Exception {
+        String key= request.getParameter("key");
+        return userManagementService.deleteUserRoles(Integer.parseInt(key),"/orgs/"+orgId+"/user-roles?userId="+userId+"&role="+role, HttpMethod.DELETE, null);
+    }
+
+
+    /**
+     * 사용자 수정에서 선택한 공간권한을 삭제한다.
+     *
+     * @param spaceId
+     * @return Map
+     */
+    @DeleteMapping(V2_URL + "/spaces/{spaceId}/user-roles/{userId}/{role}")
+    @ResponseBody
+    public Map<String, Object> deleteSpaceRoles(@PathVariable String spaceId,@PathVariable String userId,@PathVariable String role, HttpServletRequest request, @RequestBody Object param) throws Exception {
+        String key= request.getParameter("key");
+        return userManagementService.deleteUserRoles(Integer.parseInt(key),"/spaces/"+spaceId+"/user-roles?userId="+userId+"&role="+role, HttpMethod.DELETE, null);
+    }
+
+
 }

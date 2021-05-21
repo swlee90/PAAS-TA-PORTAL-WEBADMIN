@@ -5,6 +5,7 @@ import org.openpaas.paasta.portal.web.admin.common.Constants;
 import org.openpaas.paasta.portal.web.admin.controller.OrgSpaceListController;
 import org.openpaas.paasta.portal.web.admin.model.Org;
 import org.openpaas.paasta.portal.web.admin.model.Space;
+import org.openpaas.paasta.portal.web.admin.model.UserManagement;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
@@ -12,9 +13,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -222,7 +225,7 @@ public class OrgSpaceListService extends Common {
      * @param key
      * @param reqUrl
      * @param httpMethod
-     * @param space
+     * @param
      * @return
      */
     public Map createSpaceForAdmin(int key,String reqUrl,HttpMethod httpMethod,Map param){

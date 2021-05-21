@@ -3,15 +3,15 @@ package org.openpaas.paasta.portal.web.admin.controller;
 import org.openpaas.paasta.portal.web.admin.common.Common;
 import org.openpaas.paasta.portal.web.admin.common.Constants;
 import org.openpaas.paasta.portal.web.admin.common.User;
-import org.openpaas.paasta.portal.web.admin.model.Org;
-import org.openpaas.paasta.portal.web.admin.model.Quota;
-import org.openpaas.paasta.portal.web.admin.model.Space;
+import org.openpaas.paasta.portal.web.admin.model.UserManagement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpMethod;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.jws.WebParam;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
@@ -256,18 +256,36 @@ public class OrgSpaceListController extends Common {
 
 
     /**
-     * 공간에 속한 유저들의 역할을 불러온다.
+     * 공간의 id로 공간에 속한 유저들의 역할을 불러온다.
      *
      * @param spaceid
      * 2021-05-10
      * @return Map (자바 Map 클래스)
      */
-    @GetMapping(V2_URL+"/spaces/{spaceid}/user-roles")
+    @GetMapping(V2_URL + "/spaces/{spaceid}/user-roles")
     @ResponseBody
     public Map<String, Object> getSpaceRoles(@PathVariable String spaceid, HttpServletRequest request) {
         String key = request.getParameter("key");
         LOGGER.info(spaceid);
         return commonService.procCfApiRestTemplate(Integer.parseInt(key), Constants.V3_URL + "/spaces/" +spaceid+ "/user-roles2", HttpMethod.GET,null);
     }
+
+
+    /**
+     * 조직의 id로 해당 조직에서 유저들이 가진 역할을 조회한다.
+     *
+     * @param orgId  (org name)
+     * 2021-05-12
+     * @return Map (자바 Map 클래스)
+     */
+    @GetMapping(V2_URL + "/orgs/{orgId}/user-roles")
+    @ResponseBody
+    public Map<String, Object> getSpaceRoles(@PathVariable String orgId, HttpServletRequest request, Object obj) {
+        String key = request.getParameter("key");
+        LOGGER.info("유저이름 ?" + orgId);
+        return commonService.procCfApiRestTemplate(Integer.parseInt(key), Constants.V2_URL + "/orgs/" +orgId+ "/user-roles", HttpMethod.GET, null);
+    }                                                                                                                                               //응답받을
+
+
 
 }

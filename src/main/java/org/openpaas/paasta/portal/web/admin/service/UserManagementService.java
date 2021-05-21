@@ -173,7 +173,7 @@ public class UserManagementService extends Common {
     }
 
     /**
-     * 사용자의 권한을 삭제한다
+     * 사용자의 권한을 전체 삭제한다.
      *
      * @param param
      * @return Map

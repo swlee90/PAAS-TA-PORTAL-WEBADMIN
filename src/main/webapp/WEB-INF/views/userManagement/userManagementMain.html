@@ -381,7 +381,7 @@
         var usersObj = new Object();
         var str;
         var arr = new Array();
-        var del = new Array();
+        var getList;
 
 
 
@@ -865,19 +865,27 @@
 
         };
 
-        //수정전에 유저의 권한들을 삭제한다.
+       // 유저의 조직과 공간 권한들을 전체 삭제한다.
+        function removeAllOreSpaceRole(){
 
-        var procCallbackDeleteUserRoles = function(param, data) {
+            var orgId = $("#getOrgList2 option:selected").val();
+            var userId = $("#userGuid").val();
 
-            if (RESULT_STATUS_FAIL == param.RESULT) {
+            var param = {
+                orgId : orgId, //org guid
+                userId : userId //user guid
             }
-            procInitPage();
+            procCallAjax(GET_ORGS_FOR_ADMIN_URL+"/"+orgId+"/user-roles/"+userId+ "?key="+key, "DELETE", JSON.stringify(param), procCallbackDeleteUserRoles , null);
+
         }
 
+        var procCallbackDeleteUserRoles = function(data) {
+
+        }
 
         function updateConfirm() {
-            key = $("#apiUrls").val();
 
+            key = $("#apiUrls").val();
             var userId = $("#userName").val();
             var param = {
                 userId: userId
@@ -887,8 +895,7 @@
             $("#selectOS2 button").each(function () {
                 arr.push($(this).text());
             });
-
-            procCallAjax(REST_URL +"/info"+"/"+ userId+ "?key="+key, "PUT", JSON.stringify(param), procCallbackUpdateUserInsert, $('#layerModalLoadingBar'));
+            procCallAjax(REST_URL +"/info"+"/"+ userId + "?key="+key, "PUT", JSON.stringify(param), procCallbackUpdateUserInsert, $('#layerModalLoadingBar'));
 
         };
 
@@ -1159,6 +1166,8 @@
 
 
         function getManagment2(val,flag){
+
+
             if(flag==1){
                 $("#selectOS2 #orgOutput2>button").each(function () {
                     if($(this).text() == val){
@@ -1308,64 +1317,57 @@
             var getRoleList = JSON.parse(getList);
             var getUserRole = getRoleList.user_roles;
             var name =  $("#userName").val();
-
+            arr=[];
             for (var i=0; i<getUserRole.length; i++) {
 
-                if (name == getUserRole[i].user_email) {
+                if (name == getUserRole[i].user_email) { /*name = 유저 아이디*/
 
-                    var str = getUserRole[i].roles;
-                    var orgAuditor = str.filter(roles => roles === "OrgAuditor");
-                    var orgManager = str.filter(roles => roles === "OrgManager");
-                    var billingManager = str.filter(roles => roles === "BillingManager");
+                        var getList = JSON.stringify(data);
+                        var getRoleList = JSON.parse(getList);
+                        var getUserRole = getRoleList.user_roles;
+                        var str = getUserRole[i].roles;
+                        var userId = getUserRole[i].user_id;
+                        var orgId = $("#getOrgList2 option:selected").val();
 
-                    /* if(str)$("#orgRoles").html("<br>"+orgAuditor+"<br>" + "<br>"+orgManager+"<br>" + "<br>"+billingManager+"<br>")*/
+                        var orgAuditor = str.filter(roles => roles === "OrgAuditor");
+                        var orgManager = str.filter(roles => roles === "OrgManager");
+                        var billingManager = str.filter(roles => roles === "BillingManager");
 
-                    if (orgManager.length > 0) $("#orgSelect2").append(
-                        '<div id ="orgOutput2" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 15px;" ><button type="button" class="user_btn colors2"' +
-                        ' style="position: absolute;top: 6px;left: -8px;" onclick="getSelected(\'' + orgManager + '\',1)">' + orgManager + '</button></div>' +
-                        '<button type="button" id="orgClose2" class="close" style="float: left;margin-left: -21px;" onclick="getSelected(\'' + orgManager + '\',1)">\n' +
-                        '                                                 <span aria-hidden="true">×</span></button>')
+                        /* if(str)$("#orgRoles").html("<br>"+orgAuditor+"<br>" + "<br>"+orgManager+"<br>" + "<br>"+billingManager+"<br>")*/
+                        if (orgManager.length > 0)
+                            $("#orgSelect2").append(
+                                '<div id ="orgOutput2" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 15px;" ><button type="button" class="user_btn colors2"' +
+                                ' style="position: absolute;top: 6px;left: -8px;"  onclick="getSelected(\'' + orgManager + '\',1 ,\'' + userId  + '\',\'' + str+ '\' )">' + orgManager + '</button></div>' +
+                                '<button type="button" id="orgClose3" class="close" style="float: left;margin-left: -21px;" onclick="getSelected(\'' + orgManager + '\',1 ,\'' + userId  + '\',\'' + str + '\' )">\n' +
+                                '                                                 <span aria-hidden="true">×</span></button>')
+                        arr.push(orgManager);
 
-                    if (billingManager.length > 0) $("#orgSelect2").append(
-                        '<div id ="orgOutput2" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 15px;" ><button type="button" class="user_btn colors2"' +
-                        ' style="position: absolute;top: 6px;left: -8px;" onclick="getSelected(\'' + billingManager + '\',1)">' + billingManager + '</button></div>' +
-                        '<button type="button" id="orgClose2" class="close" style="float: left;margin-left: -21px;" onclick="getSelected(\'' + billingManager + '\',1)">\n' +
-                        '                                                    <span aria-hidden="true">×</span></button>')
+                        if (billingManager.length > 0) $("#orgSelect2").append(
+                            '<div id ="orgOutput2" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 15px;" ><button type="button" class="user_btn colors2"' +
+                            ' style="position: absolute;top: 6px;left: -8px;"  onclick="getSelected(\'' + billingManager + '\',1,\'' + userId  + '\',\'' + str + '\')">' + billingManager + '</button></div>' +
+                            '<button type="button" id="orgClose4" class="close" style="float: left;margin-left: -21px;" onclick="getSelected(\'' + billingManager + '\',1,\'' + userId  + '\',\'' + str + '\')">\n' +
+                            '                                                    <span aria-hidden="true">×</span></button>')
 
-                    if (orgAuditor.length > 0) $("#orgSelect2").append(
-                        '<div id ="orgOutput2" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 15px;" ><button type="button" class="user_btn colors2"' +
-                        ' style="position: absolute;top: 6px;left: -8px;" onclick="getSelected(\'' + orgAuditor + '\',1)">' + orgAuditor + '</button></div>' +
-                        '<button type="button" id="orgClose2" class="close" style="float: left;margin-left: -21px;" onclick="getSelected(\'' + orgAuditor + '\',1)">\n' +
-                        '                                                    <span aria-hidden="true">×</span></button>')
-               /*     if (orgAuditor.length > 0) {
-                        $("select option[value=OrgAuditor]").attr('disabled', true);
-                    }if (orgManager.length > 0) {
-                        $("select option[value=OrgManager]").attr('disabled', true);
-                    }if (billingManager.length > 0) {
-                        $("select option[value=BillingManager]").attr('disabled', true);
-                    }*/
+
+                        if (orgAuditor.length > 0) $("#orgSelect2").append(
+                            '<div id ="orgOutput2" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 15px;" ><button type="button" class="user_btn colors2"' +
+                            ' style="position: absolute;top: 6px;left: -8px;"  onclick="getSelected(\'' + orgAuditor + '\',1,\'' + userId  + '\',\'' + str + '\')">' + orgAuditor + '</button></div>' +
+                            '<button type="button" id="orgClose5" class="close" style="float: left;margin-left: -21px;" onclick="getSelected(\'' + orgAuditor + '\',1,\'' + userId  + '\',\'' + str+ '\')">\n' +
+                            '                                                    <span aria-hidden="true">×</span></button>')
+
                     if (orgAuditor.length > 0) {
                         $("select option[value=OrgAuditor]").remove();
                     }if (orgManager.length > 0) {
                         $("select option[value=OrgManager]").remove();
                     }if (billingManager.length > 0) {
                         $("select option[value=BillingManager]").remove();
+
                     }
                 }
             }
         }
-
-        /*   var str;
-        var orgAuditor;
-        var orgManager;
-        var billingManager;
-        var spaceDeveloper;
-        var spaceManager;
-        var spaceAuditor;*/
-
         /*2021-05-12 추가 : space id로 유저의 공간Roles을 조회한다.*/
         function getUserSpaceRoles(){
-
             var spaceid = $("#getSpaceList2 option:selected").val();
             procCallAjax(V2_URL +"/spaces"+"/"+spaceid+"/user-roles"+"?key="+key,"GET",null, procCallbackGetSpaceRoles, $("#layerModalLoadingBar"));
 
@@ -1390,10 +1392,10 @@
             var dataRoles = parseData.result.userRoles.user_roles;
             var name = $("#userName").val();
 
+
             for (var i = 0; i < dataRoles.length; i++) {
 
                 if (name == dataRoles[i].user_email) {
-
                     /*space Role의 array에서 권한을 나누어서 찾는다.*/
                     var str = dataRoles[i].roles;
                     var spaceDeveloper = str.filter(roles => roles === "SpaceDeveloper");
@@ -1402,7 +1404,7 @@
 
                     if (spaceManager.length > 0) $("#spaceSelect2").append(
                         '<div id ="spaceOutput2" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 15px;" ><button type="button" class="user_btn colors2"' +
-                        ' style="position: absolute;top: 6px;left: -8px;" onclick="getSelected(\'' + spaceManager + '\',1)">' + spaceManager + '</button></div>' +
+                        ' style="position: absolute;top: 6px;left: -8px;" onclick="getSelected(\'' + spaceManager + '\',1,)">' + spaceManager + '</button></div>' +
                         '<button type="button" id="spaceClose2" class="close" style="float: left;margin-left: -21px;" onclick="getSelected(\'' + spaceManager + '\',2)">\n' +
                         '                                                    <span aria-hidden="true">×</span></button>')
 
@@ -1431,27 +1433,42 @@
         }
 
         function getSelected(val,flag){
-            var orgId = $("#getOrgList2 option:selected").val(); //guid //userguid 가져오기.
-            var userId = $("#userGuid").val();
 
             if(flag==1){
                 $("#selectOS2 #orgOutput2>button").each(function () {
                     if($(this).text() == val){
+
+                        var orgId = $("#getOrgList2 option:selected").val();
+                        var userId = $("#userGuid").val();
+                        var role = $(this).text();
+
+                        var param = {
+                            orgId : orgId, //org guid
+                            userId : userId, //user guid
+                            role : val
+                        }
+                        procCallAjax(GET_ORGS_FOR_ADMIN_URL+"/"+orgId+"/user-roles/"+userId+"/"+ role +"?key="+key, "DELETE", JSON.stringify(param),null,null);
+
                         $(this).parent().parent().children().find('select').append("<option value='"+val+"'>"+val+"</option>");
                         $(this).parent().remove();
                         $("#orgClose2").remove();
-                        var param = {
-                            orgId: orgId,
-                            userId: userId,
-                            role: val
-                        }
-                        procCallAjax(REST_URL +"/"+orgId+"/user-roles"+"?key="+key, "DELETE" ,JSON.stringify(param), procCallbackDeleteUserRoles);
                     }
                 });
 
             }else if(flag==2){
                 $("#selectOS2 #spaceOutput2>button").each(function () {
                     if($(this).text() == val){
+
+                        var spaceId = $("#getSpaceList2 option:selected").val();
+                        var userId = $("#userGuid").val();
+                        var role = $(this).text();
+                        var param = {
+                            orgId : spaceId, //org guid
+                            userId : userId, //user guid
+                            role : role
+                        }
+                        procCallAjax(V2_URL + "/spaces"+"/"+spaceId+"/user-roles/"+userId+"/"+role+"?key="+key, "DELETE", JSON.stringify(param),null,null);
+
                         $(this).parent().parent().children().find('select').append("<option value='"+val+"'>"+val+"</option>");
                         $(this).parent().remove();
                         $("#spaceClose2").remove();
@@ -1459,6 +1476,7 @@
                 });
             }
         }
+
 
         /*]]>*/
     </script>
