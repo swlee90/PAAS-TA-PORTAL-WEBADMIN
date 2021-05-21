@@ -351,7 +351,7 @@
                     </div>
 
                     <div class="modal-footer">
-                        <button type="button" id="clientSaveBtn2" name="modalSaveBtn" class="btn btn-sm btn-primary pull-right" onClick="updateConfirm();" data-dismiss="modal">수정</button>
+                        <button type="button" id="clientSaveBtn2" name="modalSaveBtn" class="btn btn-sm btn-primary pull-right" onClick="updateConfirm();" data-dismiss="modal">확인</button>
                         <button type="button" id="clientCloseBtn2" class="btn btn-sm btn-default pull-left" data-dismiss="modal">취소</button>
                     </div>
 
@@ -769,6 +769,8 @@
 
         //user의 id를 불러온다.
         $(document).on("mouseup",'tr td[id=userList]',function (e) {
+
+            $("#getSpaceList2").attr('disabled', true);
 
             var username =$(e.target).data('value');
             $("#userName").val(username);
@@ -1206,6 +1208,7 @@
         var procCallbackGetSpace2 = function(data, param) {
 
             var spaceNull = null;
+
             if(data.spaceList.resources.length === 0){
                 $('#getSpaceList2').val("");
                 $('#getSpaceList2').text("");
@@ -1295,6 +1298,8 @@
         /*2021-05-12 추가 : OrgName으로 유저의 조직Roles을 조회한다.*/
         function getUserOrgRoles() {
             var orgId = $("#getOrgList2 option:selected").val();
+
+            $("#getSpaceList2").attr('disabled', false);
             procCallAjax(GET_ORGS_FOR_ADMIN_URL+"/"+orgId+"/user-roles/"+"?key="+key,"GET" ,null ,procCallbackGetUserRoles);
 
             orgOutputDel();
@@ -1334,25 +1339,27 @@
                         var billingManager = str.filter(roles => roles === "BillingManager");
 
                         /* if(str)$("#orgRoles").html("<br>"+orgAuditor+"<br>" + "<br>"+orgManager+"<br>" + "<br>"+billingManager+"<br>")*/
+
+
+
                         if (orgManager.length > 0)
                             $("#orgSelect2").append(
                                 '<div id ="orgOutput2" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 15px;" ><button type="button" class="user_btn colors2"' +
                                 ' style="position: absolute;top: 6px;left: -8px;"  onclick="getSelected(\'' + orgManager + '\',1 ,\'' + userId  + '\',\'' + str+ '\' )">' + orgManager + '</button></div>' +
-                                '<button type="button" id="orgClose3" class="close" style="float: left;margin-left: -21px;" onclick="getSelected(\'' + orgManager + '\',1 ,\'' + userId  + '\',\'' + str + '\' )">\n' +
+                                '<button type="button" id="orgClose2" class="close" style="float: left;margin-left: -21px;" onclick="getSelected(\'' + orgManager + '\',1 ,\'' + userId  + '\',\'' + str + '\' )">\n' +
                                 '                                                 <span aria-hidden="true">×</span></button>')
-                        arr.push(orgManager);
 
                         if (billingManager.length > 0) $("#orgSelect2").append(
                             '<div id ="orgOutput2" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 15px;" ><button type="button" class="user_btn colors2"' +
                             ' style="position: absolute;top: 6px;left: -8px;"  onclick="getSelected(\'' + billingManager + '\',1,\'' + userId  + '\',\'' + str + '\')">' + billingManager + '</button></div>' +
-                            '<button type="button" id="orgClose4" class="close" style="float: left;margin-left: -21px;" onclick="getSelected(\'' + billingManager + '\',1,\'' + userId  + '\',\'' + str + '\')">\n' +
+                            '<button type="button" id="orgClose2" class="close" style="float: left;margin-left: -6px;" onclick="getSelected(\'' + billingManager + '\',1,\'' + userId  + '\',\'' + str + '\')">\n' +
                             '                                                    <span aria-hidden="true">×</span></button>')
 
 
                         if (orgAuditor.length > 0) $("#orgSelect2").append(
                             '<div id ="orgOutput2" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 15px;" ><button type="button" class="user_btn colors2"' +
                             ' style="position: absolute;top: 6px;left: -8px;"  onclick="getSelected(\'' + orgAuditor + '\',1,\'' + userId  + '\',\'' + str + '\')">' + orgAuditor + '</button></div>' +
-                            '<button type="button" id="orgClose5" class="close" style="float: left;margin-left: -21px;" onclick="getSelected(\'' + orgAuditor + '\',1,\'' + userId  + '\',\'' + str+ '\')">\n' +
+                            '<button type="button" id="orgClose2" class="close" style="float: left;margin-left: -28px;" onclick="getSelected(\'' + orgAuditor + '\',1,\'' + userId  + '\',\'' + str+ '\')">\n' +
                             '                                                    <span aria-hidden="true">×</span></button>')
 
                     if (orgAuditor.length > 0) {
@@ -1405,19 +1412,19 @@
                     if (spaceManager.length > 0) $("#spaceSelect2").append(
                         '<div id ="spaceOutput2" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 15px;" ><button type="button" class="user_btn colors2"' +
                         ' style="position: absolute;top: 6px;left: -8px;" onclick="getSelected(\'' + spaceManager + '\',1,)">' + spaceManager + '</button></div>' +
-                        '<button type="button" id="spaceClose2" class="close" style="float: left;margin-left: -21px;" onclick="getSelected(\'' + spaceManager + '\',2)">\n' +
+                        '<button type="button" id="spaceClose2" class="close" style="float: left;margin-left: -9px;" onclick="getSelected(\'' + spaceManager + '\',2)">\n' +
                         '                                                    <span aria-hidden="true">×</span></button>')
 
                     if (spaceDeveloper.length > 0) $("#spaceSelect2").append(
                         '<div id ="spaceOutput2" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 15px;" ><button type="button" class="user_btn colors2"' +
                         ' style="position: absolute;top: 6px;left: -8px;" onclick="getSelected(\'' + spaceDeveloper + '\',1)">' + spaceDeveloper + '</button></div>' +
-                        '<button type="button" id="spaceClose2" class="close" style="float: left;margin-left: -21px;" onclick="getSelected(\'' + spaceDeveloper + '\',2)">\n' +
+                        '<button type="button" id="spaceClose2" class="close" style="float: left;margin-left: -1px;" onclick="getSelected(\'' + spaceDeveloper + '\',2)">\n' +
                         '                                                    <span aria-hidden="true">×</span></button>')
 
                     if (spaceAuditor.length > 0) $("#spaceSelect2").append(
                          '<div id ="spaceOutput2" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 15px;" ><button type="button" class="user_btn colors2"' +
                         ' style="position: absolute;top: 6px;left: -8px;" onclick="getSelected(\'' + spaceAuditor + '\',1)">' + spaceAuditor + '</button></div>' +
-                        '<button type="button" id="spaceClose2" class="close" style="float: left;margin-left: -21px;" onclick="getSelected(\'' + spaceAuditor + '\',2)">\n' +
+                        '<button type="button" id="spaceClose2" class="close" style="float: left;margin-left: -16px;" onclick="getSelected(\'' + spaceAuditor + '\',2)">\n' +
                         '                                                    <span aria-hidden="true">×</span></button>')
                     if (spaceManager.length > 0) {
                         $("select option[value=SpaceManager]").remove();
@@ -1447,7 +1454,7 @@
                             userId : userId, //user guid
                             role : val
                         }
-                        procCallAjax(GET_ORGS_FOR_ADMIN_URL+"/"+orgId+"/user-roles/"+userId+"/"+ role +"?key="+key, "DELETE", JSON.stringify(param),null,null);
+                        procCallAjax(GET_ORGS_FOR_ADMIN_URL+"/"+orgId+"/user-roles/"+userId+"/"+ role +"?key="+key, "DELETE", JSON.stringify(param),"",$("#layerModalLoadingBar"));
 
                         $(this).parent().parent().children().find('select').append("<option value='"+val+"'>"+val+"</option>");
                         $(this).parent().remove();
@@ -1467,7 +1474,7 @@
                             userId : userId, //user guid
                             role : role
                         }
-                        procCallAjax(V2_URL + "/spaces"+"/"+spaceId+"/user-roles/"+userId+"/"+role+"?key="+key, "DELETE", JSON.stringify(param),null,null);
+                        procCallAjax(V2_URL + "/spaces"+"/"+spaceId+"/user-roles/"+userId+"/"+role+"?key="+key, "DELETE", JSON.stringify(param),"",$("#layerModalLoadingBar"));
 
                         $(this).parent().parent().children().find('select').append("<option value='"+val+"'>"+val+"</option>");
                         $(this).parent().remove();
@@ -1476,6 +1483,7 @@
                 });
             }
         }
+
 
 
         /*]]>*/
