@@ -68,7 +68,7 @@ public class UserManagementService extends Common {
      * @return
      */
     public Map<String, Object> setInitPassword(String reqUrl, HttpMethod httpMethod, Object param) {
-        return commonService.procApiRestTemplate(Constants.V2_URL + reqUrl, httpMethod, param, Constants.COMMON_API, Map.class).getBody();
+        return commonService.procApiRestTemplate(Constants.V2_URL + reqUrl, httpMethod, param, Constants.CF_API, Map.class).getBody();
     }
 
     /**
@@ -118,7 +118,7 @@ public class UserManagementService extends Common {
      * @return
      */
     public Map<String, Object> associateUserOrg(String reqUrl, HttpMethod httpMethod, String param) throws Exception {
-        return commonService.procApiRestTemplate(Constants.V2_URL + reqUrl, httpMethod, param, Constants.COMMON_API, Map.class).getBody();
+        return commonService.procApiRestTemplate(Constants.V2_URL + reqUrl, httpMethod, param, Constants.CF_API, Map.class).getBody();
     }
 
     /**
@@ -139,7 +139,7 @@ public class UserManagementService extends Common {
      * @return
      */
     public Map<String, Object> GetUserSummary(String reqUrl, HttpMethod httpMethod) {
-        return commonService.procApiRestTemplate(Constants.V3_URL + reqUrl, httpMethod, null, Constants.COMMON_API, Map.class).getBody();
+        return commonService.procApiRestTemplate(Constants.V3_URL + reqUrl, httpMethod, null, Constants.CF_API, Map.class).getBody();
     }
 
     /**
@@ -149,7 +149,7 @@ public class UserManagementService extends Common {
      * @throws Exception the exception
      */
     public Map<String, Object> getUser(String reqUrl, HttpMethod httpMethod) {
-        return commonService.procApiRestTemplate(Constants.V3_URL + reqUrl, httpMethod, null, Constants.COMMON_API, Map.class).getBody();
+        return commonService.procApiRestTemplate(Constants.V3_URL + reqUrl, httpMethod, null, Constants.CF_API, Map.class).getBody();
     }
 
     /**
@@ -158,7 +158,7 @@ public class UserManagementService extends Common {
      * @return
      */
     public Map<String, Object> getOrgUserRolesForAdmin(String reqUrl, HttpMethod httpMethod, UserManagement users) {
-        return commonService.procApiRestTemplate(Constants.V3_URL + reqUrl, httpMethod, users, Constants.COMMON_API, Map.class).getBody();
+        return commonService.procApiRestTemplate(Constants.V3_URL + reqUrl, httpMethod, users, Constants.CF_API, Map.class).getBody();
     }
 
     /**
@@ -179,7 +179,7 @@ public class UserManagementService extends Common {
      * @return Map
      */
     public Map<String, Object> deleteUserRoles(String reqUrl, HttpMethod httpMethod, Object param) {
-        return commonService.procApiRestTemplate(Constants.V2_URL + reqUrl, httpMethod, param, Constants.COMMON_API, Map.class).getBody();
+        return commonService.procApiRestTemplate(Constants.V2_URL + reqUrl, httpMethod, param, Constants.CF_API, Map.class).getBody();
     }
 
 }
