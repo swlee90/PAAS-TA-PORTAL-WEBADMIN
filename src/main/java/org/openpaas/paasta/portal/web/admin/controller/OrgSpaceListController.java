@@ -50,8 +50,7 @@ public class OrgSpaceListController extends Common {
     @GetMapping(value = {Constants.V2_URL + "/orgs/{orgId}"})
     @ResponseBody
     public Map<String, Object> getOrg(@PathVariable String orgId, HttpServletRequest request) {
-        String key = request.getParameter("key");
-        return commonService.procCfApiRestTemplate(Integer.parseInt(key),Constants.V3_URL + "/orgs/" + orgId, HttpMethod.GET, null);
+        return commonService.procApiRestTemplate(Constants.V3_URL + "/orgs/" + orgId, HttpMethod.GET, null, Constants.CF_API, Map.class).getBody();
     }
 
     /**
@@ -63,14 +62,13 @@ public class OrgSpaceListController extends Common {
      */
 //    @GetMapping(V2_URL + "/orgs")
 //    public Map<String, Object> getOrgsForAdmin( HttpServletRequest request) throws Exception {
-//        String key = request.getParameter("key");
+//
 //        LOGGER.info("!!!!!!!!!!!!!!!!!!! "  +key);
 //        return orgSpaceListService.getOrgsForAdmin("/orgs-admin", HttpMethod.GET, null, getToken());
 //    }
     @GetMapping(V2_URL + "/orgs")
     public Map<String, Object> getOrgsForAdmin( HttpServletRequest request) throws Exception {
-        String key = request.getParameter("key");
-        return orgSpaceListService.getOrgsForAdmin(Integer.parseInt(key),"/orgs-admin", HttpMethod.GET, null);
+        return orgSpaceListService.getOrgsForAdmin("/orgs-admin", HttpMethod.GET, null);
     }
 
     /**
@@ -83,7 +81,7 @@ public class OrgSpaceListController extends Common {
     @GetMapping(V2_URL + "/spaces2")
     public Map<String,Object> getSpacesForAdmin( HttpServletRequest request) throws Exception{
         String key=request.getParameter("key");
-        return orgSpaceListService.getAllSpacesForAdmin(Integer.parseInt(key),"/spaces-admin",HttpMethod.GET,null);
+        return orgSpaceListService.getAllSpacesForAdmin("/spaces-admin",HttpMethod.GET,null);
     }
 
     /**
@@ -95,8 +93,7 @@ public class OrgSpaceListController extends Common {
      */
     @GetMapping(V2_URL + "/orgs/{orgid}/spaces")
     public Map<String, Object> getSpacesForAdmin(@PathVariable String orgid, HttpServletRequest request) throws Exception {
-        String key = request.getParameter("key");
-        return orgSpaceListService.getSpacesForAdmin(Integer.parseInt(key),"/orgs/" + orgid + "/spaces-admin", HttpMethod.GET,null);
+        return orgSpaceListService.getSpacesForAdmin("/orgs/" + orgid + "/spaces-admin", HttpMethod.GET,null);
     }
 
     /**
@@ -107,8 +104,7 @@ public class OrgSpaceListController extends Common {
      */
     @GetMapping(V2_URL + "/orgs/{orgid}/summary")
     public Map<String, Object> getOrgSummary(@PathVariable String orgid, HttpServletRequest request) {
-        String key = request.getParameter("key");
-        return orgSpaceListService.getOrgSummary(Integer.parseInt(key),"/orgs/" + orgid + "/summary-admin", HttpMethod.GET, null);
+        return orgSpaceListService.getOrgSummary("/orgs/" + orgid + "/summary-admin", HttpMethod.GET, null);
     }
 
 
@@ -120,8 +116,7 @@ public class OrgSpaceListController extends Common {
      */
     @GetMapping(V2_URL + "/orgs/{orgid}/quota")
     public Map<String, Object> getOrgQuota(@PathVariable String orgid, HttpServletRequest request) {
-        String key = request.getParameter("key");
-        return orgSpaceListService.getOrgQuota(Integer.parseInt(key),"/orgs/" + orgid + "/quota-admin", HttpMethod.GET, null);
+        return orgSpaceListService.getOrgQuota("/orgs/" + orgid + "/quota-admin", HttpMethod.GET, null);
     }
 
     /**
@@ -134,7 +129,7 @@ public class OrgSpaceListController extends Common {
     @PutMapping(Constants.V2_URL + "/organization-admin")
     public Map renameOrgForAdmin(@RequestBody Map org, HttpServletRequest request){
         String key=request.getParameter("key");
-        return orgSpaceListService.renameOrgForAdmin(Integer.parseInt(key),"/organization-admin",HttpMethod.PUT,org);
+        return orgSpaceListService.renameOrgForAdmin("/organization-admin",HttpMethod.PUT,org);
     }
 
     /**
@@ -147,7 +142,7 @@ public class OrgSpaceListController extends Common {
     @PutMapping(Constants.V2_URL + "/space-admin")
     public Map renameSpaceQuotaForAdmin(@RequestBody Map space, HttpServletRequest request){
         String key=request.getParameter("key");
-        return orgSpaceListService.renameSpaceQuotaForAdmin(Integer.parseInt(key),"/space-admin",HttpMethod.PUT,space);
+        return orgSpaceListService.renameSpaceQuotaForAdmin("/space-admin",HttpMethod.PUT,space);
     }
 
     /**
@@ -160,7 +155,7 @@ public class OrgSpaceListController extends Common {
     @PutMapping(Constants.V2_URL + "/space-name-admin")
     public Map renameSpaceForAdmin(@RequestBody Map space, HttpServletRequest request){
         String key=request.getParameter("key");
-        return orgSpaceListService.renameSpaceForAdmin(Integer.parseInt(key),"/space-admin",HttpMethod.PUT,space);
+        return orgSpaceListService.renameSpaceForAdmin("/space-admin",HttpMethod.PUT,space);
     }
 
     /**
@@ -173,7 +168,7 @@ public class OrgSpaceListController extends Common {
     @PutMapping(Constants.V2_URL + "/space-quota-admin")
     public Map qutaoSpaceForAdmin(@RequestBody Map space, HttpServletRequest request){
         String key=request.getParameter("key");
-        return orgSpaceListService.qutaoSpaceForAdmin(Integer.parseInt(key),"/space-quota-admin",HttpMethod.PUT,space);
+        return orgSpaceListService.qutaoSpaceForAdmin("/space-quota-admin",HttpMethod.PUT,space);
     }
 
     /**
@@ -184,7 +179,7 @@ public class OrgSpaceListController extends Common {
     @DeleteMapping(Constants.V2_URL + "/organizations-admin/{guid}")
     public Map deleteOrgForAdmin(@PathVariable String guid,HttpServletRequest request) throws Exception {
         String key=request.getParameter("key");
-        return orgSpaceListService.deleteOrgForAdmin(Integer.parseInt(key),"/organizations-admin/"+guid,HttpMethod.DELETE);
+        return orgSpaceListService.deleteOrgForAdmin("/organizations-admin/"+guid,HttpMethod.DELETE);
     }
 
     /**
@@ -195,8 +190,7 @@ public class OrgSpaceListController extends Common {
      */
     @GetMapping(V2_URL + "/spaces/{spaceid}/summary")
     public Map<String, Object> getSpaceSummary(@PathVariable String spaceid, HttpServletRequest request) {
-        String key = request.getParameter("key");
-        return orgSpaceListService.getSpaceSummary(Integer.parseInt(key),"/spaces/" + spaceid + "/summary-admin", HttpMethod.GET, null);
+        return orgSpaceListService.getSpaceSummary("/spaces/" + spaceid + "/summary-admin", HttpMethod.GET, null);
     }
 
     /**
@@ -207,8 +201,7 @@ public class OrgSpaceListController extends Common {
      */
     @GetMapping(V2_URL + "/spaces/{spacequtaid}/quota")
     public Map<String, Object> getSpaceQuota(@PathVariable String spacequtaid, HttpServletRequest request) {
-        String key = request.getParameter("key");
-        return orgSpaceListService.getSpaceQuota(Integer.parseInt(key),"/spaces/" + spacequtaid + "/quota-admin", HttpMethod.GET, null);
+        return orgSpaceListService.getSpaceQuota("/spaces/" + spacequtaid + "/quota-admin", HttpMethod.GET, null);
     }
 
     /**
@@ -218,8 +211,7 @@ public class OrgSpaceListController extends Common {
      */
     @GetMapping(V2_URL + "/spaces")
     public Map<String, Object> getSpace(HttpServletRequest request) {
-        String key = request.getParameter("key");
-        return orgSpaceListService.getSpace(Integer.parseInt(key),"/spaces-admin", HttpMethod.GET, null);
+        return orgSpaceListService.getSpace("/spaces-admin", HttpMethod.GET, null);
 
     }
 
@@ -233,8 +225,7 @@ public class OrgSpaceListController extends Common {
      */
     @PostMapping(V2_URL + "/organizations")
     public Map createOrgForAdmin(HttpServletRequest request,@RequestBody Map param){
-        String key = request.getParameter("key");
-        return orgSpaceListService.createOrgForAdmin(Integer.parseInt(key),"/organizations",HttpMethod.POST,param);
+        return orgSpaceListService.createOrgForAdmin("/organizations",HttpMethod.POST,param);
     }
 
     /**
@@ -246,14 +237,8 @@ public class OrgSpaceListController extends Common {
     @PostMapping(V2_URL+"/spaces")
     public Map<?,?> createSpaceForAdmin(HttpServletRequest request,@RequestBody Map param){
         String key=request.getParameter("key");
-        return orgSpaceListService.createSpaceForAdmin(Integer.parseInt(key),"/spaces",HttpMethod.POST,param);
+        return orgSpaceListService.createSpaceForAdmin("/spaces",HttpMethod.POST,param);
     }
-
-    @ModelAttribute("configs")
-    public List<User> configs(){
-        return getServerInfos();
-    }
-
 
     /**
      * 공간의 id로 공간에 속한 유저들의 역할을 불러온다.
@@ -265,9 +250,8 @@ public class OrgSpaceListController extends Common {
     @GetMapping(V2_URL + "/spaces/{spaceid}/user-roles")
     @ResponseBody
     public Map<String, Object> getSpaceRoles(@PathVariable String spaceid, HttpServletRequest request) {
-        String key = request.getParameter("key");
         LOGGER.info(spaceid);
-        return commonService.procCfApiRestTemplate(Integer.parseInt(key), Constants.V3_URL + "/spaces/" +spaceid+ "/user-roles2", HttpMethod.GET,null);
+        return commonService.procApiRestTemplate(Constants.V3_URL + "/spaces/" +spaceid+ "/user-roles2", HttpMethod.GET,null, Constants.CF_API, Map.class).getBody();
     }
 
 
@@ -281,9 +265,8 @@ public class OrgSpaceListController extends Common {
     @GetMapping(V2_URL + "/orgs/{orgId}/user-roles")
     @ResponseBody
     public Map<String, Object> getSpaceRoles(@PathVariable String orgId, HttpServletRequest request, Object obj) {
-        String key = request.getParameter("key");
         LOGGER.info("유저이름 ?" + orgId);
-        return commonService.procCfApiRestTemplate(Integer.parseInt(key), Constants.V2_URL + "/orgs/" +orgId+ "/user-roles", HttpMethod.GET, null);
+        return commonService.procApiRestTemplate(Constants.V2_URL + "/orgs/" +orgId+ "/user-roles", HttpMethod.GET, null, Constants.CF_API, Map.class).getBody();
     }                                                                                                                                               //응답받을
 
 

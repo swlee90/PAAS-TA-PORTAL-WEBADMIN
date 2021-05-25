@@ -77,28 +77,8 @@
 
 <script th:inline="javascript" type="text/javascript" layout:fragment="custom-script">
   /*<![CDATA[*/
-  $( "#apiUrls" ).change(function() {
-
-    //key 값 저장
-    key = $("#apiUrls").val();
-    $.cookie("api_key",key);
-
-    //getBuildPackList
-    procCallAjax("/v2/buildpacks"+"?key="+key, "GET", null, procCallbackGetBuildPackList, $('#loadingBar'));
-
-    //reset
-    $("#buildPackList").html("");
-  });
 
   $(document).ready(function(){
-
-    //key 값 설정
-    if($.cookie("api_key") != null){
-      key = $.cookie("api_key");
-      $("#apiUrls").val(key);
-    }else{
-      key = $("#apiUrls").val();
-    }
     getInitMarketPlaceURL();
     getBuildPackList();
 
@@ -116,8 +96,7 @@
   });
 
   function getBuildPackList() {
-    key = $("#apiUrls").val();
-    procCallAjax("/v2/buildpacks"+"?key="+key, "GET", null, procCallbackGetBuildPackList, $('#loadingBar'));
+    procCallAjax("/v2/buildpacks", "GET", null, procCallbackGetBuildPackList, $('#loadingBar'));
   };
 
   var procCallbackGetBuildPackList = function(datalist){
@@ -176,7 +155,7 @@
       lock : lock
     }
 
-    procCallAjax("/v2/buildpacks/"+guid+"?key="+key, "PUT", JSON.stringify(param), procCallbackUpdateBuildPack, $('#loadingBar'));
+    procCallAjax("/v2/buildpacks/"+guid, "PUT", JSON.stringify(param), procCallbackUpdateBuildPack, $('#loadingBar'));
   }
 
   var procCallbackUpdateBuildPack = function(data){

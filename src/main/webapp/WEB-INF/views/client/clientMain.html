@@ -329,13 +329,8 @@ More Information : # https://sks.gitbooks.io/my-road-2-industrial-applications/c
 
     $(document).ready(function () {
 
-        if($.cookie("api_key") != null){
-            key = $.cookie("api_key");
-            $("#apiUrls").val(key);
-        }else{
-            key = $("#apiUrls").val();
-        }
-        getClientList(key);
+
+        getClientList();
         getInitMarketPlaceURL();
         // 등록 버튼 클릭시, 등록 팝업 이벤트 설정
         $(document).on("click", 'button[name=registBtn]', function (e) {
@@ -358,13 +353,6 @@ More Information : # https://sks.gitbooks.io/my-road-2-industrial-applications/c
 
     });
 
-    $( "#apiUrls" ).change(function() {
-        key = $("#apiUrls").val();
-        $.cookie("api_key",key);
-        getClientList(key);
-        var objTable = $("#clientList");
-        objTable.html('');
-    });
 
 
     // Modal 초기화
@@ -375,10 +363,9 @@ More Information : # https://sks.gitbooks.io/my-road-2-industrial-applications/c
 
     // 클라리언트 리스트 조회
     var getClientList = function () {
-        key =  $("#apiUrls").val();
         $('.modal').modal('hide');
         var param = {};
-        procCallAjax(CLIENT_PROC_URL + "/" + "?key="+key, "GET", param, procCallbackGetClientList, $('#loadingBar'));
+        procCallAjax(CLIENT_PROC_URL, "GET", param, procCallbackGetClientList, $('#loadingBar'));
     };
 
     // 클라리언트 리스트 조회 Callback
@@ -418,7 +405,7 @@ More Information : # https://sks.gitbooks.io/my-road-2-industrial-applications/c
         $('#modifyGuide').removeClass('hide');
 
         // 클라리언트 상세조회
-        procCallAjax(CLIENT_PROC_URL + "/" + clientId + "/" + "?key="+key, "GET", null, procCallbackGetClient, $('#modalLoadingBar'));
+        procCallAjax(CLIENT_PROC_URL + "/" + clientId, "GET", null, procCallbackGetClient, $('#modalLoadingBar'));
     }
 
     // 클라이언트 조회 Callback
@@ -664,7 +651,7 @@ More Information : # https://sks.gitbooks.io/my-road-2-industrial-applications/c
         };
 
 
-        procCallAjax4(CLIENT_PROC_URL + "/" + "?key="+key, "POST", JSON.stringify(param), getClientList, $('#modalLoadingBar'));
+        procCallAjax4(CLIENT_PROC_URL, "POST", JSON.stringify(param), getClientList, $('#modalLoadingBar'));
     }
 
     //  [클라이언트] 생성
@@ -693,7 +680,7 @@ More Information : # https://sks.gitbooks.io/my-road-2-industrial-applications/c
     // 서비스 브로커 삭제 처리
     function deleteClient() {
         var clientId = $('#clientId').val();
-        procCallAjax4(CLIENT_PROC_URL + "/" + clientId + "/" + "?key="+key, "DELETE", null, getClientList, $('#modalLoadingBar'));
+        procCallAjax4(CLIENT_PROC_URL + "/" + clientId, "DELETE", null, getClientList, $('#modalLoadingBar'));
     }
 
     // 검색 조회

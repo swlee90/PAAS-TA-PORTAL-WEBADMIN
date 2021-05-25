@@ -43,8 +43,8 @@ public class UserManagementService extends Common {
      *
      * @return Map(자바클래스)
      */
-    public Map<String, Object> getUserInfoList(int key, String reqUrl, HttpMethod httpMethod, Object param) {
-        return commonService.procCommonApiRestTemplate(key, Constants.V2_URL + reqUrl, httpMethod, param);
+    public Map<String, Object> getUserInfoList(String reqUrl, HttpMethod httpMethod, Object param) {
+        return commonService.procApiRestTemplate(Constants.V2_URL + reqUrl, httpMethod, param, Constants.COMMON_API, Map.class).getBody();
     }
 
 
@@ -54,8 +54,8 @@ public class UserManagementService extends Common {
      * @param param UserManagement(모델클래스)
      * @return Map(자바클래스)
      */
-    public Map<String, Object> setResetPassword(int key, String reqUrl, HttpMethod httpMethod, Object param) {
-        return commonService.procCommonApiRestTemplate(key, Constants.V2_URL + reqUrl, httpMethod, param);
+    public Map<String, Object> setResetPassword(String reqUrl, HttpMethod httpMethod, Object param) {
+        return commonService.procApiRestTemplate(Constants.V2_URL + reqUrl, httpMethod, param, Constants.COMMON_API, Map.class).getBody();
     }
 
     /**
@@ -67,8 +67,8 @@ public class UserManagementService extends Common {
      * @param param
      * @return
      */
-    public Map<String, Object> setInitPassword(int key, String reqUrl, HttpMethod httpMethod, Object param) {
-        return commonService.procCfApiRestTemplate(key, Constants.V2_URL + reqUrl, httpMethod, param);
+    public Map<String, Object> setInitPassword(String reqUrl, HttpMethod httpMethod, Object param) {
+        return commonService.procApiRestTemplate(Constants.V2_URL + reqUrl, httpMethod, param, Constants.COMMON_API, Map.class).getBody();
     }
 
     /**
@@ -77,8 +77,8 @@ public class UserManagementService extends Common {
      * @param param UserManagement(모델클래스)
      * @return Map(자바클래스)
      */
-    public Map<String, Object> updateOperatingAuthority(int key, String reqUrl, HttpMethod httpMethod, Object param) {
-        return commonService.procCommonApiRestTemplate(key, Constants.V2_URL + reqUrl, httpMethod, param);
+    public Map<String, Object> updateOperatingAuthority(String reqUrl, HttpMethod httpMethod, Object param) {
+        return commonService.procApiRestTemplate(Constants.V2_URL + reqUrl, httpMethod, param, Constants.COMMON_API, Map.class).getBody();
     }
 
 
@@ -88,8 +88,8 @@ public class UserManagementService extends Common {
      * @param param UserMana    gement(모델클래스)
      * @return Map(자바클래스)
      */
-    public Map<String, Object> deleteUserAccount(int key, String guid, HttpMethod httpMethod, Object param) {
-        return commonService.procCommonApiRestTemplate(key, Constants.V2_URL + "/user/" + guid + "/all", httpMethod, param);
+    public Map<String, Object> deleteUserAccount(String guid, HttpMethod httpMethod, Object param) {
+        return commonService.procApiRestTemplate(Constants.V2_URL + "/user/" + guid + "/all", httpMethod, param, Constants.COMMON_API, Map.class).getBody();
     }
 
     /**
@@ -98,12 +98,12 @@ public class UserManagementService extends Common {
      * @param param Info
      * @return Map(자바클래스)
      */
-    public Map<String, Object> addUser(int key, HttpMethod httpMethod, Map param) {
-        Map<String, Object> result = commonService.procCfApiRestTemplate(key, Constants.V3_URL + "/users", HttpMethod.POST, param);
+    public Map<String, Object> addUser(HttpMethod httpMethod, Map param) {
+        Map<String, Object> result = commonService.procApiRestTemplate(Constants.V3_URL + "/users", HttpMethod.POST, param, Constants.CF_API, Map.class).getBody();
         if ((boolean) result.get("result")) {
             param.remove("active");
             param.put("active", param.get("active2").toString());
-            commonService.procCommonApiRestTemplate(key, Constants.V2_URL + "/user", httpMethod, param);
+            commonService.procApiRestTemplate(Constants.V2_URL + "/user", httpMethod, param, Constants.COMMON_API, Map.class).getBody();
         }
         return result;
     }
@@ -117,8 +117,8 @@ public class UserManagementService extends Common {
      * @param httpMethod
      * @return
      */
-    public Map<String, Object> associateUserOrg(int key, String reqUrl, HttpMethod httpMethod, String param) throws Exception {
-        return commonService.procCfApiRestTemplate(key, Constants.V2_URL + reqUrl, httpMethod, param);
+    public Map<String, Object> associateUserOrg(String reqUrl, HttpMethod httpMethod, String param) throws Exception {
+        return commonService.procApiRestTemplate(Constants.V2_URL + reqUrl, httpMethod, param, Constants.COMMON_API, Map.class).getBody();
     }
 
     /**
@@ -127,10 +127,10 @@ public class UserManagementService extends Common {
      * @param param UserManagement(모델클래스)
      * @return Map(자바클래스)
      */
-    public Map<String, Object> updateUserActive(int key, String reqUrl, HttpMethod httpMethod, UserManagement param) {
-        Map<String, Object> result = commonService.procCfApiRestTemplate(key, Constants.V3_URL + "/user/" + param.getUserGuid() + "/active", httpMethod, param);
+    public Map<String, Object> updateUserActive(String reqUrl, HttpMethod httpMethod, UserManagement param) {
+        Map<String, Object> result = commonService.procApiRestTemplate(Constants.V3_URL + "/user/" + param.getUserGuid() + "/active", httpMethod, param, Constants.CF_API, Map.class).getBody();
         param.setActive(result.get("active").toString().equals("true") ? "Y" : "N");
-        return commonService.procCommonApiRestTemplate(key, Constants.V2_URL + reqUrl, httpMethod, param);
+        return commonService.procApiRestTemplate(Constants.V2_URL + reqUrl, httpMethod, param, Constants.COMMON_API, Map.class).getBody();
     }
 
     /**
@@ -138,8 +138,8 @@ public class UserManagementService extends Common {
      *
      * @return
      */
-    public Map<String, Object> GetUserSummary(int key, String reqUrl, HttpMethod httpMethod) {
-        return commonService.procCfApiRestTemplate(key, Constants.V3_URL + reqUrl, httpMethod, null);
+    public Map<String, Object> GetUserSummary(String reqUrl, HttpMethod httpMethod) {
+        return commonService.procApiRestTemplate(Constants.V3_URL + reqUrl, httpMethod, null, Constants.COMMON_API, Map.class).getBody();
     }
 
     /**
@@ -148,8 +148,8 @@ public class UserManagementService extends Common {
      * @return map all user name
      * @throws Exception the exception
      */
-    public Map<String, Object> getUser(int key, String reqUrl, HttpMethod httpMethod) {
-        return commonService.procCfApiRestTemplate(key, Constants.V3_URL + reqUrl, httpMethod, null);
+    public Map<String, Object> getUser(String reqUrl, HttpMethod httpMethod) {
+        return commonService.procApiRestTemplate(Constants.V3_URL + reqUrl, httpMethod, null, Constants.COMMON_API, Map.class).getBody();
     }
 
     /**
@@ -157,8 +157,8 @@ public class UserManagementService extends Common {
      *
      * @return
      */
-    public Map<String, Object> getOrgUserRolesForAdmin(int key, String reqUrl, HttpMethod httpMethod, UserManagement users) {
-        return commonService.procCfApiRestTemplate(key, Constants.V3_URL + reqUrl, httpMethod, users);
+    public Map<String, Object> getOrgUserRolesForAdmin(String reqUrl, HttpMethod httpMethod, UserManagement users) {
+        return commonService.procApiRestTemplate(Constants.V3_URL + reqUrl, httpMethod, users, Constants.COMMON_API, Map.class).getBody();
     }
 
     /**
@@ -168,8 +168,8 @@ public class UserManagementService extends Common {
      * @return Map
      * 2021-04-26 Yoona
      */
-    public Map<String, Object> updateUser(int key, String reqUrl, HttpMethod httpMethod, Object param) {
-        return commonService.procCommonApiRestTemplate(key, Constants.V2_URL + reqUrl, httpMethod, param);
+    public Map<String, Object> updateUser(String reqUrl, HttpMethod httpMethod, Object param) {
+        return commonService.procApiRestTemplate(Constants.V2_URL + reqUrl, httpMethod, param, Constants.COMMON_API, Map.class).getBody();
     }
 
     /**
@@ -178,8 +178,8 @@ public class UserManagementService extends Common {
      * @param param
      * @return Map
      */
-    public Map<String, Object> deleteUserRoles(int key, String reqUrl, HttpMethod httpMethod, Object param) {
-        return commonService.procCfApiRestTemplate(key, Constants.V2_URL + reqUrl, httpMethod, param);
+    public Map<String, Object> deleteUserRoles(String reqUrl, HttpMethod httpMethod, Object param) {
+        return commonService.procApiRestTemplate(Constants.V2_URL + reqUrl, httpMethod, param, Constants.COMMON_API, Map.class).getBody();
     }
 
 }

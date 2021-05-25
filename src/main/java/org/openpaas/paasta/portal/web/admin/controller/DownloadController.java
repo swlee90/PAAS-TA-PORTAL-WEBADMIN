@@ -2,9 +2,7 @@ package org.openpaas.paasta.portal.web.admin.controller;
 
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.openpaas.paasta.portal.web.admin.common.Common;
-import org.openpaas.paasta.portal.web.admin.entity.ConfigEntity;
-import org.openpaas.paasta.portal.web.admin.service.ConfigService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.openpaas.paasta.portal.web.admin.common.Constants;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -105,7 +103,8 @@ public class DownloadController extends Common {
             }
             */
         } else {
-            ResponseEntity<byte[]> resultEntity = commonService.procStorageApiRestTemplateBinary( imgPath, HttpMethod.GET, null, getToken());
+
+            ResponseEntity<byte[]> resultEntity = commonService.procApiRestTemplate( imgPath, HttpMethod.GET, null, Constants.STORAGE_API, byte[].class);
             imgByte = resultEntity.getBody();
             
             if (imgByte.length > 0)
@@ -165,12 +164,4 @@ public class DownloadController extends Common {
         return encodedFilename;
     }
 
-
-    @Autowired
-    ConfigService configService;
-
-    @ModelAttribute("configs")
-    public List<ConfigEntity> configs(){
-        return configService.getConfigs();
-    }
 }

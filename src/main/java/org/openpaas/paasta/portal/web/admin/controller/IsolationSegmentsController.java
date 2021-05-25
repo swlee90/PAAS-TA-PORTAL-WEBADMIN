@@ -2,10 +2,6 @@ package org.openpaas.paasta.portal.web.admin.controller;
 
 import org.openpaas.paasta.portal.web.admin.common.Common;
 import org.openpaas.paasta.portal.web.admin.common.Constants;
-import org.openpaas.paasta.portal.web.admin.common.User;
-import org.openpaas.paasta.portal.web.admin.entity.ConfigEntity;
-import org.openpaas.paasta.portal.web.admin.service.ConfigService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -38,9 +34,8 @@ public class IsolationSegmentsController extends Common {
      */
     @GetMapping(value = {Constants.V3_URL + "/isolationSegments"})
     @ResponseBody
-    public Map<String, Object> getIsolationSegments(HttpServletRequest request) {
-        String key = request.getParameter("key");
-        return commonService.procCfApiRestTemplate(Integer.parseInt(key),Constants.V3_URL + "/isolationSegments", HttpMethod.GET, null);
+    public Map<String, Object> getIsolationSegments() {
+        return commonService.procApiRestTemplate(Constants.V3_URL + "/isolationSegments", HttpMethod.GET, null, Constants.CF_API, Map.class).getBody();
     }
 
     /**
@@ -51,9 +46,8 @@ public class IsolationSegmentsController extends Common {
      */
     @GetMapping(value = {Constants.V3_URL + "/isolationSegments/organizations/{organizationsId:.+}"})
     @ResponseBody
-    public Map<String, Object> getIsolationSegmentsByOrgGuid(HttpServletRequest request, @PathVariable String organizationsId) throws Exception {
-        String key = request.getParameter("key");
-        return commonService.procCfApiRestTemplate(Integer.parseInt(key),Constants.V3_URL + "/isolationSegments/organizations/"+organizationsId, HttpMethod.GET, null);
+    public Map<String, Object> getIsolationSegmentsByOrgGuid(@PathVariable String organizationsId) throws Exception {
+        return commonService.procApiRestTemplate(Constants.V3_URL + "/isolationSegments/organizations/"+organizationsId, HttpMethod.GET, null, Constants.CF_API, Map.class).getBody();
     }
 
     /**
@@ -65,9 +59,9 @@ public class IsolationSegmentsController extends Common {
      */
     @GetMapping(Constants.V3_URL+"/isolationSegments/{isolationSegmentId:.+}/organizations")
     @ResponseBody
-    public Map<String, Object> getIsolationSegmentsOrgs(HttpServletRequest request, @PathVariable String isolationSegmentId) throws Exception {
-        String key = request.getParameter("key");
-        return commonService.procCfApiRestTemplate(Integer.parseInt(key),Constants.V3_URL + "/isolationSegments/"+isolationSegmentId+"/organizations", HttpMethod.GET, null);
+    public Map<String, Object> getIsolationSegmentsOrgs(@PathVariable String isolationSegmentId) throws Exception {
+        return commonService.procApiRestTemplate(Constants.V3_URL + "/isolationSegments/"+isolationSegmentId+"/organizations", HttpMethod.GET, null, Constants.CF_API, Map.class).getBody();
+
     }
 
     /**
@@ -79,9 +73,8 @@ public class IsolationSegmentsController extends Common {
      */
     @PostMapping(Constants.V3_URL+"/isolationSegments/{segementName:.+}")
     @ResponseBody
-    public Map<String, Object> createIsolationSegments(HttpServletRequest request, @PathVariable String segementName) throws Exception {
-        String key = request.getParameter("key");
-        return commonService.procCfApiRestTemplate(Integer.parseInt(key),Constants.V3_URL + "/isolationSegments/"+segementName, HttpMethod.POST, null);
+    public Map<String, Object> createIsolationSegments(@PathVariable String segementName) throws Exception {
+        return commonService.procApiRestTemplate(Constants.V3_URL + "/isolationSegments/"+segementName, HttpMethod.POST, null, Constants.CF_API, Map.class).getBody();
     }
 
     /**
@@ -93,9 +86,8 @@ public class IsolationSegmentsController extends Common {
      */
     @DeleteMapping(Constants.V3_URL+"/isolationSegments/{isolationSegmentId:.+}")
     @ResponseBody
-    public Map<String, Object> deleteIsolationSegments(HttpServletRequest request, @PathVariable String isolationSegmentId) throws Exception {
-        String key = request.getParameter("key");
-        return commonService.procCfApiRestTemplate(Integer.parseInt(key),Constants.V3_URL + "/isolationSegments/"+isolationSegmentId, HttpMethod.DELETE, null);
+    public Map<String, Object> deleteIsolationSegments(@PathVariable String isolationSegmentId) throws Exception {
+        return commonService.procApiRestTemplate(Constants.V3_URL + "/isolationSegments/"+isolationSegmentId, HttpMethod.DELETE, null, Constants.CF_API, Map.class).getBody();
     }
 
     /**
@@ -109,8 +101,7 @@ public class IsolationSegmentsController extends Common {
     @PostMapping(Constants.V3_URL+"/isolationSegments/{isolationSegmentId:.+}/organizations/{organizationsId:.+}")
     @ResponseBody
     public Map eanbleIsolationSegments(HttpServletRequest request, @PathVariable String isolationSegmentId, @PathVariable String organizationsId) throws Exception {
-        String key = request.getParameter("key");
-        return commonService.procCfApiRestTemplate(Integer.parseInt(key),Constants.V3_URL + "/isolationSegments/"+isolationSegmentId+"/organizations/"+organizationsId, HttpMethod.POST, null);
+        return commonService.procApiRestTemplate(Constants.V3_URL + "/isolationSegments/"+isolationSegmentId+"/organizations/"+organizationsId, HttpMethod.POST, null, Constants.CF_API, Map.class).getBody();
     }
 
     /**
@@ -123,9 +114,8 @@ public class IsolationSegmentsController extends Common {
      */
     @DeleteMapping(Constants.V3_URL+"/isolationSegments/{isolationSegmentId:.+}/organizations/{organizationsId:.+}")
     @ResponseBody
-    public Map disableIsolationSegments(HttpServletRequest request, @PathVariable String isolationSegmentId, @PathVariable String organizationsId) throws Exception {
-        String key = request.getParameter("key");
-        return commonService.procCfApiRestTemplate(Integer.parseInt(key),Constants.V3_URL + "/isolationSegments/"+isolationSegmentId+"/organizations/"+organizationsId, HttpMethod.DELETE, null);
+    public Map disableIsolationSegments(@PathVariable String isolationSegmentId, @PathVariable String organizationsId) throws Exception {
+        return commonService.procApiRestTemplate(Constants.V3_URL + "/isolationSegments/"+isolationSegmentId+"/organizations/"+organizationsId, HttpMethod.DELETE, null, Constants.CF_API, Map.class).getBody();
     }
 
     /**
@@ -139,8 +129,7 @@ public class IsolationSegmentsController extends Common {
     @PutMapping(Constants.V3_URL+"/orgs/{organizationsId:.+}/isolationSegments/{isolationSegmentId:.+}")
     @ResponseBody
     public Map setOrgDefaultIsolationSegments(HttpServletRequest request, @PathVariable String organizationsId, @PathVariable String isolationSegmentId) throws Exception {
-        String key = request.getParameter("key");
-        return commonService.procCfApiRestTemplate(Integer.parseInt(key),Constants.V3_URL + "/orgs/"+organizationsId+"/isolationSegments/"+isolationSegmentId, HttpMethod.PUT, null);
+        return commonService.procApiRestTemplate(Constants.V3_URL + "/orgs/"+organizationsId+"/isolationSegments/"+isolationSegmentId, HttpMethod.PUT, null, Constants.CF_API, Map.class).getBody();
     }
 
     /**
@@ -151,9 +140,8 @@ public class IsolationSegmentsController extends Common {
      * @throws Exception the exception
      */
     @PutMapping(Constants.V3_URL+"/orgs/{organizationsId:.+}/isolationSegments/reset")
-    public Map resetOrgDefaultIsolationSegments(HttpServletRequest request, @PathVariable String organizationsId) throws Exception {
-        String key = request.getParameter("key");
-        return commonService.procCfApiRestTemplate(Integer.parseInt(key),Constants.V3_URL + "/orgs/"+organizationsId+"/isolationSegments/reset", HttpMethod.PUT, null);
+    public Map resetOrgDefaultIsolationSegments(@PathVariable String organizationsId) throws Exception {
+        return commonService.procApiRestTemplate(Constants.V3_URL + "/orgs/"+organizationsId+"/isolationSegments/reset", HttpMethod.PUT, null, Constants.CF_API, Map.class).getBody();
     }
 
     /**
@@ -166,9 +154,8 @@ public class IsolationSegmentsController extends Common {
      */
     @PutMapping(Constants.V3_URL+"/spaces/{spaceId:.+}/isolationSegments/{isolationSegmentId:.+}")
     @ResponseBody
-    public Map setSpaceDefaultIsolationSegments(HttpServletRequest request, @PathVariable String spaceId, @PathVariable String isolationSegmentId) throws Exception {
-        String key = request.getParameter("key");
-        return commonService.procCfApiRestTemplate(Integer.parseInt(key),Constants.V3_URL + "/spaces/"+spaceId+"/isolationSegments/"+isolationSegmentId, HttpMethod.PUT, null);
+    public Map setSpaceDefaultIsolationSegments(@PathVariable String spaceId, @PathVariable String isolationSegmentId) throws Exception {
+        return commonService.procApiRestTemplate(Constants.V3_URL + "/spaces/"+spaceId+"/isolationSegments/"+isolationSegmentId, HttpMethod.PUT, null, Constants.CF_API, Map.class).getBody();
     }
 
     /**
@@ -180,14 +167,8 @@ public class IsolationSegmentsController extends Common {
      */
     @PutMapping(Constants.V3_URL+"/spaces/{spaceId:.+}/isolationSegments/reset")
     @ResponseBody
-    public Map resetSpaceDefaultIsolationSegments(HttpServletRequest request, @PathVariable String spaceId) throws Exception {
-        String key = request.getParameter("key");
-        return commonService.procCfApiRestTemplate(Integer.parseInt(key),Constants.V3_URL + "/spaces/"+spaceId+"/isolationSegments/reset", HttpMethod.PUT, null);
+    public Map resetSpaceDefaultIsolationSegments(@PathVariable String spaceId) throws Exception {
+        return commonService.procApiRestTemplate(Constants.V3_URL + "/spaces/"+spaceId+"/isolationSegments/reset", HttpMethod.PUT, null, Constants.CF_API, Map.class).getBody();
     }
 
-
-    @ModelAttribute("configs")
-    public List<User> configs(){
-        return getServerInfos();
-    }
 }

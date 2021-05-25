@@ -1,12 +1,10 @@
 package org.openpaas.paasta.portal.web.admin.controller;
 
 import org.openpaas.paasta.portal.web.admin.common.Common;
+import org.openpaas.paasta.portal.web.admin.common.Constants;
 import org.openpaas.paasta.portal.web.admin.common.User;
-import org.openpaas.paasta.portal.web.admin.entity.ConfigEntity;
-import org.openpaas.paasta.portal.web.admin.service.ConfigService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,10 +47,8 @@ public class AdminMainController extends Common {
      */
     @GetMapping(value = {V2_URL + "/statistics"})
     @ResponseBody
-    public Map<String, Object> getTotalCountList(HttpServletRequest request) {
-        String key = request.getParameter("key");
-        LOGGER.info("::getTotalCountList index:: "  +key);
-        return commonService.procCommonApiRestTemplate(Integer.parseInt(key),V2_URL + "/statistics", HttpMethod.GET, null);
+    public Map<String, Object> getTotalCountList() {
+        return commonService.procApiRestTemplate(V2_URL + "/statistics", HttpMethod.GET, null, Constants.COMMON_API, Map.class).getBody();
     }
 
 
@@ -65,10 +61,8 @@ public class AdminMainController extends Common {
      */
     @GetMapping(value = {V2_URL + "/statistics/organizations"})
     @ResponseBody
-    public Map<String, Object> getTotalOrganizationList(HttpServletRequest request) {
-        String key = request.getParameter("key");
-        LOGGER.info("::getTotalOrganizationList::"  +key);
-        return commonService.procCommonApiRestTemplate(Integer.parseInt(key),V2_URL + "/statistics/organizations", HttpMethod.GET, null);
+    public Map<String, Object> getTotalOrganizationList() {
+        return commonService.procApiRestTemplate(V2_URL + "/statistics/organizations", HttpMethod.GET, null, Constants.COMMON_API, Map.class).getBody();
     }
 
 
@@ -79,16 +73,8 @@ public class AdminMainController extends Common {
      */
     @GetMapping(value = {V2_URL + "/statistics/organizations/{organizationId}/spaces"})
     @ResponseBody
-    public Map<String, Object> getTotalSpaceList(@PathVariable String organizationId, HttpServletRequest request) {
-        String key = request.getParameter("key");
-        LOGGER.info("::getTotalSpaceList::"  +key);
-        // spaceId, spaceName, applicationCount Info
-        return commonService.procCommonApiRestTemplate(Integer.parseInt(key), V2_URL + "/statistics/organizations/"+organizationId+"/spaces", HttpMethod.GET, null);
+    public Map<String, Object> getTotalSpaceList(@PathVariable String organizationId) {
+        return commonService.procApiRestTemplate(V2_URL + "/statistics/organizations/"+organizationId+"/spaces", HttpMethod.GET, null, Constants.COMMON_API, Map.class).getBody();
     }
 
-
-    @ModelAttribute("configs")
-    public List<User> configs(){
-        return getServerInfos();
-    }
 }

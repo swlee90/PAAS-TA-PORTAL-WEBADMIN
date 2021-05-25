@@ -56,8 +56,8 @@ public class OrgSpaceListService extends Common {
 //        return commonService.procCfApiRestTemplate(Constants.V3_URL + reqUrl, httpMethod, param, reqToken);
 //    }
 
-    public Map<String, Object> getOrgsForAdmin(int key, String reqUrl, HttpMethod httpMethod, Object obj) throws Exception {
-        return commonService.procCfApiRestTemplate(key,Constants.V3_URL + reqUrl, httpMethod, obj);
+    public Map<String, Object> getOrgsForAdmin(String reqUrl, HttpMethod httpMethod, Object obj) throws Exception {
+        return commonService.procApiRestTemplate(Constants.V3_URL + reqUrl, httpMethod, obj, Constants.CF_API, Map.class).getBody();
     }
 
     /**
@@ -70,8 +70,8 @@ public class OrgSpaceListService extends Common {
      * @return
      * @throws Exception
      */
-    public Map<String, Object> getAllSpacesForAdmin(int key,String reqUrl,HttpMethod httpMethod,Object obj) throws Exception{
-        return commonService.procCfApiRestTemplate(key,Constants.V3_URL+reqUrl,httpMethod,obj);
+    public Map<String, Object> getAllSpacesForAdmin(String reqUrl,HttpMethod httpMethod,Object obj) throws Exception{
+        return commonService.procApiRestTemplate(Constants.V3_URL+reqUrl, httpMethod, obj, Constants.CF_API, Map.class).getBody();
     }
 
     /**
@@ -82,8 +82,8 @@ public class OrgSpaceListService extends Common {
      * @return Map (자바 Map 클래스)
      * @throws Exception the exception
      */
-    public Map<String, Object> getSpacesForAdmin(int key, String reqUrl, HttpMethod httpMethod, Object obj) throws Exception {
-        return commonService.procCfApiRestTemplate(key,Constants.V3_URL + reqUrl, httpMethod, obj);
+    public Map<String, Object> getSpacesForAdmin(String reqUrl, HttpMethod httpMethod, Object obj) throws Exception {
+        return commonService.procApiRestTemplate(Constants.V3_URL+reqUrl, httpMethod, obj, Constants.CF_API, Map.class).getBody();
     }
 
     /**
@@ -93,8 +93,8 @@ public class OrgSpaceListService extends Common {
      * @param httpMethod httpMethod
      * @return Map (자바 Map 클래스)
      */
-    public Map<String, Object> getOrgSummary(int key, String reqUrl, HttpMethod httpMethod, Object obj) {
-        return commonService.procCfApiRestTemplate(key,Constants.V3_URL + reqUrl, httpMethod, obj);
+    public Map<String, Object> getOrgSummary(String reqUrl, HttpMethod httpMethod, Object obj) {
+        return commonService.procApiRestTemplate(Constants.V3_URL+reqUrl, httpMethod, obj, Constants.CF_API, Map.class).getBody();
     }
 
 
@@ -105,8 +105,8 @@ public class OrgSpaceListService extends Common {
      * @param httpMethod httpMethod
      * @return Map (자바 Map 클래스)
      */
-    public Map<String, Object> getOrgQuota(int key, String reqUrl, HttpMethod httpMethod, Object obj) {
-        return commonService.procCfApiRestTemplate(key,Constants.V3_URL + reqUrl, httpMethod, obj);
+    public Map<String, Object> getOrgQuota(String reqUrl, HttpMethod httpMethod, Object obj) {
+        return commonService.procApiRestTemplate(Constants.V3_URL+reqUrl, httpMethod, obj, Constants.CF_API, Map.class).getBody();
     }
 
     /**
@@ -117,8 +117,8 @@ public class OrgSpaceListService extends Common {
      * @param httpMethod
      * @return
      */
-    public Map renameOrgForAdmin (int key,String reqUrl,HttpMethod httpMethod,Map org){
-        return commonService.procCfApiRestTemplate(key,Constants.V3_URL+reqUrl,httpMethod,org);
+    public Map renameOrgForAdmin (String reqUrl,HttpMethod httpMethod,Map org){
+        return commonService.procApiRestTemplate(Constants.V3_URL+reqUrl, httpMethod, org, Constants.CF_API, Map.class).getBody();
     }
 
     /**
@@ -129,8 +129,8 @@ public class OrgSpaceListService extends Common {
      * @param httpMethod
      * @return
      */
-    public Map renameSpaceQuotaForAdmin (int key,String reqUrl,HttpMethod httpMethod,Map space){
-        return commonService.procCfApiRestTemplate(key,Constants.V3_URL+reqUrl,httpMethod,space);
+    public Map renameSpaceQuotaForAdmin (String reqUrl,HttpMethod httpMethod,Map space){
+        return commonService.procApiRestTemplate(Constants.V3_URL+reqUrl, httpMethod, space, Constants.CF_API, Map.class).getBody();
     }
 
     /**
@@ -141,8 +141,8 @@ public class OrgSpaceListService extends Common {
      * @param httpMethod
      * @return
      */
-    public Map renameSpaceForAdmin (int key,String reqUrl,HttpMethod httpMethod,Map space){
-        return commonService.procCfApiRestTemplate(key,Constants.V3_URL+reqUrl,httpMethod,space);
+    public Map renameSpaceForAdmin (String reqUrl,HttpMethod httpMethod,Map space){
+        return commonService.procApiRestTemplate(Constants.V3_URL+reqUrl, httpMethod, space, Constants.CF_API, Map.class).getBody();
     }
 
 
@@ -154,8 +154,8 @@ public class OrgSpaceListService extends Common {
      * @param httpMethod
      * @return
      */
-    public Map qutaoSpaceForAdmin (int key,String reqUrl,HttpMethod httpMethod,Map space){
-        return commonService.procCfApiRestTemplate(key,Constants.V3_URL+reqUrl,httpMethod,space);
+    public Map qutaoSpaceForAdmin (String reqUrl,HttpMethod httpMethod,Map space){
+        return commonService.procApiRestTemplate(Constants.V3_URL+reqUrl, httpMethod, space, Constants.CF_API, Map.class).getBody();
     }
 
     /**
@@ -167,8 +167,8 @@ public class OrgSpaceListService extends Common {
      * @param httpMethod
      * @return
      */
-    public Map deleteOrgForAdmin(int key,String reqUrl,HttpMethod httpMethod){
-        return commonService.procCfApiRestTemplate(key,Constants.V3_URL+reqUrl,httpMethod,null);
+    public Map deleteOrgForAdmin(String reqUrl,HttpMethod httpMethod){
+        return commonService.procApiRestTemplate(Constants.V3_URL+reqUrl, httpMethod, null, Constants.CF_API, Map.class).getBody();
     }
 
     /**
@@ -178,8 +178,8 @@ public class OrgSpaceListService extends Common {
      * @param httpMethod httpMethod
      * @return Map (자바 Map 클래스)
      */
-    public Map<String, Object> getSpaceSummary(int key, String reqUrl, HttpMethod httpMethod, Object obj) {
-        return commonService.procCfApiRestTemplate(key,Constants.V3_URL + reqUrl, httpMethod, obj);
+    public Map<String, Object> getSpaceSummary(String reqUrl, HttpMethod httpMethod, Object obj) {
+        return commonService.procApiRestTemplate(Constants.V3_URL+reqUrl, httpMethod, obj, Constants.CF_API, Map.class).getBody();
     }
 
     /**
@@ -189,8 +189,8 @@ public class OrgSpaceListService extends Common {
      * @param httpMethod httpMethod
      * @return Map (자바 Map 클래스)
      */
-    public Map<String, Object> getSpaceQuota(int key, String reqUrl, HttpMethod httpMethod, Object obj) {
-        return commonService.procCfApiRestTemplate(key,Constants.V3_URL + reqUrl, httpMethod, obj);
+    public Map<String, Object> getSpaceQuota(String reqUrl, HttpMethod httpMethod, Object obj) {
+        return commonService.procApiRestTemplate(Constants.V3_URL + reqUrl, httpMethod, obj, Constants.CF_API, Map.class).getBody();
     }
 
     /**
@@ -200,8 +200,8 @@ public class OrgSpaceListService extends Common {
      * @param httpMethod httpMethod
      * @return Map (자바 Map 클래스)
      */
-    public Map<String, Object> getSpace(int key, String reqUrl, HttpMethod httpMethod, Object obj) {
-        return commonService.procCfApiRestTemplate(key,Constants.V3_URL + reqUrl, httpMethod, obj);
+    public Map<String, Object> getSpace(String reqUrl, HttpMethod httpMethod, Object obj) {
+        return commonService.procApiRestTemplate(Constants.V3_URL + reqUrl, httpMethod, obj, Constants.CF_API, Map.class).getBody();
     }
 
     /**
@@ -214,8 +214,8 @@ public class OrgSpaceListService extends Common {
      * @param param
      * @return
      */
-    public Map createOrgForAdmin(int key,String reqUrl,HttpMethod httpMethod,Map param){
-        return commonService.procCfApiRestTemplate(key,Constants.V3_URL + reqUrl,httpMethod,param);
+    public Map createOrgForAdmin(String reqUrl,HttpMethod httpMethod,Map param){
+        return commonService.procApiRestTemplate(Constants.V3_URL + reqUrl, httpMethod, param, Constants.CF_API, Map.class).getBody();
     }
 
     /**
@@ -228,8 +228,8 @@ public class OrgSpaceListService extends Common {
      * @param
      * @return
      */
-    public Map createSpaceForAdmin(int key,String reqUrl,HttpMethod httpMethod,Map param){
-        return commonService.procCfApiRestTemplate(key,Constants.V3_URL+reqUrl,httpMethod,param);
+    public Map createSpaceForAdmin(String reqUrl,HttpMethod httpMethod,Map param){
+        return commonService.procApiRestTemplate(Constants.V3_URL + reqUrl, httpMethod, param, Constants.CF_API, Map.class).getBody();
     }
 
 }

@@ -318,29 +318,9 @@
     var sltADDSpaceData;
     var sltAllSpaceGuid = [];
 
-    $( "#apiUrls" ).change(function() {
-        //key 값 저장
-        key = $("#apiUrls").val();
-        $.cookie("api_key",key);
-
-        getInitSecurityRuleHtml();
-        getSecurityGroupList();
-
-        //reset
-        var objTable = $("#securityGroupList");
-        objTable.html('');
-
-    });
-
     // Init
     $(document).ready(function () {
         //key 값 설정
-        if($.cookie("api_key") != null){
-            key = $.cookie("api_key");
-            $("#apiUrls").val(key);
-        }else{
-            key = $("#apiUrls").val();
-        }
 
         getInitMarketPlaceURL();
         getInitSecurityRuleHtml();
@@ -508,7 +488,7 @@
         } else if (filter == 'Running') {
             sltGroupUrl = "/v2/securitygroups/running/"
         }
-        procCallAjax(sltGroupUrl + sltPage + "?key="+key, "GET", null, procCallbackSecurityGroupList, $('#loadingBar'));
+        procCallAjax(sltGroupUrl + sltPage, "GET", null, procCallbackSecurityGroupList, $('#loadingBar'));
         getOrgs();
     }
 
@@ -574,7 +554,7 @@
         $('#modifyGuide').removeClass('hide');
 
         // 클라리언트 상세조회
-        procCallAjax("/v2/securitygroup/" + clientId +"?key="+key, "GET", null, procCallbackGetSecurityGruop, $('#modalLoadingBar'));
+        procCallAjax("/v2/securitygroup/" + clientId, "GET", null, procCallbackGetSecurityGruop, $('#modalLoadingBar'));
     }
 
     var procCallbackGetSecurityGruop = function (data) {
@@ -631,18 +611,18 @@
     function createSecurityGroup() {
         var param = getRules();
         var servicename = $('#securityGroupName').val();
-        procCallAjax2('/v2/securitygroup/' + servicename +"?key="+key, "POST", param, setCreateDefaultStagingSetting, $('#modalLoadingBar'));
+        procCallAjax2('/v2/securitygroup/' + servicename, "POST", param, setCreateDefaultStagingSetting, $('#modalLoadingBar'));
     };
 
     function updateSecurityGroup() {
         var param = getRules();
         var servicename = $('#securityGroupName').val();
-        procCallAjax('/v2/securitygroup/' + sltSecurityGuid + '/' + servicename +"?key="+key, "PUT", param, setUpdateDefaultStagingSetting, $('#modalLoadingBar'));
+        procCallAjax('/v2/securitygroup/' + sltSecurityGuid + '/' + servicename, "PUT", param, setUpdateDefaultStagingSetting, $('#modalLoadingBar'));
         $.each(sltBindSpaceData, function (index, data) {
-            procCallAjax2('/v2/securitygroup/' + sltSecurityGuid + '/spaces/' + data.metadata.guid +"?key="+key , "PUT", data, bindResult);
+            procCallAjax2('/v2/securitygroup/' + sltSecurityGuid + '/spaces/' + data.metadata.guid , "PUT", data, bindResult);
         });
         $.each(sltUnBindSpaceData, function (index, data) {
-            procCallAjax2('/v2/securitygroup/' + sltSecurityGuid + '/spaces/' + data +"?key="+key, "DELETE", data, bindResult);
+            procCallAjax2('/v2/securitygroup/' + sltSecurityGuid + '/spaces/' + data, "DELETE", data, bindResult);
         });
     };
 
@@ -652,7 +632,7 @@
     }
 
     function deleteSecurityGroup() {
-        procCallAjax('/v2/securitygroup/' + sltSecurityGuid +"?key="+key, "DELETE", null, getInitGroupList, $('#modalLoadingBar'));
+        procCallAjax('/v2/securitygroup/' + sltSecurityGuid , "DELETE", null, getInitGroupList, $('#modalLoadingBar'));
     };
 
     function getRules() {
@@ -693,11 +673,11 @@
     };
 
     function getOrgs() {
-        procCallAjax('/v2/orgs' +"?key="+key, "GET", null, serSecurityOrgsList, $('#modalLoadingBar'));
+        procCallAjax('/v2/orgs', "GET", null, serSecurityOrgsList, $('#modalLoadingBar'));
     }
 
     function getSecuritySpace(page) {
-        procCallAjax('/v2/securitygroup/' + sltSecurityGuid + '/' + page +"?key="+key, "GET", null, setSecuritySpaceList, $('#modalLoadingBar'));
+        procCallAjax('/v2/securitygroup/' + sltSecurityGuid + '/' + page , "GET", null, setSecuritySpaceList, $('#modalLoadingBar'));
     }
 
     function settingOrgListSpaceList() {
@@ -773,7 +753,7 @@
     function selectSpace() {
         var orgId = $("#selectOrg").val();
         if (orgId != "") {
-            procCallAjax('/v2/orgs/' + orgId + '/spaces' +"?key="+key, "GET", "", callbackSelectSpace, $('#modalLoadingBar'));
+            procCallAjax('/v2/orgs/' + orgId + '/spaces', "GET", "", callbackSelectSpace, $('#modalLoadingBar'));
         }
     };
 
@@ -966,13 +946,13 @@
             notifyAlert('success', "", '생성 완료 되었습니다.');
             sltSecurityGuid = data.DATA.metadata.guid;
             if ($('input:checkbox[id="securityStagingDefault"]').is(":checked")) {
-                procCallAjax2('/v2/securitygroup/' + sltSecurityGuid + '/staging' +"?key="+key, "PUT", "", bindResult, $('#modalLoadingBar'));
+                procCallAjax2('/v2/securitygroup/' + sltSecurityGuid + '/staging', "PUT", "", bindResult, $('#modalLoadingBar'));
             }
             if ($('input:checkbox[id="securityRunningDefault"]').is(":checked")) {
-                procCallAjax2('/v2/securitygroup/' + sltSecurityGuid + '/running' +"?key="+key, "PUT", "", bindResult, $('#modalLoadingBar'));
+                procCallAjax2('/v2/securitygroup/' + sltSecurityGuid + '/running', "PUT", "", bindResult, $('#modalLoadingBar'));
             }
             $.each(sltBindSpaceData, function (index, data1) {
-                procCallAjax2('/v2/securitygroup/' + data.DATA.metadata.guid + '/spaces/' + sltSecurityGuid +"?key="+key, "PUT", data.DATA, bindResult);
+                procCallAjax2('/v2/securitygroup/' + data.DATA.metadata.guid + '/spaces/' + sltSecurityGuid, "PUT", data.DATA, bindResult);
             });
             sltPage = 1;
             getSecurityGroupList();
@@ -983,17 +963,17 @@
 
     var setUpdateDefaultStagingSetting = function (data) {
         if ($('input:checkbox[id="securityStagingDefault"]').is(":checked")) {
-            procCallAjax2('/v2/securitygroup/' + sltSecurityGuid + '/staging' +"?key="+key, "PUT", "", setRunningDefaultSetting);
+            procCallAjax2('/v2/securitygroup/' + sltSecurityGuid + '/staging', "PUT", "", setRunningDefaultSetting);
         } else {
-            procCallAjax2('/v2/securitygroup/' + sltSecurityGuid + '/staging' +"?key="+key, "DELETE", "", setRunningDefaultSetting);
+            procCallAjax2('/v2/securitygroup/' + sltSecurityGuid + '/staging', "DELETE", "", setRunningDefaultSetting);
         }
     };
 
     var setRunningDefaultSetting = function (data) {
         if ($('input:checkbox[id="securityRunningDefault"]').is(":checked")) {
-            procCallAjax2('/v2/securitygroup/' + sltSecurityGuid + '/running' +"?key="+key, "PUT", "", getInitGroupList);
+            procCallAjax2('/v2/securitygroup/' + sltSecurityGuid + '/running', "PUT", "", getInitGroupList);
         } else {
-            procCallAjax2('/v2/securitygroup/' + sltSecurityGuid + '/running'+"?key="+key, "DELETE", "", getInitGroupList);
+            procCallAjax2('/v2/securitygroup/' + sltSecurityGuid + '/running', "DELETE", "", getInitGroupList);
         }
     };
 

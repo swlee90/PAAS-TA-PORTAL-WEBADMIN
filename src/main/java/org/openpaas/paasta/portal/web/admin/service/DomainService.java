@@ -1,5 +1,6 @@
 package org.openpaas.paasta.portal.web.admin.service;
 
+import org.openpaas.paasta.portal.web.admin.common.Constants;
 import org.openpaas.paasta.portal.web.admin.controller.DomainController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,8 +33,8 @@ public class DomainService {
      * @version 1.0
      * @since 2016.7.26 최초작성
      */
-    public Map<String, Object> getDomains(int key, String reqUrl, HttpMethod httpMethod, Object obj) {
-        return commonService.procCfApiRestTemplate(key,V3_URL + reqUrl, httpMethod, obj);
+    public Map<String, Object> getDomains(String reqUrl, HttpMethod httpMethod, Object obj) {
+        return commonService.procApiRestTemplate(V3_URL + reqUrl, httpMethod, obj, Constants.CF_API, Map.class).getBody();
     }
 
 
@@ -49,7 +50,7 @@ public class DomainService {
     @PostMapping(V2_URL + "/domains")
     @ResponseBody
     public Map<String, Object> addDomain(String reqUrl, HttpMethod httpMethod, Object param, String reqToken) {
-        return commonService.procCfApiRestTemplate(V3_URL + reqUrl, httpMethod, param, reqToken);
+        return commonService.procApiRestTemplate(V3_URL + reqUrl, httpMethod, param, Constants.CF_API, Map.class).getBody();
     }
 
     /**
@@ -64,6 +65,6 @@ public class DomainService {
     @DeleteMapping(V2_URL + "/domains")
     @ResponseBody
     public Map<String, Object> deleteDomain(String reqUrl, HttpMethod httpMethod, Object param, String reqToken) {
-        return commonService.procCfApiRestTemplate(V3_URL + reqUrl, httpMethod, param, reqToken);
+        return commonService.procApiRestTemplate(V3_URL + reqUrl, httpMethod, param, Constants.CF_API, Map.class).getBody();
     }
 }

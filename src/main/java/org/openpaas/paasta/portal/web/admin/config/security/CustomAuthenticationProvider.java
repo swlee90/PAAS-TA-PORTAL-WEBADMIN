@@ -44,26 +44,38 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 
         Collection<? extends GrantedAuthority> authorities = null;
 
-        UserList users = null;
+        UserDetails user = null;
 
         try {
-            users = customUserDetailsService.loginByUsernameAndPassword(username, password);
-        } catch (UsernameNotFoundException e) {
+
+            user = customUserDetailsService.loginByUsernameAndPassword(username, password);
+
+            LOGGER.info("username : " + username + " / password : " + password );
+            LOGGER.info("username : " + user.getUsername() + " / password : " + user.getPassword());
+
+            // matches 를 이용하여 암호를 비교한다.
+            if ( !password.equals(user.getPassword()) ) {
+                throw new BadCredentialsException( "암호가 일치하지 않습니다." );
+            }
+
+            authorities = user.getAuthorities();
+
+        } catch(UsernameNotFoundException e) {
             LOGGER.info(e.toString());
             throw new UsernameNotFoundException(e.getMessage());
-        } catch (BadCredentialsException e) {
+        } catch(BadCredentialsException e) {
             LOGGER.info(e.toString());
             throw new BadCredentialsException(e.getMessage());
-        } catch (Exception e) {
+        } catch(Exception e) {
             LOGGER.info(e.toString());
-            throw new BadCredentialsException("");
         }
+
 
 
         List role = new ArrayList();
         role.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
         authorities = role;
-        return new UsernamePasswordAuthenticationToken(users, password, authorities);
+        return new UsernamePasswordAuthenticationToken(user, password, authorities);
     }
 
     @Override

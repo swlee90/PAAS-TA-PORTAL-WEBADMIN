@@ -3,9 +3,7 @@ package org.openpaas.paasta.portal.web.admin.controller;
 import org.openpaas.paasta.portal.web.admin.common.Common;
 import org.openpaas.paasta.portal.web.admin.common.Constants;
 import org.openpaas.paasta.portal.web.admin.common.User;
-import org.openpaas.paasta.portal.web.admin.entity.ConfigEntity;
 import org.openpaas.paasta.portal.web.admin.model.BuildPack;
-import org.openpaas.paasta.portal.web.admin.service.ConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Controller;
@@ -52,10 +50,8 @@ public class BuildPackController extends Common {
      */
     @RequestMapping(value = {V2_URL + "/buildpacks"}, method = RequestMethod.GET)
     @ResponseBody
-    public Map<String, Object> getBuildPacks(HttpServletRequest request, @ModelAttribute BuildPack buildPack) {
-        String key = request.getParameter("key");
-        return commonService.procCfApiRestTemplate(Integer.parseInt(key),Constants.V2_URL + "/buildpacks", HttpMethod.GET, buildPack);
-
+    public Map<String, Object> getBuildPacks(@ModelAttribute BuildPack buildPack) {
+        return commonService.procApiRestTemplate(Constants.V2_URL + "/buildpacks", HttpMethod.GET, buildPack, Constants.CF_API, Map.class).getBody();
     }
 
     /**
@@ -66,17 +62,8 @@ public class BuildPackController extends Common {
      */
     @RequestMapping(value = {V2_URL + "/buildpacks/{guid}"}, method = RequestMethod.PUT)
     @ResponseBody
-    public Map<String, Object> updateBuildPack(HttpServletRequest request, @RequestBody BuildPack buildPack, @PathVariable String guid) {
-        String key = request.getParameter("key");
+    public Map<String, Object> updateBuildPack(@RequestBody BuildPack buildPack, @PathVariable String guid) {
         buildPack.setGuid(UUID.fromString(guid));
-        return commonService.procCfApiRestTemplate(Integer.parseInt(key),Constants.V3_URL + "/buildpacks/" + buildPack.getGuid().toString(), HttpMethod.PUT, buildPack);
-    }
-
-    @Autowired
-    ConfigService configService;
-
-    @ModelAttribute("configs")
-    public List<User> configs(){
-        return getServerInfos();
+        return commonService.procApiRestTemplate(Constants.V3_URL + "/buildpacks/" + buildPack.getGuid().toString(), HttpMethod.PUT, buildPack, Constants.CF_API, Map.class).getBody();
     }
 }

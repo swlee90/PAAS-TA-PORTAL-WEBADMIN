@@ -33,9 +33,6 @@ public class Common {
     public CatalogService catalogService;
 
     @Autowired
-    public ConfigInfoService configInfoService;
-
-    @Autowired
     public CommonCodeService commonCodeService;
 
 
@@ -63,6 +60,9 @@ public class Common {
 
     public String getToken() {
 
+        try{
+
+
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if ("".equals(auth.getCredentials())) return ((String) auth.getPrincipal().toString());
 
@@ -81,7 +81,7 @@ public class Common {
 
                 Map result;
 
-                result = commonService.procCfApiRestTemplate("/login", HttpMethod.POST, resBody, null);
+                result = commonService.procApiRestTemplate("/login", HttpMethod.POST, resBody, Constants.CF_API, Map.class).getBody();
 
                 user.setToken((String) result.get("token"));
                 user.setExpireDate((Long) result.get("expireDate"));
@@ -102,6 +102,9 @@ public class Common {
         String token = user.getToken();
 
         return token;
+        } catch (Exception e){
+            return "";
+        }
     }
 
 
@@ -113,7 +116,7 @@ public class Common {
 
             Map result;
 
-            result = commonService.procCfApiRestTemplate(user.getApiUri(), "/login", user.getAuthorization(), HttpMethod.POST, resBody, null);
+            result = commonService.procApiRestTemplate("/login", HttpMethod.POST, resBody, Constants.CF_API, Map.class).getBody();
 
             user.setToken((String) result.get("token"));
             user.setExpireDate((Long) result.get("expireDate"));
@@ -174,20 +177,5 @@ public class Common {
         }
         return map;
     }
-
-
-    public List getServerInfos() {
-        try {
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-            final Object authPrincipal = auth.getPrincipal();
-            UserList userList = (UserList) authPrincipal;
-            List users = userList.getUsers();
-            return users;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
 }
 

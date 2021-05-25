@@ -40,8 +40,8 @@ public class SecurityGroupService extends Common {
      * @throws Exception the exception
      * @author 박철한
      */
-    public Map<String, Object> getSecurityGroupList(int key, String page) throws Exception {
-        return commonService.procCfApiRestTemplate(key,Constants.V3_URL + "/securitygroups/" + page, HttpMethod.GET, null);
+    public Map<String, Object> getSecurityGroupList(String page) throws Exception {
+        return commonService.procApiRestTemplate(Constants.V3_URL + "/securitygroups/" + page, HttpMethod.GET, null, Constants.CF_API, Map.class).getBody();
     }
 
 
@@ -52,8 +52,8 @@ public class SecurityGroupService extends Common {
      * @return Map (자바 Map 클래스)
      * @throws Exception the exception
      */
-    public Map<String, Object> getSecurityGroupResponse(int key, String securityid) throws Exception {
-        return commonService.procCfApiRestTemplate(key,Constants.V3_URL + "/securitygroup/" + securityid, HttpMethod.GET, null);
+    public Map<String, Object> getSecurityGroupResponse(String securityid) throws Exception {
+        return commonService.procApiRestTemplate(Constants.V3_URL + "/securitygroup/" + securityid, HttpMethod.GET, null, Constants.CF_API, Map.class).getBody();
     }
 
 
@@ -66,8 +66,8 @@ public class SecurityGroupService extends Common {
      * @throws Exception the exception
      * @author 박철한
      */
-    public Map<String, Object> createSecurityGroupResponse(int key, @PathVariable String groupname, @RequestBody Object rule) throws Exception {
-        return commonService.procCfApiRestTemplate(key,Constants.V3_URL + "/securitygroup/" + groupname, HttpMethod.POST, rule);
+    public Map<String, Object> createSecurityGroupResponse(@PathVariable String groupname, @RequestBody Object rule) throws Exception {
+        return commonService.procApiRestTemplate(Constants.V3_URL + "/securitygroup/" + groupname, HttpMethod.POST, rule, Constants.CF_API, Map.class).getBody();
     }
 
     /**
@@ -80,9 +80,9 @@ public class SecurityGroupService extends Common {
      * @throws Exception the exception
      * @author 박철한
      */
-    public Map<String, Object> updateSecurityGroupResponse(int key, String securityid, String groupname, Object rule) throws Exception {
+    public Map<String, Object> updateSecurityGroupResponse(String securityid, String groupname, Object rule) throws Exception {
         System.out.println(rule);
-        return commonService.procCfApiRestTemplate(key,Constants.V3_URL + "/securitygroup/" + securityid + "/" + groupname, HttpMethod.PUT, rule);
+        return commonService.procApiRestTemplate(Constants.V3_URL + "/securitygroup/" + securityid + "/" + groupname, HttpMethod.PUT, rule, Constants.CF_API, Map.class).getBody();
     }
 
 
@@ -94,8 +94,8 @@ public class SecurityGroupService extends Common {
      * @throws Exception the exception
      * @author 박철한
      */
-    public Map<String, Object> deleteSecurityGroupResponse(int key, @PathVariable String securityid) throws Exception {
-        return commonService.procCfApiRestTemplate(key,Constants.V3_URL + "/securitygroup/" + securityid, HttpMethod.DELETE, null);
+    public Map<String, Object> deleteSecurityGroupResponse(@PathVariable String securityid) throws Exception {
+        return commonService.procApiRestTemplate(Constants.V3_URL + "/securitygroup/" + securityid, HttpMethod.DELETE, null, Constants.CF_API, Map.class).getBody();
     }
 
     /**
@@ -107,8 +107,8 @@ public class SecurityGroupService extends Common {
      * @author 박철한
      */
     @PutMapping(Constants.V2_URL + "/securitygroup/{securityid}/staging")
-    public Map<String, Object> setSecurityGroupStagingDefaultResponse(int key, @PathVariable String securityid) throws Exception {
-        return commonService.procCfApiRestTemplate(key,Constants.V3_URL + "/securitygroup/" + securityid + "/staging", HttpMethod.PUT, null);
+    public Map<String, Object> setSecurityGroupStagingDefaultResponse(@PathVariable String securityid) throws Exception {
+        return commonService.procApiRestTemplate(Constants.V3_URL + "/securitygroup/" + securityid + "/staging", HttpMethod.PUT, null, Constants.CF_API, Map.class).getBody();
     }
 
 
@@ -120,8 +120,8 @@ public class SecurityGroupService extends Common {
      * @throws Exception the exception
      * @author 박철한
      */
-    public Map<String, Object> listSecurityGroupStagingDefaultsResponse(int key, int page) throws Exception {
-        return commonService.procCfApiRestTemplate(key,Constants.V3_URL + "/securitygroup/" + page + "/staging", HttpMethod.GET, null);
+    public Map<String, Object> listSecurityGroupStagingDefaultsResponse(int page) throws Exception {
+        return commonService.procApiRestTemplate(Constants.V3_URL + "/securitygroup/" + page + "/staging", HttpMethod.GET, null, Constants.CF_API, Map.class).getBody();
     }
 
 
@@ -133,8 +133,8 @@ public class SecurityGroupService extends Common {
      * @throws Exception the exception
      * @author 박철한
      */
-    public Map<String, Object> removeSecurityGroupStaging(int key, String securityid) throws Exception {
-        return commonService.procCfApiRestTemplate(key,Constants.V3_URL + "/securitygroup/" + securityid + "/staging", HttpMethod.DELETE, null);
+    public Map<String, Object> removeSecurityGroupStaging(String securityid) throws Exception {
+        return commonService.procApiRestTemplate(Constants.V3_URL + "/securitygroup/" + securityid + "/staging", HttpMethod.DELETE, null, Constants.CF_API, Map.class).getBody();
     }
 
 
@@ -146,8 +146,8 @@ public class SecurityGroupService extends Common {
      * @throws Exception the exception
      * @author 박철한
      */
-    public Map<String, Object> setSecurityGroupRunningDefaultResponse(int key, @PathVariable String securityid) throws Exception {
-        return commonService.procCfApiRestTemplate(key,Constants.V3_URL + "/securitygroup/" + securityid + "/running", HttpMethod.PUT, null);
+    public Map<String, Object> setSecurityGroupRunningDefaultResponse(@PathVariable String securityid) throws Exception {
+        return commonService.procApiRestTemplate(Constants.V3_URL + "/securitygroup/" + securityid + "/running", HttpMethod.PUT, null, Constants.CF_API, Map.class).getBody();
     }
 
 
@@ -159,8 +159,8 @@ public class SecurityGroupService extends Common {
      * @throws Exception the exception
      * @author 박철한
      */
-    public Map<String, Object> listSecurityGroupRunningDefaultsResponse(int key, @PathVariable int page) throws Exception {
-        return commonService.procCfApiRestTemplate(key, Constants.V3_URL + "/securitygroup/" + page + "/running", HttpMethod.GET, null);
+    public Map<String, Object> listSecurityGroupRunningDefaultsResponse(@PathVariable int page) throws Exception {
+        return commonService.procApiRestTemplate(Constants.V3_URL + "/securitygroup/" + page + "/running", HttpMethod.GET, null, Constants.CF_API, Map.class).getBody();
     }
 
 
@@ -172,8 +172,8 @@ public class SecurityGroupService extends Common {
      * @throws Exception the exception
      * @author 박철한
      */
-    public Map<String, Object> removeSecurityGroupRunning(int key, @PathVariable String securityid) throws Exception {
-        return commonService.procCfApiRestTemplate(key,Constants.V3_URL + "/securitygroup/" + securityid + "/running", HttpMethod.DELETE, null);
+    public Map<String, Object> removeSecurityGroupRunning(@PathVariable String securityid) throws Exception {
+        return commonService.procApiRestTemplate(Constants.V3_URL + "/securitygroup/" + securityid + "/running", HttpMethod.DELETE, null, Constants.CF_API, Map.class).getBody();
     }
 
     /**
@@ -184,8 +184,8 @@ public class SecurityGroupService extends Common {
      * @return ListSecurityGroupSpacesResponse
      * @throws Exception the exception
      */
-    public Map<String, Object> listSecurityGroupSpacesResponse(int key, @PathVariable String securityid, @PathVariable int page) throws Exception {
-        return commonService.procCfApiRestTemplate(key,Constants.V3_URL + "/securitygroup/" + securityid + "/" + page, HttpMethod.GET, null);
+    public Map<String, Object> listSecurityGroupSpacesResponse(@PathVariable String securityid, @PathVariable int page) throws Exception {
+        return commonService.procApiRestTemplate(Constants.V3_URL + "/securitygroup/" + securityid + "/" + page, HttpMethod.GET, null, Constants.CF_API, Map.class).getBody();
     }
 
     /**
@@ -196,8 +196,8 @@ public class SecurityGroupService extends Common {
      * @return AssociateSecurityGroupSpaceResponse
      * @throws Exception the exception
      */
-    public Map<String, Object> associateSecurityGroupSpaceResponse(int key, @PathVariable String securityid, @PathVariable String spaceid) throws Exception {
-        return commonService.procCfApiRestTemplate(key,Constants.V3_URL + "/securitygroup/" + securityid + "/spaces/" + spaceid, HttpMethod.PUT, null);
+    public Map<String, Object> associateSecurityGroupSpaceResponse(@PathVariable String securityid, @PathVariable String spaceid) throws Exception {
+        return commonService.procApiRestTemplate(Constants.V3_URL + "/securitygroup/" + securityid + "/spaces/" + spaceid, HttpMethod.PUT, null, Constants.CF_API, Map.class).getBody();
     }
 
     /**
@@ -208,7 +208,7 @@ public class SecurityGroupService extends Common {
      * @return Map
      * @throws Exception the exception
      */
-    public Map<String, Object> removeSecurityGroupSpace(int key, @PathVariable String securityid, @PathVariable String spaceid) throws Exception {
-        return commonService.procCfApiRestTemplate(key,Constants.V3_URL + "/securitygroup/" + securityid + "/spaces/" + spaceid, HttpMethod.DELETE, null);
+    public Map<String, Object> removeSecurityGroupSpace(@PathVariable String securityid, @PathVariable String spaceid) throws Exception {
+        return commonService.procApiRestTemplate(Constants.V3_URL + "/securitygroup/" + securityid + "/spaces/" + spaceid, HttpMethod.DELETE, null, Constants.CF_API, Map.class).getBody();
     }
 }

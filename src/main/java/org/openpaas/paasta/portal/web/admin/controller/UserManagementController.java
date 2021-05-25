@@ -50,16 +50,14 @@ public class UserManagementController extends Common {
     @GetMapping(V2_URL + "/usermgnts/{filter}/user")
     @ResponseBody
     public Map<String, Object> getUserInfoList(@PathVariable String filter, HttpServletRequest request, @ModelAttribute UserManagement param) {
-        String key = request.getParameter("key");
-        return userManagementService.getUserInfoList(Integer.parseInt(key), "/usermgnts/" + filter + "/user?searchKeyword=" + param.getSearchKeyword(), HttpMethod.GET, param);
+        return userManagementService.getUserInfoList("/usermgnts/" + filter + "/user?searchKeyword=" + param.getSearchKeyword(), HttpMethod.GET, param);
     }
 
 
     @PostMapping(V2_URL + "/usermgnts/{userid}")
     @ResponseBody
     public Map<String, Object> getUserInfoList(@PathVariable String userid, HttpServletRequest request) {
-        String key = request.getParameter("key");
-        return userManagementService.getUserInfoList(Integer.parseInt(key), "/usermgnts/" + userid, HttpMethod.POST, null);
+        return userManagementService.getUserInfoList("/usermgnts/" + userid, HttpMethod.POST, null);
     }
 
 
@@ -72,8 +70,7 @@ public class UserManagementController extends Common {
     @PostMapping(V2_URL + "/usermgnts/password/email")
     @ResponseBody
     public Map<String, Object> setResetPassword(HttpServletRequest request, @RequestBody Map map) {
-        String key = request.getParameter("key");
-        return userManagementService.setResetPassword(Integer.parseInt(key), "/users/password/email", HttpMethod.POST, map);
+        return userManagementService.setResetPassword("/users/password/email", HttpMethod.POST, map);
     }
 
 
@@ -87,8 +84,7 @@ public class UserManagementController extends Common {
     @PostMapping(V2_URL + "/usermgnts/password")
     @ResponseBody
     public Map<String, Object> setInitPassword(HttpServletRequest request, @RequestBody Map map) {
-        String key = request.getParameter("key");
-        return userManagementService.setInitPassword(Integer.parseInt(key), "/users/password/reset", HttpMethod.POST, map);
+        return userManagementService.setInitPassword("/users/password/reset", HttpMethod.POST, map);
     }
 
     /**
@@ -101,8 +97,7 @@ public class UserManagementController extends Common {
     @PutMapping(V2_URL + "/usermgnts/{userid}/authority")
     @ResponseBody
     public Map<String, Object> updateOperatingAuthority(@PathVariable String userid, HttpServletRequest request, @RequestBody UserManagement param) throws UnsupportedEncodingException {
-        String key = request.getParameter("key");
-        return userManagementService.updateOperatingAuthority(Integer.parseInt(key), "/usermgnts/" + userid + "/authority", HttpMethod.PUT, param);
+        return userManagementService.updateOperatingAuthority("/usermgnts/" + userid + "/authority", HttpMethod.PUT, param);
     }
 
 
@@ -115,8 +110,7 @@ public class UserManagementController extends Common {
     @DeleteMapping(V2_URL + "/usermgnts/{guid}")
     @ResponseBody
     public Map<String, Object> deleteUserAccount(@PathVariable String guid, HttpServletRequest request) {
-        String key = request.getParameter("key");
-        return userManagementService.deleteUserAccount(Integer.parseInt(key), guid, HttpMethod.DELETE, null);
+        return userManagementService.deleteUserAccount(guid, HttpMethod.DELETE, null);
     }
 
 
@@ -129,8 +123,7 @@ public class UserManagementController extends Common {
     @PostMapping(V2_URL + "/usermgnts/user")
     @ResponseBody
     public Map<String, Object> addUser(HttpServletRequest request, @RequestBody Map param) {
-        String key = request.getParameter("key");
-        return userManagementService.addUser(Integer.parseInt(key), HttpMethod.POST, param);
+        return userManagementService.addUser(HttpMethod.POST, param);
     }
 
 
@@ -144,8 +137,7 @@ public class UserManagementController extends Common {
     @PutMapping(V2_URL + "/organizations/{guid}/users")
     @ResponseBody
     public Map<String, Object> associateUserOrg(@PathVariable String guid, HttpServletRequest request, @RequestBody String param) throws Exception {
-        String key = request.getParameter("key");
-        return userManagementService.associateUserOrg(Integer.parseInt(key), "/organizations/" + guid + "/users", HttpMethod.PUT, param);
+        return userManagementService.associateUserOrg("/organizations/" + guid + "/users", HttpMethod.PUT, param);
     }
 
     /**
@@ -157,16 +149,8 @@ public class UserManagementController extends Common {
     @PutMapping(V2_URL + "/usermgnts/{guid}/active")
     @ResponseBody
     public Map<String, Object> updateUserActive(@PathVariable String guid, HttpServletRequest request, @RequestBody UserManagement param) {
-        String key = request.getParameter("key");
-        return userManagementService.updateUserActive(Integer.parseInt(key), "/usermgnts/" + guid + "/active", HttpMethod.PUT, param);
+        return userManagementService.updateUserActive("/usermgnts/" + guid + "/active", HttpMethod.PUT, param);
     }
-
-
-    @ModelAttribute("configs")
-    public List<User> configs() {
-        return getServerInfos();
-    }
-
     /**
      * 유저 상세정보전체출력
      *
@@ -175,8 +159,7 @@ public class UserManagementController extends Common {
      */
     @GetMapping(V2_URL + "/users/{userid}/summary")
     public Map<String, Object> GetUserSummary(@PathVariable String userid, HttpServletRequest request) {
-        String key = request.getParameter("key");
-        return userManagementService.GetUserSummary(Integer.parseInt(key), "/users/" + userid + "/summary", HttpMethod.GET);
+        return userManagementService.GetUserSummary("/users/" + userid + "/summary", HttpMethod.GET);
 
 
     }
@@ -189,8 +172,7 @@ public class UserManagementController extends Common {
      */
     @GetMapping(V2_URL + "/users/{userId}")
     public Map<String, Object> getUser(@PathVariable String userId, HttpServletRequest request) {
-        String key = request.getParameter("key");
-        return userManagementService.getUser(Integer.parseInt(key), "/users/" + userId, HttpMethod.GET);
+        return userManagementService.getUser("/users/" + userId, HttpMethod.GET);
     }
 
     /**
@@ -202,8 +184,7 @@ public class UserManagementController extends Common {
      */
     @PostMapping(V2_URL + "/orgs-user/{orgId}/user-roles/{spaceId}")
     public Map<String, Object> getOrgUserRolesForAdmin(HttpServletRequest request, @PathVariable String orgId, @PathVariable String spaceId, @RequestBody UserManagement users) {
-        String key = request.getParameter("key");
-        return userManagementService.getOrgUserRolesForAdmin(Integer.parseInt(key), "/orgs-user/" + orgId + "/user-roles/" + spaceId, HttpMethod.POST, users);
+        return userManagementService.getOrgUserRolesForAdmin("/orgs-user/" + orgId + "/user-roles/" + spaceId, HttpMethod.POST, users);
     }
 
 
@@ -217,8 +198,7 @@ public class UserManagementController extends Common {
     @GetMapping(V2_URL + "/usermgnts/info/{userid}")
     @ResponseBody
     public Map<String, Object> infoUser(@PathVariable String userid, HttpServletRequest request, @ModelAttribute UserManagement user) {
-        String key = request.getParameter("key");
-        return commonService.procCommonApiRestTemplate(Integer.parseInt(key), Constants.V2_URL + "/user/" + userid, HttpMethod.GET, user);
+        return commonService.procApiRestTemplate(Constants.V2_URL + "/user/" + userid, HttpMethod.GET, user, Constants.COMMON_API, Map.class).getBody();
 
 
     }
@@ -233,8 +213,7 @@ public class UserManagementController extends Common {
     @PutMapping(V2_URL + "/usermgnts/info/{userid}")
     @ResponseBody
     public Map<String, Object> updateUser(@PathVariable String userid, HttpServletRequest request, @RequestBody Map map) throws Exception {
-        String key = request.getParameter("key");
-        return userManagementService.updateUser(Integer.parseInt(key), "/user" + "/" + userid, HttpMethod.PUT, map);
+        return userManagementService.updateUser("/user" + "/" + userid, HttpMethod.PUT, map);
 
     }
 
@@ -247,8 +226,7 @@ public class UserManagementController extends Common {
     @GetMapping(V2_URL + "/usermgnts/{username}/uaa")
     @ResponseBody
     public Map<String, Object> getSummary(@PathVariable String username, HttpServletRequest request, @ModelAttribute UserManagement user) {
-        String key = request.getParameter("key");
-        return commonService.procCommonApiRestTemplate(Integer.parseInt(key), Constants.V2_URL + "/user/"+username+"/uaa", HttpMethod.GET, user);
+        return commonService.procApiRestTemplate(Constants.V2_URL + "/user/"+username+"/uaa", HttpMethod.GET, user, Constants.COMMON_API, Map.class).getBody();
     }
 
     /**
@@ -261,8 +239,7 @@ public class UserManagementController extends Common {
     @PutMapping(V2_URL + "/usermgnts/{username}/uaa")
     @ResponseBody
     public Map<String, Object> updateUaa(@PathVariable String username, HttpServletRequest request, @RequestBody Map map) throws Exception {
-        String key = request.getParameter("key");
-        return userManagementService.updateUser(Integer.parseInt(key), "/user/"+username+"/uaa", HttpMethod.PUT, map);
+        return userManagementService.updateUser("/user/"+username+"/uaa", HttpMethod.PUT, map);
 
     }
 
@@ -275,8 +252,7 @@ public class UserManagementController extends Common {
     @DeleteMapping(V2_URL + "/orgs/{orgId}/user-roles/{userId}")
     @ResponseBody
     public Map<String, Object> deleteAllUserRoles(@PathVariable String orgId,@PathVariable String userId, HttpServletRequest request, @RequestBody Object param) throws Exception {
-        String key= request.getParameter("key");
-        return userManagementService.deleteUserRoles(Integer.parseInt(key),"/orgs/"+orgId+"/member?userId="+userId, HttpMethod.DELETE, null);
+        return userManagementService.deleteUserRoles("/orgs/"+orgId+"/member?userId="+userId, HttpMethod.DELETE, null);
     }
 
     /**
@@ -288,8 +264,7 @@ public class UserManagementController extends Common {
     @DeleteMapping(V2_URL + "/orgs/{orgId}/user-roles/{userId}/{role}")
     @ResponseBody
     public Map<String, Object> deleteOrgRoles(@PathVariable String orgId,@PathVariable String userId,@PathVariable String role, HttpServletRequest request, @RequestBody Object param) throws Exception {
-        String key= request.getParameter("key");
-        return userManagementService.deleteUserRoles(Integer.parseInt(key),"/orgs/"+orgId+"/user-roles?userId="+userId+"&role="+role, HttpMethod.DELETE, null);
+        return userManagementService.deleteUserRoles("/orgs/"+orgId+"/user-roles?userId="+userId+"&role="+role, HttpMethod.DELETE, null);
     }
 
 
@@ -302,8 +277,7 @@ public class UserManagementController extends Common {
     @DeleteMapping(V2_URL + "/spaces/{spaceId}/user-roles/{userId}/{role}")
     @ResponseBody
     public Map<String, Object> deleteSpaceRoles(@PathVariable String spaceId,@PathVariable String userId,@PathVariable String role, HttpServletRequest request, @RequestBody Object param) throws Exception {
-        String key= request.getParameter("key");
-        return userManagementService.deleteUserRoles(Integer.parseInt(key),"/spaces/"+spaceId+"/user-roles?userId="+userId+"&role="+role, HttpMethod.DELETE, null);
+        return userManagementService.deleteUserRoles("/spaces/"+spaceId+"/user-roles?userId="+userId+"&role="+role, HttpMethod.DELETE, null);
     }
 
 

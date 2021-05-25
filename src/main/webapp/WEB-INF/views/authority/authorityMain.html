@@ -144,27 +144,11 @@
     var userInfo;
     var autoCompleteIndex;
 
-    $( "#apiUrls" ).change(function() {
-        key = $("#apiUrls").val();
-        $.cookie("api_key",key);
-        getAuthGroups(setAuthGroupTable,key);
-        getUserInfo(setUserInfo,key);
-    });
-
     $(document).ready(function(){
 
-        //key 값 설정
-        key = $("#apiUrls").val();
-        if($.cookie("api_key") != null){
-            key = $.cookie("api_key");
-            $("#apiUrls").val(key);
-        }else{
-            key = $("#apiUrls").val();
-        }
-
         getInitMarketPlaceURL()
-        getAuthGroups(setAuthGroupTable,key);
-        getUserInfo(setUserInfo,key);
+        getAuthGroups(setAuthGroupTable);
+        getUserInfo(setUserInfo);
 
         $("#user-add-name-input").keyup(function(event) {
             switch (event.which){
@@ -193,7 +177,7 @@
             reqData =null;
         }
         $.ajax({
-            url: reqUrl+"?key="+key,
+            url: reqUrl,
             method: reqMethod,
             data: reqData,
             dataType: 'json',
@@ -217,7 +201,7 @@
 
 
                 procAlert("danger", JSON.parse(xhr.responseText).message);
-                if(reqMethod == "POST" && reqUrl == AUTHORITY_MEMBER_URL+"?key="+key)
+                if(reqMethod == "POST" && reqUrl == AUTHORITY_MEMBER_URL)
                 {
                     procAlert("danger", "유저등록/삭제 할 수 있는 권한이 없습니다.");
                 }
@@ -235,7 +219,7 @@
     }
 
     function getGroupMembersInfo(groupGuid, callback){
-        procCallAjax(AUTHORITY_GROUPS_URL +"?key="+key, {"groupGuid":groupGuid}, callback)
+        procCallAjax(AUTHORITY_GROUPS_URL, {"groupGuid":groupGuid}, callback)
     }
 
     function createAuthorityGroup(groupToCreate, callback) {
@@ -249,7 +233,7 @@
         procClosePopup()
     }
 
-    function addAuthorityGroupMembers(groupGuid, memberUserNameList, callback,key){
+    function addAuthorityGroupMembers(groupGuid, memberUserNameList, callback){
         AuthorityCallAjax(AUTHORITY_MEMBER_URL,"POST", {"groupGuid":groupGuid, "memberUserNameList":memberUserNameList}, callback);
     }
 
@@ -260,7 +244,7 @@
         procClosePopup()
     }
 
-    function getUserInfo(callback,key){
+    function getUserInfo(callback){
         AuthorityCallAjax(GET_USER_INFO,"GET", {}, callback);
     }
 

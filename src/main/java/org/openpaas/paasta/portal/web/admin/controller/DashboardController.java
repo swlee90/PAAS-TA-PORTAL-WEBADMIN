@@ -34,11 +34,4 @@ public class DashboardController extends Common {
 
         return mv;
     }
-
-
-    @ModelAttribute("configs")
-    public List<User> configs(){
-        return getServerInfos();
-    }
-
 }

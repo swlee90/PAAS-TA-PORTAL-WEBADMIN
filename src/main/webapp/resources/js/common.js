@@ -746,7 +746,7 @@ var LIST_DETAIL_PROC_URL = "/v2/codedetail";
 
 function getInitMarketPlaceURL() {
     var param = {"searchKeyword": "MARKET_ADMIN_URL"};
-    procCallAjax(LIST_DETAIL_PROC_URL+"?key="+key, "GET", param, procCallbackGetCodeDetailList, $('#serviceModalLoadingBar'));
+    //procCallAjax(LIST_DETAIL_PROC_URL, "GET", param, procCallbackGetCodeDetailList, $('#serviceModalLoadingBar'));
 }
 
 function procCallbackGetCodeDetailList(data) {

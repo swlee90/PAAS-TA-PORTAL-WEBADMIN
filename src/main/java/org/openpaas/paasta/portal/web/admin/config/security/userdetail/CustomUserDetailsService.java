@@ -1,11 +1,8 @@
 package org.openpaas.paasta.portal.web.admin.config.security.userdetail;
 
+import org.openpaas.paasta.portal.web.admin.common.Constants;
 import org.openpaas.paasta.portal.web.admin.common.User;
-import org.openpaas.paasta.portal.web.admin.common.UserList;
-import org.openpaas.paasta.portal.web.admin.entity.ConfigEntity;
-import org.openpaas.paasta.portal.web.admin.respository.ConfigRepository;
 import org.openpaas.paasta.portal.web.admin.service.CommonService;
-import org.openpaas.paasta.portal.web.admin.service.ConfigService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,11 +30,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
     private CommonService commonService;
 
-    @Autowired
-    private ConfigService configService;
 
-    @Autowired
-    ConfigRepository configRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -51,106 +44,43 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
 
-    public UserList loginByUsernameAndPassword(String username, String password) throws Exception {
+    public UserDetails loginByUsernameAndPassword(String username, String password) throws Exception {
 
         Map<String, Object> resBody = new HashMap();
 
         resBody.put("id", username);
         resBody.put("password", password);
+        Map result;
 
 
-        List users = new ArrayList();
-        int apiLoginCount = 0;
-        int adminYN = 0;
-        for (ConfigEntity configEntity : configService.getConfigs()) {
-
-            LOGGER.info("> configEntity Name: " + configEntity.getName());
-            LOGGER.info("> configEntity ApiUri: " + configEntity.getApiUri());
-            LOGGER.info("> configEntity UaaUri: " + configEntity.getUaaUri());
-
-
-            /*
-             * CF_API  로그인 요청
-             */
-            Map result = null;
-            try {
-                result = commonService.procCfApiRestTemplate(configEntity.getApiUri(), "/login", configEntity.getAuthorization(), HttpMethod.POST, resBody, "");
-                apiLoginCount++;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            /*
-             * DB에 사용자 정보 요청
-             */
-            Map info = null;
-            Map userInfo = null;
-            try {
-                info = commonService.procCommonApiRestTemplate(configEntity.getApiUri(), "/v2/user/" + username, configEntity.getAuthorization(), HttpMethod.GET, null, "");
-                userInfo = (Map) info.get("User");
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            String token = null;
-            Long expireDate = null;
-            if (result != null) {
-                token = (String) result.get("token");
-                expireDate = (Long) result.get("expireDate");
-            }
-
-            String name = null;
-            String adminYn = null;
-            String imgPath = null;
-
-            if (userInfo != null) {
-                adminYn = (String) userInfo.get("adminYn");
-                imgPath = (String) userInfo.get("imgPath");
-                name = (String) userInfo.get("name");
-            }
-
-
-            String roleName;
-            if (adminYn != null && adminYn.equals("Y")) {
-                roleName = "ROLE_ADMIN";
-                adminYN++;
-            } else {
-                roleName = "ROLE_USER";
-                token = null;
-            }
-
-
-            List role = new ArrayList();
-            role.add(new SimpleGrantedAuthority(roleName));
-
-            User user = new User(username, password, role);
-            user.setName(name);
-            user.setToken(token);
-            user.setExpireDate(expireDate);
-            user.setImgPath(imgPath);
-            user.setInfra_name(configEntity.getName());
-            user.setAuthorization(configEntity.getAuthorization());
-            user.setApiUri(configEntity.getApiUri());
-            user.setUaaUri(configEntity.getUaaUri());
-            user.setKey(configEntity.getKey());
-            LOGGER.info("End Login :: " + configEntity.getApiUri() + " /// " + user.toString());
-            users.add(user);
+        try {
+            result = commonService.procApiRestTemplate("/login", HttpMethod.POST, resBody, Constants.CF_API, Map.class).getBody();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new BadCredentialsException(e.getMessage());
+        }
+        Map info = new HashMap();
+        try {
+            info = commonService.procApiRestTemplate("/v2/user/" + username, HttpMethod.GET, null, Constants.COMMON_API, Map.class).getBody();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-        LOGGER.info("LOGIN :: " + apiLoginCount);
-        if (apiLoginCount == 0) {
-            throw new BadCredentialsException("Incorrect login information or incorrect contact address.");
-        }
-        LOGGER.info("adminYN :: " + adminYN);
-        if (adminYN == 0) {
-            throw new BadCredentialsException("You do not have access..");
-        }
+        Map userInfo = (Map) info.get("User");
 
         List role = new ArrayList();
-        role.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        if (userInfo.get("adminYn").toString().equals("Y")) {
+            role.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        } else {
+            role.add(new SimpleGrantedAuthority("ROLE_USER"));
+        }
+        User user = new User((String) result.get("id"), (String) result.get("password"), role);
 
-        UserList userList = new UserList(username, password, role);
-        userList.setUsers(users);
-        return userList;
+        user.setToken((String) result.get("token"));
+        user.setExpireDate((Long) result.get("expireDate"));
+        user.setName((String) userInfo.get("name"));
+        user.setImgPath((String) userInfo.get("imgPath"));
+
+        return user;
     }
 }

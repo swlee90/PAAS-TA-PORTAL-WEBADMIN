@@ -34,8 +34,8 @@ public class AuthorityManagementService {
      * @return the authority groups
      * @throws Exception the exception
      */
-    public Map<String, Object> getAuthorityGroups(int key, String reqUrl, HttpMethod httpMethod, String param) throws Exception {
-        return commonService.procCfApiRestTemplate(key,Constants.V3_URL + reqUrl, httpMethod, param);
+    public Map<String, Object> getAuthorityGroups(String reqUrl, HttpMethod httpMethod, String param) throws Exception {
+        return commonService.procApiRestTemplate(Constants.V3_URL + reqUrl, httpMethod, param, Constants.CF_API, Map.class).getBody();
     }
 
     /**
@@ -45,8 +45,8 @@ public class AuthorityManagementService {
      * @return the uaa user info
      * @throws Exception the exception
      */
-    public Map<String, Object> getUaaUserInfo(int key, String reqUrl, HttpMethod httpMethod, Map param) throws Exception {
-        return commonService.procRestTemplate(key,Constants.V2_URL + reqUrl, httpMethod, param);
+    public Map<String, Object> getUaaUserInfo(String reqUrl, HttpMethod httpMethod, Map param) throws Exception {
+        return commonService.procApiRestTemplate(Constants.V3_URL + reqUrl, httpMethod, param, Constants.CF_API, Map.class).getBody();
     }
 
     /**
@@ -56,8 +56,8 @@ public class AuthorityManagementService {
      * @return the map
      * @throws Exception the exception
      */
-    public Map<String, Object> createAuthorityGroup(int key, String reqUrl, HttpMethod httpMethod, Map param) throws Exception {
-        return commonService.procCfApiRestTemplate(key, Constants.V3_URL + reqUrl, httpMethod, param);
+    public Map<String, Object> createAuthorityGroup(String reqUrl, HttpMethod httpMethod, Map param) throws Exception {
+        return commonService.procApiRestTemplate(Constants.V3_URL + reqUrl, httpMethod, param, Constants.CF_API, Map.class).getBody();
     }
 
     /**
@@ -67,8 +67,8 @@ public class AuthorityManagementService {
      * @return the map
      * @throws Exception the exception
      */
-    public Map<String, Object> deleteAuthorityGroup(int key, String reqUrl, HttpMethod httpMethod, Map param) throws Exception {
-        return commonService.procCfApiRestTemplate(key, Constants.V3_URL + reqUrl, httpMethod, param);
+    public Map<String, Object> deleteAuthorityGroup(String reqUrl, HttpMethod httpMethod, Map param) throws Exception {
+        return commonService.procApiRestTemplate(Constants.V3_URL + reqUrl, httpMethod, param, Constants.CF_API, Map.class).getBody();
     }
 
     /**
@@ -78,8 +78,8 @@ public class AuthorityManagementService {
      * @return the map
      * @throws Exception the exception
      */
-    public Map<String, Object> addGroupMembers(int key, String reqUrl, HttpMethod httpMethod, Map param) throws Exception {
-        return commonService.procCfApiRestTemplate(key,Constants.V3_URL + reqUrl, httpMethod, param);
+    public Map<String, Object> addGroupMembers(String reqUrl, HttpMethod httpMethod, Map param) throws Exception {
+        return commonService.procApiRestTemplate(Constants.V3_URL + reqUrl, httpMethod, param, Constants.CF_API, Map.class).getBody();
     }
 
     /**
@@ -89,8 +89,8 @@ public class AuthorityManagementService {
      * @return the map
      * @throws Exception the exception
      */
-    public Map<String, Object> deleteGroupMembers(int key, String reqUrl, HttpMethod httpMethod, Map param) throws Exception {
-        return commonService.procCfApiRestTemplate(key,Constants.V3_URL + reqUrl, httpMethod, param);
+    public Map<String, Object> deleteGroupMembers(String reqUrl, HttpMethod httpMethod, Map param) throws Exception {
+        return commonService.procApiRestTemplate(Constants.V3_URL + reqUrl, httpMethod, param, Constants.CF_API, Map.class).getBody();
     }
 
     /**
@@ -100,8 +100,8 @@ public class AuthorityManagementService {
      * @return the user name list
      * @throws Exception the exception
      */
-    public Map<String, Object> getUserNameList(int key, String reqUrl, HttpMethod httpMethod, Map param) throws Exception {
-        return commonService.procCommonApiRestTemplate(key,Constants.V2_URL + reqUrl, httpMethod, param);
+    public Map<String, Object> getUserNameList(String reqUrl, HttpMethod httpMethod, Map param) throws Exception {
+        return commonService.procApiRestTemplate(Constants.V2_URL + reqUrl, httpMethod, param, Constants.COMMON_API, Map.class).getBody();
     }
 
 }

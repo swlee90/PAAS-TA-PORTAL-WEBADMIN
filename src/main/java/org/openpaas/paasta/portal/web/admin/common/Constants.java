@@ -217,6 +217,12 @@ public class Constants {
     public static final String DEVELOP_PACK_PROC_URL = V2_URL + "/developpacks";
     public static final String SERVICE_PACK_PROC_URL = V2_URL + "/servicepacks";
 
+    public static final String CF_API = "cfAPI";
+    public static final String COMMON_API = "commonAPI";
+    public static final String STORAGE_API = "storageAPI";
+    public static final String LOGOUT = "logout";
+    public static final String UAA_API = "uaaAPI";
+
 
 
 }

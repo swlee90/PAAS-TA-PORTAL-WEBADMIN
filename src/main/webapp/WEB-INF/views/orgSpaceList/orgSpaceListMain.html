@@ -290,38 +290,19 @@
     var ORG_LIST_MAP = new Map(); // 조직 할당량정의에서 사용할 조직 정보 Map
 
     $(document).ready(function(){
-        if($.cookie("api_key") != null){
-            key = $.cookie("api_key");
-            $("#apiUrls").val(key);
-        }else{
-            key = $("#apiUrls").val();
-        }
         getInitMarketPlaceURL();
-        procCallAjax2(GET_ORGS_FOR_ADMIN_URL+"?key="+key,"GET",null ,procCallbackGetOrgs);
-        procCallAjax2(GET_SPACES_FOR_ADMIN_URL+"?key="+key,"GET",null ,procCallbackGetSpacesAll);
-        getDomains(key);
+        procCallAjax2(GET_ORGS_FOR_ADMIN_URL,"GET",null ,procCallbackGetOrgs);
+        procCallAjax2(GET_SPACES_FOR_ADMIN_URL,"GET",null ,procCallbackGetSpacesAll);
+        getDomains();
 
-        procCallAjax("/v2/orgs/quota-definitions"+"?key="+key, "GET", null, procCallbackGetOrgQuotaDefinitionList,null);
-    });
-
-    $( "#apiUrls" ).change(function() {
-        key = $("#apiUrls").val();
-        $.cookie("api_key",key);
-
-        $("#orgTable *").remove();
-        $("#spaceTable *").remove();
-        procCallAjax2(GET_ORGS_FOR_ADMIN_URL+"?key="+key,"GET",null ,procCallbackGetOrgs);
-
-        getDomains(key);
+        procCallAjax("/v2/orgs/quota-definitions", "GET", null, procCallbackGetOrgQuotaDefinitionList,null);
     });
 
 
     /*<![CDATA[*/
-    function getDomains(key) {
-
-
+    function getDomains() {
         $.ajax({
-            url: V2_URL+ "/domains/shared/"+"?key="+key,
+            url: V2_URL+ "/domains/shared/",
             method: "GET",
             dataType: 'json',
             contentType: "application/json",
@@ -425,9 +406,9 @@
 
     function updateSet(flag,guid) {
         if(flag==1){
-            procCallAjax2(V2_URL + "/orgs/"+guid+"/summary"+"?key="+key, "GET",null, procCallbackGetOrgSetUpdate);
+            procCallAjax2(V2_URL + "/orgs/"+guid+"/summary", "GET",null, procCallbackGetOrgSetUpdate);
         }else{
-            procCallAjax2(V2_URL+"/spaces/quota-definitions/"+guid+"?key="+key,"GET", null, procCallbackGetSpaceSetUpdate);
+            procCallAjax2(V2_URL+"/spaces/quota-definitions/"+guid,"GET", null, procCallbackGetSpaceSetUpdate);
         }
 
     }
@@ -477,7 +458,7 @@
                         newOrgName: name,
                         quotaGuid : quota
                     };
-                    procCallAjax(V2_URL + "/organization-admin"+"?key="+key, 'PUT', JSON.stringify(param), procCallbackResetPage, $('#layerModalLoadingBar'));
+                    procCallAjax(V2_URL + "/organization-admin", 'PUT', JSON.stringify(param), procCallbackResetPage, $('#layerModalLoadingBar'));
                     $("#devEnvFormModal .close").click();
                 }else{
                     notifyAlert("warning", "", name+" 은(는) 이미 사용중인 이름 입니다.");
@@ -489,7 +470,7 @@
                     newOrgName: name,
                     quotaGuid : quota
                 };
-                procCallAjax(V2_URL + "/organization-admin"+"?key="+key, 'PUT', JSON.stringify(param), procCallbackResetPage, $('#layerModalLoadingBar'));
+                procCallAjax(V2_URL + "/organization-admin", 'PUT', JSON.stringify(param), procCallbackResetPage, $('#layerModalLoadingBar'));
                 $("#devEnvFormModal .close").click();
             }
         }else if(flag==2){
@@ -513,7 +494,7 @@
                 spaceQuotaGuid : quota,
                 orgGuid : spaceQuota //original guid 로 사용
             };
-            procCallAjax(V2_URL + "/space-admin"+"?key="+key, 'PUT', JSON.stringify(param), procCallbackResetPage, $('#layerModalLoadingBar'));
+            procCallAjax(V2_URL + "/space-admin", 'PUT', JSON.stringify(param), procCallbackResetPage, $('#layerModalLoadingBar'));
             $("#devEnvFormModal2 .close").click();
             }
         }
@@ -525,7 +506,7 @@
                 spaceGuid: guid,
                 newSpaceName: name
             };
-            procCallAjax(V2_URL + "/space-name-admin"+"?key="+key, 'PUT', JSON.stringify(param), procCallbackResetPage, $('#layerModalLoadingBar'));
+            procCallAjax(V2_URL + "/space-name-admin", 'PUT', JSON.stringify(param), procCallbackResetPage, $('#layerModalLoadingBar'));
             $("#devEnvFormModal2 .close").click();
             procInitPage();
         }else{
@@ -534,7 +515,7 @@
                 spaceQuotaGuid : quota,
                 orgGuid : spaceQuota
             };
-            procCallAjax(V2_URL + "/space-quota-admin"+"?key="+key, 'PUT', JSON.stringify(param), procCallbackResetPage, $('#layerModalLoadingBar'));
+            procCallAjax(V2_URL + "/space-quota-admin", 'PUT', JSON.stringify(param), procCallbackResetPage, $('#layerModalLoadingBar'));
             $("#devEnvFormModal2 .close").click();
         }
     }
@@ -555,7 +536,7 @@
                     orgName: $("#orgName").val(),
                     orgQuotaGuid: $('#orgQuota option:checked').val()
                 };
-                procCallAjax(V2_URL + "/organizations"+"?key="+key, 'POST', JSON.stringify(param), procCallbackResetPage, $('#layerModalLoadingBar'));
+                procCallAjax(V2_URL + "/organizations", 'POST', JSON.stringify(param), procCallbackResetPage, $('#layerModalLoadingBar'));
                 $("#devEnvFormModal .close").click();
             }
         //공간등록
@@ -573,7 +554,7 @@
                     spaceName : $("#spaceName").val(),
                     spaceQuotaGuid : $('#spaceQuota option:checked').val()
                 };
-                procCallAjax(V2_URL + "/spaces"+"?key="+key, 'POST', JSON.stringify(param), procCallbackResetPage, $('#layerModalLoadingBar'));
+                procCallAjax(V2_URL + "/spaces", 'POST', JSON.stringify(param), procCallbackResetPage, $('#layerModalLoadingBar'));
                 $("#devEnvFormModal2 .close").click();
             }
         }
@@ -588,7 +569,7 @@
 
     function deleteOrg() {
         var guid=$("#guid").val();
-        procCallAjax(V2_URL + "/organizations-admin/"+guid+"?key="+key, 'DELETE', null, procCallbackResetPage, $('#layerModalLoadingBar'));
+        procCallAjax(V2_URL + "/organizations-admin/"+guid, 'DELETE', null, procCallbackResetPage, $('#layerModalLoadingBar'));
         $("#devEnvFormModal .close").click();
     }
 
@@ -609,8 +590,8 @@
         $("#orgTable *").remove();
         $("#spaceTable *").remove();
 
-        procCallAjax2(GET_ORGS_FOR_ADMIN_URL+"?key="+key,"GET",null ,procCallbackGetOrgs);
-        procCallAjax2(GET_SPACES_FOR_ADMIN_URL+"?key="+key,"GET",null ,procCallbackGetSpacesAll);
+        procCallAjax2(GET_ORGS_FOR_ADMIN_URL,"GET",null ,procCallbackGetOrgs);
+        procCallAjax2(GET_SPACES_FOR_ADMIN_URL,"GET",null ,procCallbackGetSpacesAll);
     }
 
     function pattenTest() {
@@ -635,9 +616,9 @@
         currentOrg = orgName;
         currentOrgId = orgid;
         currentOrgNum = orgNum;
-        procCallAjax2(GET_ORGS_FOR_ADMIN_URL+"/"+orgid+"/spaces"+"?key="+key,"GET" ,null ,procCallbackGetSpace);
+        procCallAjax2(GET_ORGS_FOR_ADMIN_URL+"/"+orgid+"/spaces","GET" ,null ,procCallbackGetSpace);
         contentSelectControl("group", orgNum);
-        procCallAjax("/v2/organizations/"+orgid+"/space_quota_definitions"+"?key="+key, "GET", null, procCallbackGetSpaceQuotaDefinitionList,null);
+        procCallAjax("/v2/organizations/"+orgid+"/space_quota_definitions", "GET", null, procCallbackGetSpaceQuotaDefinitionList,null);
     }
 
     // 조직 할당량
@@ -702,10 +683,10 @@
         OrgId = orgid;
         //procCallAjax2(V2_URL + "/orgs/"+quotaid+"/quota","GET", null, procCallbackGetOrgQuota);
         //procCallAjax2(V2_URL + "/orgs/"+orgid+"/quota","GET", null, procCallbackGetOrgQuota);
-        procCallAjax2(V2_URL + "/orgs/"+OrgId+"/summary"+"?key="+key, "GET",null, procCallbackGetOrgSummary);
+        procCallAjax2(V2_URL + "/orgs/"+OrgId+"/summary", "GET",null, procCallbackGetOrgSummary);
 
         if(orgid!=null){
-            procCallAjax(GET_ORGS_FOR_ADMIN_URL+"/"+orgid+"/user-roles/"+"?key="+key,"GET" ,null ,procCallbackGetUserOrgRoles);
+            procCallAjax(GET_ORGS_FOR_ADMIN_URL+"/"+orgid+"/user-roles/","GET" ,null ,procCallbackGetUserOrgRoles);
         }
         $("#modal-default .modal-footer").html("<button type='button' class='btn btn-primary' data-dismiss='modal'>확인</button>");
     };
@@ -721,7 +702,7 @@
         } else {
             paidServices = "paid services disallowed";
         }
-        procCallAjax2(V2_URL + "/orgs/"+OrgId+"/summary"+"?key="+key, "GET",null, procCallbackGetOrgSummary);
+        procCallAjax2(V2_URL + "/orgs/"+OrgId+"/summary", "GET",null, procCallbackGetOrgSummary);
     }
 
     // GET ORG SUMMARY CALLBACK
@@ -754,14 +735,14 @@
         spaceQuotaText = "없음";
 
         if(spaceQuotaId != "null") {
-            procCallAjax2(V2_URL+"/spaces/quota-definitions/"+spaceQuotaId+"?key="+key,"GET", null, procCallbackGetSpaceQuota);
+            procCallAjax2(V2_URL+"/spaces/quota-definitions/"+spaceQuotaId,"GET", null, procCallbackGetSpaceQuota);
             // To-Be : Quota 정보 관리 추가
         }
 
-        procCallAjax2(V2_URL + "/spaces/"+spaceId+"/summary"+"?key="+key,"GET", null, procCallbackGetSpaceSummary);
+        procCallAjax2(V2_URL + "/spaces/"+spaceId+"/summary","GET", null, procCallbackGetSpaceSummary);
 
         if(spaceId != "null"){ //spaceId가 존재하면 ( null이 아니면)
-            procCallAjax(V2_URL +"/spaces"+"/"+spaceId+"/user-roles"+"?key="+key,"GET",null, procCallbackSpaceRoles, $("#layerModalLoadingBar"));
+            procCallAjax(V2_URL +"/spaces"+"/"+spaceId+"/user-roles","GET",null, procCallbackSpaceRoles, $("#layerModalLoadingBar"));
 
         $("modal-default .modal-footer").html("<button type='button' class='btn btn-primary' data-dismiss='modal'>확인</button>");
 
@@ -966,7 +947,7 @@
 
     // 조직 허용량 상세
     function getOrgQuotaDefinition(quotaId) {
-        procCallAjax("/v2/orgs/quota-definitions/"+quotaId+"?key="+key, "GET", null, procCallbackGetQuotaDefinition, null);
+        procCallAjax("/v2/orgs/quota-definitions/"+quotaId, "GET", null, procCallbackGetQuotaDefinition, null);
     }
 
     var procCallbackGetQuotaDefinition = function(data){
@@ -991,7 +972,7 @@
 
     // 공간 허용량 정의 상세
     function getSpaceQuotaDefinition(quotaId) {
-        procCallAjax("/v2/spaces/quota-definitions/"+quotaId+"?key="+key, "GET", null, procCallbackGetQuotaDefinition2, null);
+        procCallAjax("/v2/spaces/quota-definitions/"+quotaId, "GET", null, procCallbackGetQuotaDefinition2, null);
     }
 
     var procCallbackGetQuotaDefinition2 = function(data){

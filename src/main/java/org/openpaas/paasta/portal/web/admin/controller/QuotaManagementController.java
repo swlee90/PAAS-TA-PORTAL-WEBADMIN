@@ -3,10 +3,8 @@ package org.openpaas.paasta.portal.web.admin.controller;
 import org.openpaas.paasta.portal.web.admin.common.Common;
 import org.openpaas.paasta.portal.web.admin.common.Constants;
 import org.openpaas.paasta.portal.web.admin.common.User;
-import org.openpaas.paasta.portal.web.admin.entity.ConfigEntity;
 import org.openpaas.paasta.portal.web.admin.model.Quota;
 import org.openpaas.paasta.portal.web.admin.service.CommonService;
-import org.openpaas.paasta.portal.web.admin.service.ConfigService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,8 +54,7 @@ public class QuotaManagementController extends Common {
     @GetMapping(value = {Constants.V2_URL + "/orgs/quota-definitions"})
     @ResponseBody
     public Map<String, Object> getOrgQuotaDefinitions(HttpServletRequest request, @ModelAttribute Quota quota) {
-        String key = request.getParameter("key");
-       return commonService.procCfApiRestTemplate(Integer.parseInt(key),Constants.V3_URL + "/orgs/quota-definitions", HttpMethod.GET, quota);
+        return commonService.procApiRestTemplate(Constants.V3_URL + "/orgs/quota-definitions", HttpMethod.GET, quota, Constants.CF_API, Map.class).getBody();
     }
 
     /**
@@ -69,8 +66,7 @@ public class QuotaManagementController extends Common {
      */
     @GetMapping(Constants.V2_URL + "/organizations/{guid}/space_quota_definitions")
     public Map<String,Object> getOrgSpaceQuotaDefinitionsList(HttpServletRequest request, @PathVariable String guid){
-        String key = request.getParameter("key");
-        return commonService.procCfApiRestTemplate(Integer.parseInt(key),Constants.V3_URL+"/organizations/"+guid+"/space_quota_definitions",HttpMethod.GET,null);
+        return commonService.procApiRestTemplate(Constants.V3_URL+"/organizations/"+guid+"/space_quota_definitions",HttpMethod.GET,null, Constants.CF_API, Map.class).getBody();
     }
 
     /**
@@ -82,8 +78,7 @@ public class QuotaManagementController extends Common {
     @GetMapping(value = {Constants.V2_URL + "/orgs/quota-definitions/{quotaId}"})
     @ResponseBody
     public Map<String, Object> getOrgQuotaDefinition(@ModelAttribute Quota quota, @PathVariable String quotaId, HttpServletRequest request) {
-        String key = request.getParameter("key");
-        return commonService.procCfApiRestTemplate(Integer.parseInt(key),Constants.V3_URL + "/orgs/quota-definitions/"+quotaId, HttpMethod.GET, quota);
+        return commonService.procApiRestTemplate(Constants.V3_URL + "/orgs/quota-definitions/"+quotaId, HttpMethod.GET, quota, Constants.CF_API, Map.class).getBody();
     }
 
     /**
@@ -95,8 +90,7 @@ public class QuotaManagementController extends Common {
     @PostMapping(value = {Constants.V2_URL + "/orgs/quota-definitions"})
     @ResponseBody
     public Map<String, Object> createOrgQuotaDefinition(HttpServletRequest request, @RequestBody Quota quota) {
-        String key = request.getParameter("key");
-        return commonService.procCfApiRestTemplate(Integer.parseInt(key),Constants.V3_URL + "/orgs/quota-definitions", HttpMethod.POST, quota);
+        return commonService.procApiRestTemplate(Constants.V3_URL + "/orgs/quota-definitions", HttpMethod.POST, quota, Constants.CF_API, Map.class).getBody();
     }
 
     /**
@@ -109,8 +103,7 @@ public class QuotaManagementController extends Common {
     @PutMapping(value = {Constants.V2_URL + "/orgs/quota-definitions/{quotaId}"})
     @ResponseBody
     public Map<String, Object> updateOrgQuotaDefinition(@RequestBody Quota quota, @PathVariable String quotaId, HttpServletRequest request) {
-        String key = request.getParameter("key");
-        return commonService.procCfApiRestTemplate(Integer.parseInt(key),Constants.V3_URL + "/orgs/quota-definitions/"+quotaId, HttpMethod.PUT, quota);
+        return commonService.procApiRestTemplate(Constants.V3_URL + "/orgs/quota-definitions/"+quotaId, HttpMethod.PUT, quota, Constants.CF_API, Map.class).getBody();
     }
 
     /**
@@ -122,8 +115,7 @@ public class QuotaManagementController extends Common {
     @DeleteMapping(value = {Constants.V2_URL + "/orgs/quota-definitions/{quotaId}"})
     @ResponseBody
     public Map<String, Object> deleteOrgQuotaDefinition(@PathVariable String quotaId, HttpServletRequest request) {
-        String key = request.getParameter("key");
-        return commonService.procCfApiRestTemplate(Integer.parseInt(key),Constants.V3_URL + "/orgs/quota-definitions/"+quotaId, HttpMethod.DELETE, null);
+        return commonService.procApiRestTemplate(Constants.V3_URL + "/orgs/quota-definitions/"+quotaId, HttpMethod.DELETE, null, Constants.CF_API, Map.class).getBody();
     }
 
     /**
@@ -135,8 +127,7 @@ public class QuotaManagementController extends Common {
     @GetMapping(value = {Constants.V2_URL + "/spaces/quota-definitions"})
     @ResponseBody
     public Map<String, Object> getSpaceQuotaDefinitions(HttpServletRequest request, @ModelAttribute Quota quota) {
-        String key = request.getParameter("key");
-        return commonService.procCfApiRestTemplate(Integer.parseInt(key),Constants.V3_URL + "/spaces/quota-definitions", HttpMethod.GET, quota);
+        return commonService.procApiRestTemplate(Constants.V3_URL + "/spaces/quota-definitions", HttpMethod.GET, quota, Constants.CF_API, Map.class).getBody();
     }
 
     /**
@@ -147,9 +138,8 @@ public class QuotaManagementController extends Common {
      */
     @GetMapping(value = {Constants.V2_URL + "/spaces/quota-definitions/{spaceQuotaId}"})
     @ResponseBody
-    public Map<String, Object> getSpaceQuotaDefinition(@PathVariable String spaceQuotaId, HttpServletRequest request) {
-        String key= request.getParameter("key");
-        return commonService.procCfApiRestTemplate(Integer.parseInt(key),Constants.V3_URL + "/spaces/quota-definitions/"+spaceQuotaId, HttpMethod.GET, null);
+    public Map<String, Object> getSpaceQuotaDefinition(@PathVariable String spaceQuotaId) {
+        return commonService.procApiRestTemplate(Constants.V3_URL + "/spaces/quota-definitions/"+spaceQuotaId, HttpMethod.GET, null, Constants.CF_API, Map.class).getBody();
     }
 
     /**
@@ -160,9 +150,8 @@ public class QuotaManagementController extends Common {
      */
     @PostMapping(value = {Constants.V2_URL + "/spaces/quota-definitions"})
     @ResponseBody
-    public Map<String, Object> createSpaceQuotaDefinition(HttpServletRequest request, @RequestBody Quota quota) {
-        String key = request.getParameter("key");
-        return commonService.procCfApiRestTemplate(Integer.parseInt(key),Constants.V3_URL + "/spaces/quota-definitions", HttpMethod.POST, quota);
+    public Map<String, Object> createSpaceQuotaDefinition(@RequestBody Quota quota) {
+        return commonService.procApiRestTemplate(Constants.V3_URL + "/spaces/quota-definitions", HttpMethod.POST, quota, Constants.CF_API, Map.class).getBody();
     }
 
     /**
@@ -174,9 +163,8 @@ public class QuotaManagementController extends Common {
      */
     @PutMapping(value = {Constants.V2_URL + "/spaces/quota-definitions/{spaceQuotaId}"})
     @ResponseBody
-    public Map<String, Object> updateSpaceQuotaDefinition(@RequestBody Quota quota, @PathVariable String spaceQuotaId, HttpServletRequest request) {
-        String key = request.getParameter("key");
-        return commonService.procCfApiRestTemplate(Integer.parseInt(key),Constants.V3_URL + "/spaces/quota-definitions/"+spaceQuotaId, HttpMethod.PUT, quota);
+    public Map<String, Object> updateSpaceQuotaDefinition(@RequestBody Quota quota, @PathVariable String spaceQuotaId) {
+        return commonService.procApiRestTemplate(Constants.V3_URL + "/spaces/quota-definitions/"+spaceQuotaId, HttpMethod.PUT, quota, Constants.CF_API, Map.class).getBody();
     }
 
     /**
@@ -187,15 +175,9 @@ public class QuotaManagementController extends Common {
      */
     @DeleteMapping(value = {Constants.V2_URL + "/spaces/quota-definitions/{quotaId}"})
     @ResponseBody
-    public Map<String, Object> deleteSpaceQuotaDefinition(@PathVariable String quotaId, HttpServletRequest request) {
-        String key = request.getParameter("key");
-        return commonService.procCfApiRestTemplate(Integer.parseInt(key), Constants.V3_URL + "/spaces/quota-definitions/"+quotaId, HttpMethod.DELETE, null);
+    public Map<String, Object> deleteSpaceQuotaDefinition(@PathVariable String quotaId) {
+        return commonService.procApiRestTemplate(Constants.V3_URL + "/spaces/quota-definitions/"+quotaId, HttpMethod.DELETE, null, Constants.CF_API, Map.class).getBody();
     }
 
-
-    @ModelAttribute("configs")
-    public List<User> configs(){
-        return getServerInfos();
-    }
 }
 

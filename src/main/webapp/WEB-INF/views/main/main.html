@@ -163,15 +163,6 @@
   var APP_LABEL   = "APP";
   var USER_LABEL  = "사용자";
 
-  $( "#apiUrls" ).change(function() {
-
-    //key 값 저장
-    key = $("#apiUrls").val();
-    $.cookie("api_key",key);
-
-    getTotalCountList(key);  // 조직 / 공간 / 앱 /사용자 수 조회
-    getChartList(key);       // 조직 / 공간 차트 조회
-  });
 
   // ON LOAD
   $(document.body).ready(function() {
@@ -181,23 +172,17 @@
 
   // Init
   var procInitPage = function() {
-    //key 값 설정
-    if($.cookie("api_key") != null){
-      key = $.cookie("api_key");
-      $("#apiUrls").val(key);
-    }else{
-      key = $("#apiUrls").val();
-    }
-      getInitMarketPlaceURL();
-    getTotalCountList(key);  // 조직 / 공간 / 앱 /사용자 수 조회
-    getChartList(key);       // 조직 / 공간 차트 조회
+
+    getInitMarketPlaceURL();
+    getTotalCountList();  // 조직 / 공간 / 앱 /사용자 수 조회
+    getChartList();       // 조직 / 공간 차트 조회
     setBoardEvent();      // Board Event Listener Setting
   };
 
 
   // 조직.공간.앱.사용자 수 조회
-  var getTotalCountList = function(key) {
-    procCallAjax(TOTAL_COUNT_LIST_PROC_URL+"?key="+key,"GET", {}, procCallbackGetTotalCountList,null);
+  var getTotalCountList = function() {
+    procCallAjax(TOTAL_COUNT_LIST_PROC_URL,"GET", {}, procCallbackGetTotalCountList,null);
   };
 
   // 조직.공간.앱.사용자 수 조회 CALLBACK
@@ -216,9 +201,9 @@
   };
 
 
-  var getChartList = function(key){
+  var getChartList = function(){
       // 조직 공간 앱 사용자 통계정보
-      procCallAjax(TOTAL_ORGANIZATION_LIST_PROC_URL+"?key="+key,"GET", {}, procCallbackGetTotalOrganizationList,null);
+      procCallAjax(TOTAL_ORGANIZATION_LIST_PROC_URL,"GET", {}, procCallbackGetTotalOrganizationList,null);
   };
 
   // '조직'차트 CALLBACK
@@ -457,8 +442,7 @@
 
   // 조직 Label Click Event
   var getTotalSpaceList = function(reqOrganizationId) {
-    key = $("#apiUrls").val();
-    procCallAjax(TOTAL_ORGANIZATION_LIST_PROC_URL+"/"+reqOrganizationId+"/spaces"+"?key="+key,"GET", {}, procCallbackGetTotalSpaceList,null);
+    procCallAjax(TOTAL_ORGANIZATION_LIST_PROC_URL+"/"+reqOrganizationId+"/spaces","GET", {}, procCallbackGetTotalSpaceList,null);
   };
 
   // '공간'차트 CALLBACK
@@ -500,7 +484,7 @@
         // 차트 여러번 조작시 animation complete시 셋팅한 데이터들이 사라지는 현상이 있어,
         // 조직 클릭시 차트를 새로 만드는 걸로 변경
         if($legendElem.children('text').length == 1 || triggerType == ORGANIZATION_LABEL) {
-          getChartList(key);
+          getChartList();
           return;
         }
 

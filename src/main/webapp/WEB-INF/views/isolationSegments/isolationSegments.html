@@ -138,11 +138,6 @@
     var SELECT_ORGANIZATIONS_ISOLATION_SEGMENT_LIST;
     var SELECT_DEFAULT_ISOLATION_SEGMENT_GUID;
 
-    $( "#apiUrls" ).change(function() {
-        key = $("#apiUrls").val();
-        $.cookie("api_key",key);
-        getIsolationSegments(key);
-    });
 
     $(document).ready(function () {
 
