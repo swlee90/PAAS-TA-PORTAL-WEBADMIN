@@ -265,9 +265,8 @@ public class OrgSpaceListController extends Common {
     @GetMapping(V2_URL + "/orgs/{orgId}/user-roles")
     @ResponseBody
     public Map<String, Object> getSpaceRoles(@PathVariable String orgId, HttpServletRequest request, Object obj) {
-        LOGGER.info("유저이름 ?" + orgId);
         return commonService.procApiRestTemplate(Constants.V2_URL + "/orgs/" +orgId+ "/user-roles", HttpMethod.GET, null, Constants.CF_API, Map.class).getBody();
-    }                                                                                                                                               //응답받을
+    }
 
 
 
