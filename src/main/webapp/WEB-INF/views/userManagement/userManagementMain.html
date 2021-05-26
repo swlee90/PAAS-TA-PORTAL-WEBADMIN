@@ -298,54 +298,54 @@
                                         </div>
                                     </div>
 
+                                </div>
+                                <!--사용자관리 공간지정-->
+                                <div class="form-group">
+                                    <label for="userName" class="col-sm-3 control-label">Space</label>
+                                    <div class="col-sm-9">
+                                        <select class="form-control" id="getSpaceList2" onchange="getUserSpaceRoles()">
+                                            <!--<option>테스트1</option>-->
+                                        </select>
                                     </div>
-                                    <!--사용자관리 공간지정-->
-                                    <div class="form-group">
-                                        <label for="userName" class="col-sm-3 control-label">Space</label>
-                                             <div class="col-sm-9">
-                                            <select class="form-control" id="getSpaceList2" onchange="getUserSpaceRoles()">
-                                                <!--<option>테스트1</option>-->
+                                </div>
+
+                                <!--Space Role 텍스트 추가-->
+                                <div id="selectOS2">
+                                    <div class="form-group" style="height:35px;" id="orgSelect2">
+                                        <label for="orgInput2" class="col-sm-3 col-xs-12 control-label">조직 권한</label>
+                                        <div class="col-sm-4 col-xs-3">
+                                            <select class="form-control" id="orgInput2">
+                                                <option value="N">조직 권한을 선택해주세요.</option>
+                                                <option value="OrgManager">OrgManager</option>
+                                                <option value="BillingManager">BillingManager</option>
+                                                <option value="OrgAuditor">OrgAuditor</option>
+                                            </select>
+                                        </div>
+                                        <!--<div id ="orgOutput" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 15px;" ><button type="button" class="user_btn colors2" style="position: absolute;top: 6px;left: -8px;" >\
+                                                vavavava<button type="button" id="close" class="close" style="float: left;margin-left: 54px;">
+                                                <span aria-hidden="true">×</span></button>
+                                        </button></div>-->
+                                    </div>
+
+                                    <div class="form-group" style="height:35px;" id="spaceSelect2">
+                                        <label for="spaceInput2" class="col-sm-3 col-xs-12 control-label">공간 권한</label>
+                                        <div class="col-sm-4 col-xs-3">
+                                            <select class="form-control" id="spaceInput2">
+                                                <option value="N">공간 권한을 선택해주세요.</option>
+                                                <option value="SpaceManager">SpaceManager</option>
+                                                <option value="SpaceDeveloper">SpaceDeveloper</option>
+                                                <option value="SpaceAuditor">SpaceAuditor</option>
                                             </select>
                                         </div>
                                     </div>
-
-                                    <!--Space Role 텍스트 추가-->
-                                    <div id="selectOS2">
-                                        <div class="form-group" style="height:35px;" id="orgSelect2">
-                                            <label for="orgInput2" class="col-sm-3 col-xs-12 control-label">조직 권한</label>
-                                            <div class="col-sm-4 col-xs-3">
-                                                <select class="form-control" id="orgInput2">
-                                                    <option value="N">조직 권한을 선택해주세요.</option>
-                                                    <option value="OrgManager">OrgManager</option>
-                                                    <option value="BillingManager">BillingManager</option>
-                                                    <option value="OrgAuditor">OrgAuditor</option>
-                                                </select>
-                                            </div>
-                                            <!--<div id ="orgOutput" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 15px;" ><button type="button" class="user_btn colors2" style="position: absolute;top: 6px;left: -8px;" >\
-                                                    vavavava<button type="button" id="close" class="close" style="float: left;margin-left: 54px;">
-                                                    <span aria-hidden="true">×</span></button>
-                                            </button></div>-->
-                                        </div>
-
-                                        <div class="form-group" style="height:35px;" id="spaceSelect2">
-                                            <label for="spaceInput2" class="col-sm-3 col-xs-12 control-label">공간 권한</label>
-                                            <div class="col-sm-4 col-xs-3">
-                                                <select class="form-control" id="spaceInput2">
-                                                    <option value="N">공간 권한을 선택해주세요.</option>
-                                                    <option value="SpaceManager">SpaceManager</option>
-                                                    <option value="SpaceDeveloper">SpaceDeveloper</option>
-                                                    <option value="SpaceAuditor">SpaceAuditor</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <!--Active 설정 (승인 여부)-->
-                                        <div class="form-group">
-                                            <label for="updateUserActive" class="col-sm-3 control-label">Active 설정 (승인 여부)</label>
-                                            <div class="col-sm-9" style="margin-top : 5px">
-                                                <input type="checkbox" checked="" id="updateUserActive" disabled="disabled"/>
-                                            </div>
+                                    <!--Active 설정 (승인 여부)-->
+                                    <div class="form-group">
+                                        <label for="updateUserActive" class="col-sm-3 control-label">Active 설정 (승인 여부)</label>
+                                        <div class="col-sm-9" style="margin-top : 5px">
+                                            <input type="checkbox" checked="" id="updateUserActive" disabled="disabled"/>
                                         </div>
                                     </div>
+                                </div>
                             </form>
                         </div>
                     </div>
@@ -666,8 +666,6 @@
         // INIT PAGE
         var procInitPage = function () {
             procAlert("info", WELCOME_MESSAGE);
-
-
             getInitMarketPlaceURL();
             $('#userInfoViewArea').hide();
             getUserInfoList(/*[[${T(org.openpaas.paasta.portal.web.admin.common.Constants).USER_MANAGEMENT_PAGE_NO}]]*/ "");
@@ -755,6 +753,8 @@
         $(document).on("mouseup",'tr td[id=userList]',function (e) {
 
             $("#getSpaceList2").attr('disabled', true);
+            $("#orgInput2").attr('disabled', true);
+            $("#spaceInput2").attr('disabled', true);
 
             var username =$(e.target).data('value');
             $("#userName").val(username);
@@ -783,13 +783,12 @@
             } else {
                 var orgName = new Array();
                 var idMap = new Map();
-                var orgNull = null;
                 for (var i = 0; i < data.resources.length; i++) {
                     orgName[i] = data.resources[i].entity.name;
                     idMap.set(orgName[i],data.resources[i].metadata.guid);
                 }
                 orgName.sort();
-                    $("#getOrgList2").append ("<option value='"+orgNull+"'>조직을 선택해 주세요</option>");
+                    $("#getOrgList2").append ("<option value='N'>조직을 선택해 주세요</option>");
                 for (var i = 0; i < data.resources.length; i++) {
                     $("#getOrgList2").append ("<option value='"+idMap.get(orgName[i])+"'>"+orgName[i]+"</option>");
                 }
@@ -1139,13 +1138,14 @@
 
         function getManagment2(val,flag){
 
-
             if(flag==1){
                 $("#selectOS2 #orgOutput2>button").each(function () {
                     if($(this).text() == val){
                         $(this).parent().parent().children().find('select').append("<option value='"+val+"'>"+val+"</option>");
                         $(this).parent().remove();
+                        $("#orgClose2>span").remove();
                         $("#orgClose2").remove();
+
                     }
                 });
             }else if(flag==2){
@@ -1153,7 +1153,9 @@
                     if($(this).text() == val){
                         $(this).parent().parent().children().find('select').append("<option value='"+val+"'>"+val+"</option>");
                         $(this).parent().remove();
+                        $("#spaceOutput2>spaceClose2>span").remove();
                         $("#spaceClose2").remove();
+
                     }
                 });
             }
@@ -1176,13 +1178,13 @@
 
         //사용자 수정 sapceList
         var procCallbackGetSpace2 = function(data, param) {
-
             var spaceNull = null;
 
             if(data.spaceList.resources.length === 0){
                 $('#getSpaceList2').val("");
                 $('#getSpaceList2').text("");
-                $("#getSpaceList2").append ("<option value='N'>생성된 공간이 없습니다.</option>");
+                $("#getSpaceList2").append ("<option value='"+spaceNull+"'>권한을 선택해 주세요.</option>");
+                $("#getSpaceList2").append ("<option value='N'  disabled = 'disabled'>생성된 공간이 없습니다.</option>");
             } else {
                 $('#getSpaceList2').val("");
                 $('#getSpaceList2').text("");
@@ -1266,11 +1268,35 @@
 
         /*2021-05-12 추가 : OrgName으로 유저의 조직Roles을 조회한다.*/
         function getUserOrgRoles() {
+            var orgVal = $("#getOrgList2 option:selected").text();
+
+            if(orgVal == "조직을 선택해 주세요"){
+                $("#getSpaceList2").attr('disabled', true);
+                $("#orgInput2").attr('disabled', true);
+                $("#spaceInput2").attr('disabled', true);
+
+            }
+            else{
+                $("#getSpaceList2").attr('disabled', false);
+                $("#orgInput2").attr('disabled', false);
+
+                $(" #orgInput2 option").remove();
+                $("#orgInput2").append("<option value='N'>" + '조직 권한을 선택해 주세요' + "</option>");
+                $("#orgInput2").append("<option value='OrgManager'>" + 'OrgManager' + "</option>");
+                $("#orgInput2").append("<option value='BillingManager'>" + 'BillingManager' + "</option>");
+                $("#orgInput2").append("<option value='OrgAuditor'>" + 'OrgAuditor' + "</option>");
+            }
+
+        /*    // values=orgInput2 의 옵션 값들을 전부 가져온다.
+            var values = $("#orgInput2>option").map(function () {return $(this).val();});
+            var orgValue = $("#orgInput2 option").val();
+            var orgOutVal = $("#selectOS2 #orgOutput2").text();*/
+
             var orgId = $("#getOrgList2 option:selected").val();
 
-            $("#getSpaceList2").attr('disabled', false);
-            procCallAjax(GET_ORGS_FOR_ADMIN_URL+"/"+orgId+"/user-roles/","GET" ,null ,procCallbackGetUserRoles);
+            //spaceList를 가져온다.
 
+            procCallAjax(GET_ORGS_FOR_ADMIN_URL+"/"+orgId+"/user-roles/","GET" ,null ,procCallbackGetUserRoles);
             orgOutputDel();
         }
 
@@ -1296,40 +1322,37 @@
 
                 if (name == getUserRole[i].user_email) { /*name = 유저 아이디*/
 
-                        var getList = JSON.stringify(data);
-                        var getRoleList = JSON.parse(getList);
-                        var getUserRole = getRoleList.user_roles;
-                        var str = getUserRole[i].roles;
-                        var userId = getUserRole[i].user_id;
-                        var orgId = $("#getOrgList2 option:selected").val();
+                    var getList = JSON.stringify(data);
+                    var getRoleList = JSON.parse(getList);
+                    var getUserRole = getRoleList.user_roles;
+                    var str = getUserRole[i].roles;
+                    var userId = getUserRole[i].user_id;
+                    var orgId = $("#getOrgList2 option:selected").val();
 
-                        var orgAuditor = str.filter(roles => roles === "OrgAuditor");
-                        var orgManager = str.filter(roles => roles === "OrgManager");
-                        var billingManager = str.filter(roles => roles === "BillingManager");
+                    var orgAuditor = str.filter(roles => roles === "OrgAuditor");
+                    var orgManager = str.filter(roles => roles === "OrgManager");
+                    var billingManager = str.filter(roles => roles === "BillingManager");
 
-                        /* if(str)$("#orgRoles").html("<br>"+orgAuditor+"<br>" + "<br>"+orgManager+"<br>" + "<br>"+billingManager+"<br>")*/
-
-
-
-                        if (orgManager.length > 0)
-                            $("#orgSelect2").append(
-                                '<div id ="orgOutput2" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 15px;" ><button type="button" class="user_btn colors2"' +
-                                ' style="position: absolute;top: 6px;left: -8px;"  onclick="getSelected(\'' + orgManager + '\',1 ,\'' + userId  + '\',\'' + str+ '\' )">' + orgManager + '</button></div>' +
-                                '<button type="button" id="orgClose2" class="close" style="float: left;margin-left: -21px;" onclick="getSelected(\'' + orgManager + '\',1 ,\'' + userId  + '\',\'' + str + '\' )">\n' +
-                                '                                                 <span aria-hidden="true">×</span></button>')
-
-                        if (billingManager.length > 0) $("#orgSelect2").append(
+                    /* if(str)$("#orgRoles").html("<br>"+orgAuditor+"<br>" + "<br>"+orgManager+"<br>" + "<br>"+billingManager+"<br>")*/
+                    if (orgManager.length > 0)
+                        $("#orgSelect2").append(
                             '<div id ="orgOutput2" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 15px;" ><button type="button" class="user_btn colors2"' +
-                            ' style="position: absolute;top: 6px;left: -8px;"  onclick="getSelected(\'' + billingManager + '\',1,\'' + userId  + '\',\'' + str + '\')">' + billingManager + '</button></div>' +
-                            '<button type="button" id="orgClose2" class="close" style="float: left;margin-left: -6px;" onclick="getSelected(\'' + billingManager + '\',1,\'' + userId  + '\',\'' + str + '\')">\n' +
-                            '                                                    <span aria-hidden="true">×</span></button>')
+                            ' style="position: absolute;top: 6px;left: -8px;"  onclick="getSelected(\'' + orgManager + '\',1 ,\'' + userId  + '\',\'' + str+ '\' )">' + orgManager + '</button></div>' +
+                            '<button type="button" id="orgClose2" class="close" style="float: left;margin-left: -21px;" onclick="getSelected(\'' + orgManager + '\',1)">\n' +
+                            '                                                 <span aria-hidden="true">×</span></button>')
+
+                    if (billingManager.length > 0) $("#orgSelect2").append(
+                        '<div id ="orgOutput2" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 15px;" ><button type="button" class="user_btn colors2"' +
+                        ' style="position: absolute;top: 6px;left: -8px;"  onclick="getSelected(\'' + billingManager + '\',1,\'' + userId  + '\',\'' + str + '\')">' + billingManager + '</button></div>' +
+                        '<button type="button" id="orgClose2" class="close" style="float: left;margin-left: -4px;" onclick="getSelected(\'' + billingManager + '\',1)">\n' +
+                        '                                                    <span aria-hidden="true">×</span></button>')
 
 
-                        if (orgAuditor.length > 0) $("#orgSelect2").append(
-                            '<div id ="orgOutput2" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 15px;" ><button type="button" class="user_btn colors2"' +
-                            ' style="position: absolute;top: 6px;left: -8px;"  onclick="getSelected(\'' + orgAuditor + '\',1,\'' + userId  + '\',\'' + str + '\')">' + orgAuditor + '</button></div>' +
-                            '<button type="button" id="orgClose2" class="close" style="float: left;margin-left: -28px;" onclick="getSelected(\'' + orgAuditor + '\',1,\'' + userId  + '\',\'' + str+ '\')">\n' +
-                            '                                                    <span aria-hidden="true">×</span></button>')
+                    if (orgAuditor.length > 0) $("#orgSelect2").append(
+                        '<div id ="orgOutput2" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 15px;" ><button type="button" class="user_btn colors2"' +
+                        ' style="position: absolute;top: 6px;left: -8px;"  onclick="getSelected(\'' + orgAuditor + '\',1,\'' + userId  + '\',\'' + str + '\')">' + orgAuditor + '</button></div>' +
+                        '<button type="button" id="orgClose2" class="close" style="float: left;margin-left: -28px;" onclick="getSelected(\'' + orgAuditor + '\',1)">\n' +
+                        '                                                    <span aria-hidden="true">×</span></button>')
 
                     if (orgAuditor.length > 0) {
                         $("select option[value=OrgAuditor]").remove();
@@ -1337,13 +1360,21 @@
                         $("select option[value=OrgManager]").remove();
                     }if (billingManager.length > 0) {
                         $("select option[value=BillingManager]").remove();
-
                     }
                 }
             }
         }
         /*2021-05-12 추가 : space id로 유저의 공간Roles을 조회한다.*/
         function getUserSpaceRoles(){
+            $("#spaceInput2").attr('disabled', false);
+
+            $(" #spaceInput2 option").remove();
+            $("#spaceInput2").append("<option value='N'>"+'공간 권한을 선택해 주세요'+"</option>");
+            $("#spaceInput2").append("<option value='SpaceManager'>"+'SpaceManager'+"</option>");
+            $("#spaceInput2").append("<option value='SpaceDeveloper'>"+'SpaceDeveloper'+"</option>");
+            $("#spaceInput2").append("<option value='SpaceAuditor'>"+'SpaceAuditor'+"</option>");
+
+
             var spaceid = $("#getSpaceList2 option:selected").val();
             procCallAjax(V2_URL +"/spaces"+"/"+spaceid+"/user-roles","GET",null, procCallbackGetSpaceRoles, $("#layerModalLoadingBar"));
 
@@ -1381,21 +1412,21 @@
                     if (spaceManager.length > 0) $("#spaceSelect2").append(
                         '<div id ="spaceOutput2" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 15px;" ><button type="button" class="user_btn colors2"' +
                         ' style="position: absolute;top: 6px;left: -8px;" onclick="getSelected(\'' + spaceManager + '\',1,)">' + spaceManager + '</button></div>' +
-                        '<button type="button" id="spaceClose2" class="close" style="float: left;margin-left: -9px;" onclick="getSelected(\'' + spaceManager + '\',2)">\n' +
+                        '<button type="button" id="spaceClose2" class="close" style="float: left;margin-left: -8px;" onclick="getSelected(\'' + spaceManager + '\',2)">\n' +
                         '                                                    <span aria-hidden="true">×</span></button>')
 
                     if (spaceDeveloper.length > 0) $("#spaceSelect2").append(
                         '<div id ="spaceOutput2" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 15px;" ><button type="button" class="user_btn colors2"' +
                         ' style="position: absolute;top: 6px;left: -8px;" onclick="getSelected(\'' + spaceDeveloper + '\',1)">' + spaceDeveloper + '</button></div>' +
-                        '<button type="button" id="spaceClose2" class="close" style="float: left;margin-left: -1px;" onclick="getSelected(\'' + spaceDeveloper + '\',2)">\n' +
+                        '<button type="button" id="spaceClose2" class="close" style="float: left;margin-left: 3px;" onclick="getSelected(\'' + spaceDeveloper + '\',2)">\n' +
                         '                                                    <span aria-hidden="true">×</span></button>')
 
                     if (spaceAuditor.length > 0) $("#spaceSelect2").append(
-                         '<div id ="spaceOutput2" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 15px;" ><button type="button" class="user_btn colors2"' +
+                        '<div id ="spaceOutput2" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 15px;" ><button type="button" class="user_btn colors2"' +
                         ' style="position: absolute;top: 6px;left: -8px;" onclick="getSelected(\'' + spaceAuditor + '\',1)">' + spaceAuditor + '</button></div>' +
-                        '<button type="button" id="spaceClose2" class="close" style="float: left;margin-left: -16px;" onclick="getSelected(\'' + spaceAuditor + '\',2)">\n' +
+                        '<button type="button" id="spaceClose2" class="close" style="float: left;margin-left: -15px;" onclick="getSelected(\'' + spaceAuditor + '\',2)">\n' +
                         '                                                    <span aria-hidden="true">×</span></button>')
-                    if (spaceManager.length > 0) {
+                     if (spaceManager.length > 0) {
                         $("select option[value=SpaceManager]").remove();
                     }
                     if (spaceDeveloper.length > 0) {
@@ -1417,17 +1448,18 @@
                         var orgId = $("#getOrgList2 option:selected").val();
                         var userId = $("#userGuid").val();
                         var role = $(this).text();
-
                         var param = {
                             orgId : orgId, //org guid
                             userId : userId, //user guid
                             role : val
                         }
-                        procCallAjax(GET_ORGS_FOR_ADMIN_URL+"/"+orgId+"/user-roles/"+userId+"/"+ role, "DELETE", JSON.stringify(param),"",$("#layerModalLoadingBar"));
+
+                        procCallAjax(GET_ORGS_FOR_ADMIN_URL+"/"+orgId+"/user-roles/"+userId+"/"+ role, "DELETE", JSON.stringify(param),deleteCallback,$("#layerModalLoadingBar"));
 
                         $(this).parent().parent().children().find('select').append("<option value='"+val+"'>"+val+"</option>");
                         $(this).parent().remove();
                         $("#orgClose2").remove();
+
                     }
                 });
 
@@ -1443,16 +1475,20 @@
                             userId : userId, //user guid
                             role : role
                         }
-                        procCallAjax(V2_URL + "/spaces"+"/"+spaceId+"/user-roles/"+userId+"/"+role, "DELETE", JSON.stringify(param),"",$("#layerModalLoadingBar"));
+                        procCallAjax(V2_URL + "/spaces"+"/"+spaceId+"/user-roles/"+userId+"/"+role, "DELETE", JSON.stringify(param),deleteCallback,$("#layerModalLoadingBar"));
 
                         $(this).parent().parent().children().find('select').append("<option value='"+val+"'>"+val+"</option>");
                         $(this).parent().remove();
                         $("#spaceClose2").remove();
+                        $("#selectOS2 #spaceOutput2>button>span").remove();
                     }
                 });
             }
         }
 
+        function deleteCallback(){
+
+        }
 
 
         /*]]>*/
