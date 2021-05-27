@@ -730,7 +730,7 @@
 
     // GET SPACE SUMMARY
     var procGetSpaceSummary = function (spaceId, spaceQuotaId) {
-        $("#modaltitle").html("영역 상세 정보");
+        $("#modaltitle").html("공간 상세 정보");
         $("#modalbody").html("데이터를 불러오고 있습니다.");
         spaceQuotaText = "없음";
 
@@ -875,7 +875,7 @@
         if($("#devEnvFormModal2 #spaceQuota option:eq(1)").val() != null){
             $("#devEnvFormModal2 #spaceQuota option[value='N']").text("선택안함");
         }else{
-            $("#devEnvFormModal2 #spaceQuota option[value='N']").text("생선된 할당량이 없습니다.");
+            $("#devEnvFormModal2 #spaceQuota option[value='N']").text("생성된 할당량이 없습니다.");
         }
         $("#selectSQ").text("선택안함");
         $("#spaceQuotaDefinitionList td").text("");
@@ -897,7 +897,7 @@
     // 조직 할당량 정의 리스트 출력
     function printOrgData(dataList) {
         if(dataList.length == 0){
-            $("#devEnvFormModal #orgQuota option[value='N']").text("생선된 할당량이 없습니다.");
+            $("#devEnvFormModal #orgQuota option[value='N']").text("생성된 할당량이 없습니다.");
         }else{
             $.each(dataList, function (index, data) {
                 if(index==0){
@@ -998,9 +998,10 @@
     //특정 조직의 공간 할당량 리스트 출력
     function printSpaceData(dataList) {
         $("#devEnvFormModal2 select#spaceQuota option[value !='N']").remove();
+
         $("#devEnvFormModal2 #spaceQuota option[value='N']").text("선택 안함");
         if(dataList.length == 0){
-            $("#devEnvFormModal2 #spaceQuota option[value='N']").text("생선된 할당량이 없습니다.");
+            $("#devEnvFormModal2 #spaceQuota option[value='N']").text("생성된 할당량이 없습니다.");
         }else{
             $.each(dataList, function (index, data) {
                 $("#devEnvFormModal2 #spaceQuota").append("<option value='"+data.metadata.guid+"'>"+data.entity.name+"</option>");
