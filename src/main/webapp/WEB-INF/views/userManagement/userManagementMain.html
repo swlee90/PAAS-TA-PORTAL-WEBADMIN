@@ -293,12 +293,9 @@
                                         <label for="userName" class="col-sm-3 control-label">Org</label>
                                         <div class="col-sm-9">
                                             <select class="form-control" id="getOrgList2" onchange="getUserOrgRoles()">
-
                                             </select>
                                         </div>
                                     </div>
-
-                                </div>
                                 <!--사용자관리 공간지정-->
                                 <div class="form-group">
                                     <label for="userName" class="col-sm-3 control-label">Space</label>
@@ -345,6 +342,7 @@
                                             <input type="checkbox" checked="" id="updateUserActive" disabled="disabled"/>
                                         </div>
                                     </div>
+                                </div>
                                 </div>
                             </form>
                         </div>
@@ -1114,9 +1112,9 @@
                     case "SpaceAuditor":
                         $("#spaceInput2 option[value='"+value+"']").remove();
                         $("#spaceSelect2").append(
-                            '<div id ="spaceOutput2" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 15px;"><button type="button" class="user_btn colors2"'+
+                            '<div id ="spaceOutput2" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 13px;"><button type="button" class="user_btn colors2"'+
                             ' style="position: absolute;top: 6px;left: -8px;" onclick="getManagment2(\''+value+'\',2)">'+value+'</button></div>'+
-                            '<button type="button" id="spaceClose2" class="close" style="float: left;margin-left: -15px;" onclick="getManagment2(\''+value+'\',2)">\n' +
+                            '<button type="button" id="spaceClose2" class="close" style="float: left;margin-left: -13px;" onclick="getManagment2(\''+value+'\',2)">\n' +
                             '                                                    <span aria-hidden="true" class="spaceAuditor">×</span></button>'
                         );
                         break;
@@ -1124,7 +1122,7 @@
                     case "SpaceDeveloper":
                         $("#spaceInput2 option[value='"+value+"']").remove();
                         $("#spaceSelect2").append(
-                            '<div id ="spaceOutput2" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 15px;"><button type="button" class="user_btn colors2"'+
+                            '<div id ="spaceOutput2" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 13px;"><button type="button" class="user_btn colors2"'+
                             ' style="position: absolute;top: 6px;left: -8px;" onclick="getManagment2(\''+value+'\',2)">'+value+'</button></div>'+
                             '<button type="button" id="spaceClose2" class="close" style="float: left;margin-left: 1px;" onclick="getManagment2(\''+value+'\',2)">\n' +
                             '                                                    <span aria-hidden="true" class="spaceDeveloper">×</span></button>'
@@ -1432,9 +1430,9 @@
                         '                                                    <span aria-hidden="true" class="spaceDeveloper">×</span></button>');
 
                     if (spaceAuditor.length > 0) $("#spaceSelect2").append(
-                        '<div id ="spaceOutput3" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 15px;" ><button type="button" class="user_btn colors2"' +
+                        '<div id ="spaceOutput3" class="col-sm-1 col-xs-3" style="width: 102px; height: 100%; margin-left: 13px;" ><button type="button" class="user_btn colors2"' +
                         ' style="position: absolute;top: 6px;left: -8px;" onclick="getSelected(\'' + spaceAuditor + '\',2)">' + spaceAuditor + '</button></div>' +
-                        '<button type="button" id="spaceClose3" class="close" style="float: left;margin-left: -15px;" onclick="getSelected(\'' + spaceAuditor + '\',2)">\n' +
+                        '<button type="button" id="spaceClose3" class="close" style="float: left;margin-left: -13px;" onclick="getSelected(\'' + spaceAuditor + '\',2)">\n' +
                         '                                                    <span aria-hidden="true" class="spaceAuditor">×</span></button>');
                     if (spaceManager.length > 0) {
                         $("#spaceInput2 option[value=SpaceManager]").remove();
@@ -1463,6 +1461,8 @@
                             userId : userId, //user guid
                             role : val
                         }
+                        $(this).parent().parent().children().find('select').append("<option value='"+val+"'>"+val+"</option>");
+
                         if(val =="OrgAuditor"){
                             $(".orgAuditor").remove();
                         } else if(val =="OrgManager"){
@@ -1471,10 +1471,8 @@
                             $(".billingManager").remove();
                         }
                         $(this).parent().remove();
-                        $(this).parent().parent().children().find('select').append("<option value='"+val+"'>"+val+"</option>");
                         procCallAjax(GET_ORGS_FOR_ADMIN_URL+"/"+orgId+"/user-roles/"+userId+"/"+ role, "DELETE", JSON.stringify(param),deleteCallback,$("#layerModalLoadingBar"));
                         $(this).remove();
-                        /*$("#orgClose3").remove();*/
                     }
                 });
 
@@ -1490,6 +1488,8 @@
                             userId : userId, //user guid
                             role : role
                         }
+                        $(this).parent().parent().children().find('select').append("<option value='"+val+"'>"+val+"</option>");
+
                         if(val =="SpaceDeveloper"){
                             $(".spaceDeveloper").remove();
                         } else if(val =="SpaceManager") {
@@ -1498,7 +1498,6 @@
                             $(".spaceAuditor").remove();
                         }
                         $(this).parent().remove();
-                        $(this).parent().parent().children().find('select').append("<option value='"+val+"'>"+val+"</option>");
                         procCallAjax(V2_URL + "/spaces"+"/"+spaceId+"/user-roles/"+userId+"/"+role, "DELETE", JSON.stringify(param),deleteCallback,$("#layerModalLoadingBar"));
                         $(this).remove();
 
