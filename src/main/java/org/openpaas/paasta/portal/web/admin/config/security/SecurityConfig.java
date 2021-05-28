@@ -49,7 +49,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
         http
                 .csrf().disable()
                 .authorizeRequests()
@@ -60,7 +59,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/**").access("hasRole('ROLE_ADMIN')")
                 .and()
                 .formLogin().loginPage("/index")
-                .defaultSuccessUrl("/dashboard")
+                //.defaultSuccessUrl("/dashboard")
+                .successHandler(new CustomLoginSuccessPortal())
                 .failureUrl("/index?error")
                 .usernameParameter("id").passwordParameter("password")
                 .and()
