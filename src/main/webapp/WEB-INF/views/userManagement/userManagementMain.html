@@ -729,7 +729,10 @@
             };
 
             arr=[];
-            $("#selectOS button").each(function () {
+            $("#orgOutput button").each(function () {
+                arr.push($(this).text());
+            });
+            $("#spaceOutput button").each(function () {
                 arr.push($(this).text());
             });
 
@@ -804,8 +807,6 @@
             var uaa = JSON.stringify(data);
             var dataUaa = JSON.parse(uaa);
 
-            /*  var getUserOne = JSON.parse(getUser).User;*/
-
             var options = "";
 
             var guid = dataUaa.id;
@@ -845,13 +846,13 @@
 
             var active = dataUaa.active; // "Y" or "N"
             if(active == "0") $("#updateUserActive").prop('checked', true);
-            /*else $("#updateUserActive").prop('checked', true);*/
+
             procCallAjax2(GET_ORGS_FOR_ADMIN_URL, "GET", null, procCallbackGetOrgs3);
 
 
         };
 
-        // 유저의 조직과 공간 권한들을 전체 삭제한다.
+        // 유저의 조직과 공간 권한들을 전체 삭제한다. (전체삭제 테스트 O , 사용중 X )
         function removeAllOreSpaceRole(){
 
             var orgId = $("#getOrgList2 option:selected").val();
@@ -874,10 +875,15 @@
             var param = {
                 userId: userId,
             }
+
             arr=[];
-            $("#selectOS2 button").each(function () {
+            $("#orgOutput2 button").each(function () {
                 arr.push($(this).text());
             });
+            $("#spaceOutput2 button").each(function () {
+                arr.push($(this).text());
+            });
+
 
             procCallAjax(REST_URL + "/info" + "/" + userId, "PUT", JSON.stringify(param), procCallbackUpdateUserInsert, $('#layerModalLoadingBar'));
         };
@@ -891,19 +897,17 @@
                 var guid = $("#getOrgList2 option:selected").val();
                 var userId = $("#userGuid").val();
 
-                var undefined = "undefined";
-
                 orgArr = [];
                 orgArr.push($("#orgInput2 option:eq(1)").not(":selected").val());
                 orgArr.push($("#orgInput2 option:eq(2)").not(":selected").val());
                 orgArr.push($("#orgInput2 option:eq(3)").not(":selected").val());
-
 
                 spaceArr = [];
 
                 spaceArr.push($("#spaceInput2 option:eq(1)").not(":selected").val());
                 spaceArr.push($("#spaceInput2 option:eq(2)").not(":selected").val());
                 spaceArr.push($("#spaceInput2 option:eq(3)").not(":selected").val());
+
 
                 var param2 = {
                     username: $("#userName").val(),
@@ -916,6 +920,7 @@
                     userId: userId,
                     role2: orgArr
                 };
+
                 var param4 = {
                     spaceId: spaceId,
                     userId: userId,
@@ -925,13 +930,16 @@
                 procCallAjax(REST_URL2 + "/" + guid + "/users", 'PUT', JSON.stringify(param2), procCallbackOrgTarget);
 
                 for (var i = 0; i < orgArr.length; i++) {
-                    if(orgArr[i] !== undefined|| spaceArr[i] !== undefined) {
+                    if(orgArr[i] != undefined && orgArr.length > 0) {
                         procCallAjax(GET_ORGS_FOR_ADMIN_URL + "/" + orgId + "/user-roles/" + userId + "/" + orgArr[i], "DELETE", JSON.stringify(param3), procCallbackOrgTarget);
+                    };
+                    if(spaceArr[i] != undefined && spaceArr.length>0){
                         procCallAjax("/v2" + "/spaces" + "/" + spaceId + "/user-roles/" + userId + "/" + spaceArr[i], "DELETE", JSON.stringify(param4), procCallbackOrgTarget);
-                    }
+                    };
                 }
             }
         };
+
 
         var procCallbackOrgTarget = function(data){
             if(data.result){
@@ -1509,7 +1517,6 @@
                         }
                         $(this).parent().remove();
                         $(this).remove();
-                        /*    updateConfirm(param);*/
                     }
                 });
 
@@ -1527,7 +1534,6 @@
                         }
                         $(this).parent().remove();
                         $(this).remove();
-                        /*              updateConfirm(param);*/
                     }
                 });
             }
