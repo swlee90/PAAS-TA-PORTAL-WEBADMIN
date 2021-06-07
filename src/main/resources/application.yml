@@ -32,28 +32,27 @@ spring:
 server:
   port: 8090
 
-datasource:
-  hikari:
-    maximum-pool-size: 50
-  cfg:
-    url: jdbc:mysql://XXX.XXX.XXX.XXX:3306/webconfig
-    username: root # YOUR UAA PORTAL DB ACCOUNT
-    password: 'PASSWORD' # YOUR PORTAL DB PASSWORD
-    ddl-auto: none
-    naming:
-      strategy: org.hibernate.dialect.MySQL5Dialect
-
 paasta:
   portal:
     api:
       authorization:
         base64: Basic YWRtaW46b3BlbnBhYXN0YQ==
       zuulUrl:
-        cfapi: http://XXX.XXX.XXX.XXX:2225/portalapi #YOUR GATEWAY SERVICE DEV SETTING(ACTIVE INFORMATION)
-        commonapi: http://XXX.XXX.XXX.XXX:2225/commonapi #YOUR GATEWAY SERVICE DEV SETTING(ACTIVE INFORMATION)
-        storageapi: http://XXX.XXX.XXX.XXX:2225/storageapi #YOUR GATEWAY SERVICE DEV SETTING(ACTIVE INFORMATION)
+        cfapi: http://172.30.200.29:2225/portalapi
+        commonapi: http://172.30.200.29:2225/commonapi
+        storageapi: http://172.30.200.29:2225/storageapi
     storageapi:
       type: swift
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://172.30.200.32:2221/eureka/ #YOUR LOCAL TEST SETTING
+      registry-fetch-interval-seconds: 5
+  instance:
+    hostname: ${spring.cloud.client.hostname}
+    lease-expiration-duration-in-seconds: 5
+    lease-renewal-interval-in-seconds: 10
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
 
 logging:
   level:
