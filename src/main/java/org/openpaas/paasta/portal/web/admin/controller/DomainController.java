@@ -56,7 +56,7 @@ public class DomainController extends Common {
     @ResponseBody
     public Map<String, Object> addDomain(@RequestBody Map body) {
         LOGGER.info("Start addDomain");
-        return domainService.addDomain("/domains-admin", HttpMethod.POST, body, getToken());
+        return domainService.addDomain("/domains-admin", HttpMethod.POST, body, null);
     }
 
     /**
@@ -73,7 +73,7 @@ public class DomainController extends Common {
     @ResponseBody
     public Map<String, Object> deleteDomain(@RequestBody Map body) {
         LOGGER.info("Start deleteDomain");
-        return domainService.deleteDomain("/domains-admin", HttpMethod.DELETE, body, getToken());
+        return domainService.deleteDomain("/domains-admin", HttpMethod.DELETE, body, null);
     }
 }
 

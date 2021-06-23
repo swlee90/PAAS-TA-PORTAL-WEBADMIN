@@ -54,7 +54,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
 
         try {
-            result = commonService.procApiRestTemplate("/login", HttpMethod.POST, resBody, Constants.CF_API, Map.class).getBody();
+            result = commonService.procLoginRestTemplate("/login", HttpMethod.POST, resBody, Map.class).getBody();
         } catch (Exception e) {
             e.printStackTrace();
             throw new BadCredentialsException(e.getMessage());
@@ -75,9 +75,10 @@ public class CustomUserDetailsService implements UserDetailsService {
             role.add(new SimpleGrantedAuthority("ROLE_USER"));
         }
         User user = new User((String) result.get("id"), (String) result.get("password"), role);
-
+        ;
         user.setToken((String) result.get("token"));
         user.setExpireDate((Long) result.get("expireDate"));
+//        user.setExpireDate(System.currentTimeMillis() + 10000L);
         user.setName((String) userInfo.get("name"));
         user.setImgPath((String) userInfo.get("imgPath"));
 

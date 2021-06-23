@@ -13,6 +13,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -76,6 +77,7 @@ public class CommonService extends Common {
             restTemplate = new RestTemplate();
             HttpHeaders reqHeaders = new HttpHeaders();
             StringBuffer req = new StringBuffer();
+            LOGGER.info("ENDPOINT ::::" +  endpoint);
             switch(api){
                 case Constants.CF_API :
                 case Constants.COMMON_API :
@@ -96,12 +98,34 @@ public class CommonService extends Common {
 
 
     /**
+     * REST TEMPLATE 처리(통합)
+     *
+     * @param endpoint       the req url
+     * @param httpMethod     the http method
+     * @param param          the rest api param
+     * @param responseType   the ResponseType
+     * @return <T> ResponseEntity<T>
+     */
+
+    public <T> ResponseEntity<T> procLoginRestTemplate(String endpoint, HttpMethod httpMethod, Object param, Class<T> responseType) {
+        restTemplate = new RestTemplate();
+        HttpHeaders reqHeaders = new HttpHeaders();
+        StringBuffer req = new StringBuffer();
+        LOGGER.info("로그인");
+        req.append(cfApiUrl + endpoint);
+        reqHeaders.add(AUTHORIZATION_HEADER_KEY, base64Authorization);
+        HttpEntity<Object> reqEntity = new HttpEntity<>(param, reqHeaders);
+        return restTemplate.exchange(req.toString(), httpMethod, reqEntity, responseType);
+    }
+
+
+    /**
      * USER ID를 조회한다.
      *
      * @return user id
      */
     public String getUserId() {
-        UserList userList = (UserList) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserDetails userList = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return userList.getUsername();
     }
 

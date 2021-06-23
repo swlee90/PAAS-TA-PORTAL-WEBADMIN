@@ -80,14 +80,18 @@ public class Common {
                 resBody.put("password", user.getPassword());
 
                 Map result;
-
-                result = commonService.procApiRestTemplate("/login", HttpMethod.POST, resBody, Constants.CF_API, Map.class).getBody();
+                LOG.info(user.toString());
+                result = commonService.procLoginRestTemplate("/login", HttpMethod.POST, resBody, Map.class).getBody();
 
                 user.setToken((String) result.get("token"));
                 user.setExpireDate((Long) result.get("expireDate"));
 
                 // session에 적용
-                Authentication authentication = new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities());
+                List role = new ArrayList();
+                role.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+                User R_user = new User(user.getUsername(), user.getPassword(), role);
+                Authentication authentication = new UsernamePasswordAuthenticationToken(R_user, user.getPassword(), role);
+                SecurityContextHolder.clearContext();
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
                 LOG.info("new token : " + user.getToken());
@@ -98,7 +102,6 @@ public class Common {
         }
 
         LOG.info("############################# Expires In : " + (user.getExpireDate() - System.currentTimeMillis()) / 1000 + " sec");
-
         String token = user.getToken();
 
         return token;
@@ -116,7 +119,7 @@ public class Common {
 
             Map result;
 
-            result = commonService.procApiRestTemplate("/login", HttpMethod.POST, resBody, Constants.CF_API, Map.class).getBody();
+            result = commonService.procLoginRestTemplate("/login", HttpMethod.POST, resBody, Map.class).getBody();
 
             user.setToken((String) result.get("token"));
             user.setExpireDate((Long) result.get("expireDate"));
