@@ -61,15 +61,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().loginPage("/index")
-                //.defaultSuccessUrl("/dashboard")
-                .successHandler(new CustomLoginSuccessPortal())
-                .failureHandler(new CustomFailurePortal())
+                .defaultSuccessUrl("/dashboard")
+                //.successHandler(new CustomLoginSuccessPortal())
+                //.failureHandler(new CustomFailurePortal())
                 //.failureUrl("/index?error")
                 .usernameParameter("id").passwordParameter("password")
                 .and()
-                .logout()./*.logoutSuccessUrl("/index?logout")*/
-                invalidateHttpSession(true).
-                logoutSuccessHandler(new CustomLogoutSuccessPortal());
+                .logout().logoutSuccessUrl("/index?logout");
+//                invalidateHttpSession(true).
+//                logoutSuccessHandler(new CustomLogoutSuccessPortal());
 
     }
 

@@ -5,10 +5,9 @@
 <head>
     <script layout:fragment="ext_inc_script" type="text/javascript" src="/resources/bower_components/ckeditor/ckeditor.js"
             th:src="@{../../resources/bower_components/ckeditor/ckeditor.js}"></script>
-
-
 </head>
 <body>
+
 <div>
     <header></header>
     <aside>/</aside>
@@ -86,6 +85,7 @@
                                     <li class="header no-padding active"><a href="#starterTab" data-toggle="tab" aria-expanded="true"  data-tab-type="starter">앱 템플릿</a></li>
                                     <li class="header no-padding"><a href="#devTab" data-toggle="tab" aria-expanded="false" data-tab-type="dev">앱 개발환경</a></li>
                                     <li class="header no-padding"><a href="#serviceTab" data-toggle="tab" aria-expanded="false" data-tab-type="service">앱 서비스</a></li>
+                                    <li class="header no-padding"><a href="#docTab" data-toggle="tab" aria-expanded="false" data-tab-type="doc">가이드</a></li>
                                 </ul>
                             </div>
 
@@ -215,6 +215,41 @@
                                                     <td></td>
                                                     <td></td>
                                                 </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <!-- /.box-body -->
+
+                                    </div><!-- /.box -->
+                                </div><!-- /.tab-pane tab_3 -->
+
+                                <div class="tab-pane fade" id="docTab">
+                                    <div class="box">
+                                        <div id="docLoadingBar" class="overlay hide"><i class="fa fa-refresh fa-spin"></i></div>
+                                        <div class="box-header">
+                                            <div class="pull-right" style="padding-right: 0px;">
+                                                <button type="button" class="btn btn-block btn-primary btn-sm" id="docRegistBtn" name="registBtn" data-toggle="modal" data-backdrop="static" data-keyboard="false" onclick="docInit()" data-target="#docFormModal">
+                                                    가이드 등록
+                                                </button>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="box-body no-padding table-responsive"> <!-- table-responsive -->
+                                            <table class="table table-striped text-center" style="word-break:break-all;">
+                                                <colgroup>
+                                                    <col class="col-xs-4"/>
+                                                    <col class="col-xs-4"/>
+                                                    <col class="col-xs-4"/>
+                                                </colgroup>
+                                                <thead>
+                                                <tr class="text-center">
+                                                    <th>이름</th>
+                                                    <th>항목</th>
+                                                    <th>세부항목</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody id="doc_List" name="dataList">
                                                 </tbody>
                                             </table>
                                         </div>
@@ -955,6 +990,76 @@
             </div>
             <!-- Modal END -->
 
+            <!-- [가이드] Modal-->
+            <div class="modal fade" id="docFormModal" data-backdrop="static" data-keyboard="false">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span></button>
+
+                            <h4 class="modal-title">
+                                <div id="docTitle" name="modalTitle">앱 서비스 등록</div>
+                            </h4>
+                        </div>
+                        <div class="modal-body">
+
+                            <div class="box" style="margin-bottom: 0px; border-top: 0px; box-shadow: 0 0px 0px">
+                                <div id="docModalLoadingBar" name="modalLoadingBar" class="overlay hide"><i class="fa fa-refresh fa-spin"></i></div>
+                                <form id="docForm" class="form-horizontal">
+                                    <div class="box-body">
+
+                                        <div class="form-group required">
+                                            <label for="serviceName" class="col-sm-3 control-label">이름</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" class="form-control checkServiceForm" id="docName" name="name" placeholder="" />
+                                                <input type="hidden" id="docId" name="id"/>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group required">
+                                            <label for="categoryServiceList" class="col-sm-3 control-label">분류</label>
+                                            <div class="col-sm-9">
+                                                <select class="form-control checkServiceForm" onchange='changeClassification(this.value)' id="docList" style="width:auto;">
+                                                    <option value="앱 개발환경"> 앱 개발환경 </option>
+                                                    <option value="앱 서비스"> 앱 서비스 </option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group required">
+                                            <label for="serviceServicePackList" class="col-sm-3 control-label">서비스</label>
+                                            <div class="col-sm-9">
+                                                <select class="form-control checkServiceForm"  id="docPackList" style="width:auto;">
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="content" class="col-sm-3 control-label" >Content:</label>
+                                            <div class="col-sm-9">
+                                                <textarea type="text" rows="4" id="content" placeholder="Content" class="form-control" autocomplete="off"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" id="docDeleteBtn" name="modalDeleteBtn" class="btn btn-sm btn-danger pull-left" onClick="deleteModal();">삭제</button>
+                            <button type="button" id="docSaveBtn" name="modalSaveBtn" class="btn btn-sm btn-primary pull-right" onClick="updateService();">저장</button>
+                            <button type="button" id="docRegBtn" name="modalRegBtn" class="btn btn-sm btn-primary pull-right" onClick="createGuides();">등록</button>
+                            <button type="button" id="docCloseBtn" class="btn btn-sm btn-default pull-left" data-dismiss="modal">취소</button>
+                        </div>
+                    </div>
+                    <!-- /.modal-content -->
+                </div>
+                <!-- /.modal-dialog -->
+            </div>
+            <!-- Modal END -->
+
+
             <!-- Confirm Modal -->
             <div class="modal fade" tabindex="-1" role="dialog" id="confirmModal">
                 <div class="modal-dialog modal-lg">
@@ -985,13 +1090,16 @@
 </div>
 <!-- ./wrapper -->
 
+<script th:inline="javascript" type="text/javascript" layout:fragment="custom-markdown" >
+
+</script>
 <script th:inline="javascript" type="text/javascript" layout:fragment="custom-script">
     /*<![CDATA[*/
     /* To_BEf
      앱 템플릿 등록시 동일 이름 있는지 체크 DUPLICATED_PROC_URL
      앱 템플릿에서 사용중인지 확인 부분
     */
-
+    var simplemde = new SimpleMDE({element: document.getElementById("content")});
     var STARTER_PACK_PROC_URL = /*[[${T(org.openpaas.paasta.portal.web.admin.common.Constants).STARTER_PACK_PROC_URL}]]*/ "";
     var DEVELOP_PACK_PROC_URL = /*[[${T(org.openpaas.paasta.portal.web.admin.common.Constants).DEVELOP_PACK_PROC_URL}]]*/ "";
     var SERVICE_PACK_PROC_URL = /*[[${T(org.openpaas.paasta.portal.web.admin.common.Constants).SERVICE_PACK_PROC_URL}]]*/ "";
@@ -1001,6 +1109,7 @@
     var SERVICE_PACK_CATALOG_ID = /*[[${T(org.openpaas.paasta.portal.web.admin.common.Constants).SERVICE_PACK_CATALOG_ID}]]*/ "";
 
     var CATEGORY_LIST_PROC_URL = "/v2/codedetail";
+    var GUID_URL = "/v2/guides"
 
     //var CLIENT_LIST = new Array();
 
@@ -1032,7 +1141,7 @@
     var BEFORE_SAMPLE_APP_NAME; // 샘플앱 명(storage file name)
     var BEFORE_SAMPLE_APP_LABEL_NAME; //샘플앱 파일명
     var BEFORE_SAMPLE_APP_SIZE; // 샘플앱 크기
-
+    var SELECT_GUBUN2 = "";
 
     $(document.body).ready(function () {
 
@@ -1040,7 +1149,8 @@
         getStarterList();
         getBuildPackList();
         getServicePackList();
-
+        getDocBuildPackList();
+        getDocList();
         // 활성화 탭 체크
         $('.nav-tabs li').each(function(){
             $(this).click(function(e){
@@ -1075,6 +1185,8 @@
                 getBuildPack(id);
             }else if(ACTIVE_TAB == 'service'){
                 getServicePack(id);
+            }else if(ACTIVE_TAB == 'doc'){
+                getDoc(id);
             }
         });
 
@@ -3139,6 +3251,102 @@
             eval("$('button[name=tagPreview]:eq("+index+")').addClass('"+type2+"')");
             eval("$('button[name=tagPreview]:eq("+index+")').removeClass('hide')");
         }
+    }
+
+    function changeClassification(value){
+        $('#docPackList').empty();
+        if(value === '앱 개발환경'){
+            getDocBuildPackList()
+        } else {
+            getDocServicePackList()
+        }
+
+    }
+
+    // GET BuildPackList
+    var getDocBuildPackList = function () {
+        procCallAjax(DEVELOP_PACK_PROC_URL, "GET", null, procCallbackGetDocList, $('#devEnvTabLoadingBar'));
+    };
+
+    // GET ServicePackList
+    var getDocServicePackList = function () {
+        procCallAjax(SERVICE_PACK_PROC_URL, "GET", null, procCallbackGetDocList, $('#serviceTabLoadingBar'));
+    };
+
+    // GET LIST CALLBACK BuildPackList
+    var procCallbackGetDocList = function (data) {
+        DEV_SOURCE_LIST = data.list;
+        docPackList(DEV_SOURCE_LIST);
+    };
+
+    // [앱 개발환경] 리스트 출력
+    function docPackList(dataList) {
+        var objTable = $("#docPackList");
+        $.each(dataList, function (id, data) {
+            objTable.append('<option value="'+data.name+ '">'+data.name+ '</option>');
+        });
+        if(SELECT_GUBUN2 != null && SELECT_GUBUN2.length > 0 && SELECT_GUBUN2 !== undefined){
+            $("#docPackList").val(SELECT_GUBUN2);
+        }
+    };
+
+    /* [가이드] 등록  */
+    function createGuides() {
+        $('.modal').modal('hide');
+        $('#catalogSearch')[0].reset();
+        var param = {
+            name                        : $("#docName").val(),
+            gubun                       : $("#docList").val(),
+            gubun2                      : $("#docPackList").val(),
+            markdown                    : simplemde.value()
+        }
+        procCallAjax(GUID_URL, "POST", JSON.stringify(param), getDocList, $('#serviceModalLoadingBar'));
+    }
+
+    // GET LIST CALLBACK BuildPackList
+    var getDocList = function () {
+        procCallAjax(GUID_URL, "GET", null, viewDocList, $('#serviceTabLoadingBar'));
+    };
+
+    var viewDocList = function (data) {
+        var objTable = $("#doc_List");
+        objTable.html('');
+        var dataList = data['data'];
+        $.each(dataList, function (id, data) {
+            objTable.append('<tr style="cursor:pointer;" data-id='+data.name+'>'
+                + '<td>' + data.name + '</td>'
+                + '<td>' + data.gubun + '</td>'
+                + '<td>' + data.gubun2 + '</td>'
+                + '</tr>');
+        });
+    };
+
+    var getDoc = function(id){
+
+        $('#docTitle').text(id + "가이드 상세");
+        $('#docDeleteBtn').show();
+        $('#docSaveBtn').show();
+        $('#docRegBtn').hide();
+        $('#docFormModal').modal('toggle');
+
+        // Starter 상세조회
+        procCallAjax(GUID_URL + "/" + id, "GET", null, procCallbackGetDoc, $('#starterModalLoadingBar '));
+    }
+
+    var procCallbackGetDoc = function(data){
+        var entity = data['data'];
+        SELECT_GUBUN2 = entity.gubun2;
+        changeClassification(entity.gubun);
+        $("#docName").val(entity.name);
+        simplemde.value(entity.markdown);
+
+        $("#docList").val(entity.gubun);
+    }
+
+    var docInit = function (){
+        $("#docName").val("");
+        simplemde.value("");
+        SELECT_GUBUN2 = "";
     }
 
     /*]]>*/

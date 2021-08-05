@@ -5,6 +5,7 @@ import org.openpaas.paasta.portal.web.admin.common.Common;
 import org.openpaas.paasta.portal.web.admin.common.Constants;
 import org.openpaas.paasta.portal.web.admin.common.User;
 import org.openpaas.paasta.portal.web.admin.model.Catalog;
+import org.openpaas.paasta.portal.web.admin.model.Guide;
 import org.openpaas.paasta.portal.web.admin.util.MultipartFileResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -563,4 +564,22 @@ class CatalogController extends Common {
     /*
      * ------------------------------------------------------------------------------------삭제 끝
      */
+    @PostMapping(V2_URL + "/guides")
+    @ResponseBody
+    public Map<String, Object> createGuide(@RequestBody Guide guide){
+        return catalogService.createGuide(guide);
+    }
+
+
+    @GetMapping(V2_URL + "/guides")
+    @ResponseBody
+    public Map<String, Object> getGuides(){
+        return catalogService.getGuides();
+    }
+
+    @GetMapping(V2_URL + "/guides/{name}")
+    @ResponseBody
+    public Map<String, Object> getGuide(@PathVariable String name){
+        return catalogService.getGuide(name);
+    }
 }

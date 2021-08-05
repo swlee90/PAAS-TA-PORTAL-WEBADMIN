@@ -2,6 +2,7 @@ package org.openpaas.paasta.portal.web.admin.service;
 
 import org.openpaas.paasta.portal.web.admin.common.Constants;
 import org.openpaas.paasta.portal.web.admin.model.Catalog;
+import org.openpaas.paasta.portal.web.admin.model.Guide;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
@@ -259,7 +260,7 @@ public class CatalogService {
     }
 
     /**
-     * 빌드 팩을 삭제한다.
+     * 빌드 팩을 삭제한다.v2/guides
      *
      * @param no
      * @return Map(자바클래스)
@@ -267,4 +268,17 @@ public class CatalogService {
     public Map<String, Object> deleteServicePackCatalog(int no) {
         return commonService.procApiRestTemplate(Constants.V2_URL + "/servicepacks/" + no, HttpMethod.DELETE, null, Constants.COMMON_API, Map.class).getBody();
     }
+
+    public Map <String, Object> createGuide(Guide guide){
+        return commonService.procApiRestTemplate(Constants.V2_URL + "/guides", HttpMethod.POST, guide, Constants.COMMON_API, Map.class).getBody();
+    }
+
+    public Map <String, Object> getGuides(){
+        return commonService.procApiRestTemplate(Constants.V2_URL + "/guides", HttpMethod.GET, null, Constants.COMMON_API, Map.class).getBody();
+    }
+
+    public Map <String, Object> getGuide(String name){
+        return commonService.procApiRestTemplate(Constants.V2_URL + "/guides/"+name, HttpMethod.GET, null, Constants.COMMON_API, Map.class).getBody();
+    }
+
 }
