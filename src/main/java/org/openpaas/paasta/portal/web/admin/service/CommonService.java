@@ -52,8 +52,6 @@ public class CommonService extends Common {
     @Value("${paasta.portal.api.zuulUrl.cfapi}")
     private String cfApiUrl;
 
-    @Value("${paasta.portal.api.zuulUrl.cfapiv3}")
-    private String cfApiUrlV3;
 
     @Value("${paasta.portal.api.zuulUrl.commonapi}")
     private String commonApiUrl;
@@ -88,7 +86,6 @@ public class CommonService extends Common {
                 case Constants.STORAGE_API :
                     switch (api){
                         case Constants.CF_API :  req.append(cfApiUrl + endpoint); break;
-                        case Constants.CF_API_V3 :  req.append(cfApiUrlV3 + endpoint); break;
                         case Constants.COMMON_API :  req.append(commonApiUrl + endpoint); break;
                         case Constants.STORAGE_API :  req.append(storageApiUrl + "/v2/" + storageApiType + '/' + endpoint); break;
                     }

@@ -1047,8 +1047,8 @@
 
                         </div>
                         <div class="modal-footer">
-                            <button type="button" id="docDeleteBtn" name="modalDeleteBtn" class="btn btn-sm btn-danger pull-left" onClick="deleteModal();">삭제</button>
-                            <button type="button" id="docSaveBtn" name="modalSaveBtn" class="btn btn-sm btn-primary pull-right" onClick="updateService();">저장</button>
+                            <button type="button" id="docDeleteBtn" name="modalDeleteBtn" class="btn btn-sm btn-danger pull-left" onClick="deleteGuides();">삭제</button>
+                            <button type="button" id="docSaveBtn" name="modalSaveBtn" class="btn btn-sm btn-primary pull-right" onClick="updateGuides();">저장</button>
                             <button type="button" id="docRegBtn" name="modalRegBtn" class="btn btn-sm btn-primary pull-right" onClick="createGuides();">등록</button>
                             <button type="button" id="docCloseBtn" class="btn btn-sm btn-default pull-left" data-dismiss="modal">취소</button>
                         </div>
@@ -1142,6 +1142,7 @@
     var BEFORE_SAMPLE_APP_LABEL_NAME; //샘플앱 파일명
     var BEFORE_SAMPLE_APP_SIZE; // 샘플앱 크기
     var SELECT_GUBUN2 = "";
+    var SELECT_NAME = "";
 
     $(document.body).ready(function () {
 
@@ -3336,6 +3337,7 @@
     var procCallbackGetDoc = function(data){
         var entity = data['data'];
         SELECT_GUBUN2 = entity.gubun2;
+        SELECT_NAME = entity.name;
         changeClassification(entity.gubun);
         $("#docName").val(entity.name);
         simplemde.value(entity.markdown);
@@ -3347,6 +3349,23 @@
         $("#docName").val("");
         simplemde.value("");
         SELECT_GUBUN2 = "";
+    }
+
+    /* [가이드] 수정  */
+    function updateGuides() {
+        $('.modal').modal('hide');
+        var param = {
+            gubun                       : $("#docList").val(),
+            gubun2                      : $("#docPackList").val(),
+            markdown                    : simplemde.value()
+        }
+        procCallAjax(GUID_URL+"/"+SELECT_NAME, "PUT", JSON.stringify(param), getDocList, $('#serviceModalLoadingBar'));
+    }
+
+    /* [가이드] 삭제  */
+    function deleteGuides() {
+        $('.modal').modal('hide');
+        procCallAjax(GUID_URL+"/"+SELECT_NAME, "DELETE", null, getDocList, $('#serviceModalLoadingBar'));
     }
 
     /*]]>*/

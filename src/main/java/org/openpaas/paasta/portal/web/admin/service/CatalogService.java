@@ -281,4 +281,11 @@ public class CatalogService {
         return commonService.procApiRestTemplate(Constants.V2_URL + "/guides/"+name, HttpMethod.GET, null, Constants.COMMON_API, Map.class).getBody();
     }
 
+    public Map <String, Object> updateGuide(Guide guide, String name){
+        return commonService.procApiRestTemplate(Constants.V2_URL + "/guides/"+name, HttpMethod.PUT, guide, Constants.COMMON_API, Map.class).getBody();
+    }
+
+    public Map <String, Object> deleteGuide(String name){
+        return commonService.procApiRestTemplate(Constants.V2_URL + "/guides/"+name, HttpMethod.DELETE, null, Constants.COMMON_API, Map.class).getBody();
+    }
 }

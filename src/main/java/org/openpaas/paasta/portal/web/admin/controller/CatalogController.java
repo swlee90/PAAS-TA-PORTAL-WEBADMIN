@@ -582,4 +582,16 @@ class CatalogController extends Common {
     public Map<String, Object> getGuide(@PathVariable String name){
         return catalogService.getGuide(name);
     }
+
+    @PutMapping(V2_URL + "/guides/{name}")
+    @ResponseBody
+    public Map<String, Object> updateGuide(@RequestBody Guide guide, @PathVariable String name){
+        return catalogService.updateGuide(guide, name);
+    }
+
+    @DeleteMapping(V2_URL + "/guides/{name}")
+    @ResponseBody
+    public Map<String, Object> deleteGuide(@PathVariable String name){
+        return catalogService.deleteGuide(name);
+    }
 }
