@@ -1010,7 +1010,7 @@
                                     <div class="box-body">
 
                                         <div class="form-group required">
-                                            <label for="serviceName" class="col-sm-3 control-label">이름</label>
+                                            <label for="docName" class="col-sm-3 control-label">이름</label>
                                             <div class="col-sm-9">
                                                 <input type="text" class="form-control checkServiceForm" id="docName" name="name" placeholder="" />
                                                 <input type="hidden" id="docId" name="id"/>
@@ -1018,7 +1018,7 @@
                                         </div>
 
                                         <div class="form-group required">
-                                            <label for="categoryServiceList" class="col-sm-3 control-label">분류</label>
+                                            <label for="docList" class="col-sm-3 control-label">분류</label>
                                             <div class="col-sm-9">
                                                 <select class="form-control checkServiceForm" onchange='changeClassification(this.value)' id="docList" style="width:auto;">
                                                     <option value="앱 개발환경"> 앱 개발환경 </option>
@@ -1028,7 +1028,7 @@
                                         </div>
 
                                         <div class="form-group required">
-                                            <label for="serviceServicePackList" class="col-sm-3 control-label">서비스</label>
+                                            <label for="docPackList" class="col-sm-3 control-label">서비스</label>
                                             <div class="col-sm-9">
                                                 <select class="form-control checkServiceForm"  id="docPackList" style="width:auto;">
                                                 </select>
@@ -1109,7 +1109,7 @@
     var SERVICE_PACK_CATALOG_ID = /*[[${T(org.openpaas.paasta.portal.web.admin.common.Constants).SERVICE_PACK_CATALOG_ID}]]*/ "";
 
     var CATEGORY_LIST_PROC_URL = "/v2/codedetail";
-    var GUID_URL = "/v2/guides"
+    var GUIDE_URL = "/v2/guides"
 
     //var CLIENT_LIST = new Array();
 
@@ -3301,12 +3301,12 @@
             gubun2                      : $("#docPackList").val(),
             markdown                    : simplemde.value()
         }
-        procCallAjax(GUID_URL, "POST", JSON.stringify(param), getDocList, $('#serviceModalLoadingBar'));
+        procCallAjax(GUIDE_URL, "POST", JSON.stringify(param), getDocList, $('#serviceModalLoadingBar'));
     }
 
     // GET LIST CALLBACK BuildPackList
     var getDocList = function () {
-        procCallAjax(GUID_URL, "GET", null, viewDocList, $('#serviceTabLoadingBar'));
+        procCallAjax(GUIDE_URL, "GET", null, viewDocList, $('#serviceTabLoadingBar'));
     };
 
     var viewDocList = function (data) {
@@ -3331,7 +3331,7 @@
         $('#docFormModal').modal('toggle');
 
         // Starter 상세조회
-        procCallAjax(GUID_URL + "/" + id, "GET", null, procCallbackGetDoc, $('#starterModalLoadingBar '));
+        procCallAjax(GUIDE_URL + "/" + id, "GET", null, procCallbackGetDoc, $('#starterModalLoadingBar '));
     }
 
     var procCallbackGetDoc = function(data){
@@ -3359,13 +3359,13 @@
             gubun2                      : $("#docPackList").val(),
             markdown                    : simplemde.value()
         }
-        procCallAjax(GUID_URL+"/"+SELECT_NAME, "PUT", JSON.stringify(param), getDocList, $('#serviceModalLoadingBar'));
+        procCallAjax(GUIDE_URL+"/"+SELECT_NAME, "PUT", JSON.stringify(param), getDocList, $('#serviceModalLoadingBar'));
     }
 
     /* [가이드] 삭제  */
     function deleteGuides() {
         $('.modal').modal('hide');
-        procCallAjax(GUID_URL+"/"+SELECT_NAME, "DELETE", null, getDocList, $('#serviceModalLoadingBar'));
+        procCallAjax(GUIDE_URL+"/"+SELECT_NAME, "DELETE", null, getDocList, $('#serviceModalLoadingBar'));
     }
 
     /*]]>*/

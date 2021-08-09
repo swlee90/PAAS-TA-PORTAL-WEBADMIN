@@ -47,6 +47,9 @@ public class Common {
 
     @Autowired
     public DomainService domainService;
+
+    @Autowired
+    public GuideImageService guideImageService;
     /**
      * Get Token
      *
