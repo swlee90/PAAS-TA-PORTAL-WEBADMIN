@@ -251,10 +251,9 @@
     $(document).on( "mouseup", 'tbody[name=serviceList]' ,function(e){
         initModal();
         $("#imageList").val('앱 서비스');
-
-        var id = $(e.target).parent().data('id');
+        SELECT_ID = $(e.target).parent().data('id');
         $('#FormModal').modal('toggle');
-        procCallAjax("/v2/guide_images/" + id, "GET", null, viewGuideSImage, null);
+        procCallAjax("/v2/guide_images/" + SELECT_ID, "GET", null, viewGuideSImage, null);
 
     });
 
@@ -299,7 +298,7 @@
             // 파일 직접 주소 참조 불가. API를 통해 FILE 가져오기
             $('#guideImagePreview img').attr("src","/v2/thumbnail/"+fileName);
             $('div[name=guideImagePreview]').show();
-            BEFORE_THUMB_PATH = entity.url;
+            BEFORE_THUMB_NAME = fileName;
         }
         getImageServicePackList();
     }
