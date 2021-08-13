@@ -33,13 +33,20 @@
                                 <div class="box-body" style="display:none;">
                                     <form class="form-horizontal" id="catalogSearch"><!--form-inline-->
                                         <div class="form-group col-sm-12">
-                                            <label for="searchValue" class="control-label col-sm-3 col-xs-12">검색어</label>
+                                            <label for="searchName" class="control-label col-sm-3 col-xs-12">이름</label>
                                             <div class="has-feedback col-sm-4 col-xs-12">
-                                                <input type="text" id="searchValue" class="form-control"/>
+                                                <input type="text" id="searchName" class="form-control"/>
                                                 <span class="glyphicon glyphicon-search form-control-feedback"></span>
                                                 <input style="visibility:hidden; width:0px;"/><!-- Auto Summit 방지용 -->
                                             </div>
-
+                                        </div>
+                                        <div class="form-group col-sm-12">
+                                            <label for="searchGubun" class="control-label col-sm-3 col-xs-12">분류</label>
+                                            <div class="has-feedback col-sm-4 col-xs-12">
+                                                <input type="text" id="searchGubun" class="form-control"/>
+                                                <span class="glyphicon glyphicon-search form-control-feedback"></span>
+                                                <input style="visibility:hidden; width:0px;"/><!-- Auto Summit 방지용 -->
+                                            </div>
                                         </div>
                                     </form>
 
@@ -189,6 +196,7 @@
     <footer></footer>
 </div>
 <script th:inline="javascript" type="text/javascript" layout:fragment="custom-script">
+    /*<![CDATA[*/
     var DEVELOP_PACK_PROC_URL = /*[[${T(org.openpaas.paasta.portal.web.admin.common.Constants).DEVELOP_PACK_PROC_URL}]]*/ "";
     var SERVICE_PACK_PROC_URL = /*[[${T(org.openpaas.paasta.portal.web.admin.common.Constants).SERVICE_PACK_PROC_URL}]]*/ "";
     var IMAGE_URL = "/v2/guide_images"
@@ -196,24 +204,8 @@
     var THUMB_MAX_SIZE = 20 * 1024; // 20MB
     var BEFORE_THUMB_PATH;
     var SELECT_ID = "";
+    var DATA_LIST = [];
     $(document.body).ready(function () {
-        // 활성화 탭 체크
-        $('.nav-tabs li').each(function () {
-            $(this).click(function (e) {
-                ACTIVE_TAB = $(e.target).data('tabType');
-
-                // 조건 검색 초기화 추가
-                $("#catalogSearch")[0].reset();
-                if (ACTIVE_TAB == 'buildpack') {
-                    //getStarterList(); // 탭클릭시 API재조회는 해당 항목 사용
-                    //printStarterList(STARTER_SOURCE_LIST);
-                } else {
-                    //getBuildPackList();
-                    //printDevEnvList(DEV_SOURCE_LIST);
-                }
-            });
-        });
-
         getImageBuildPackList();
         getImageList();
         $('div[name=guideImagePreview]').hide();
@@ -345,27 +337,8 @@
     };
 
     var viewImageList = function (data) {
-        var objTable = $("#buildpackList");
-        var objTable2 = $("#serviceList");
-        objTable.html('');
-        objTable2.html('');
-        var dataList = data['data'];
-        $.each(dataList, function (id, data) {
-            if(data.gubun ==='앱 서비스' ){
-                objTable2.append('<tr style="cursor:pointer;" data-id='+data.id+'>'
-                    + '<td>' + data.name + '</td>'
-                    + '<td>' + data.gubun2 + '</td>'
-                    + '<td>' + data.url + '</td>'
-                    + '</tr>');
-            }else {
-                objTable.append('<tr style="cursor:pointer;" data-id='+data.id+'>'
-                    + '<td>' + data.name + '</td>'
-                    + '<td>' + data.gubun2 + '</td>'
-                    + '<td>' + data.url + '</td>'
-                    + '</tr>');
-            }
-
-        });
+        DATA_LIST = data['data'];
+        keywordSearch();
     };
 
     var setPreView = function (objThumbnail) {
@@ -544,6 +517,48 @@
         };
         return param;
     }
+
+    $(document).on("keyup","#searchName", function(e){
+        keywordSearch();
+        console.log("네임")
+    });
+
+    $(document).on("keyup","#searchGubun", function(e){
+        keywordSearch();
+        console.log("구분")
+    });
+
+    // 검색조회
+    function keywordSearch() {
+        const ImageName = $("#searchName").val().toLowerCase();
+        const ImageGubun = $("#searchGubun").val().toLowerCase();
+        var objTable = $("#buildpackList");
+        var objTable2 = $("#serviceList");
+        objTable.html('');
+        objTable2.html('');
+        $.each(DATA_LIST, function (id, data) {
+            const name = data.name.toLowerCase();
+            const gubun = data.gubun2.toLowerCase();
+            if( name.includes(ImageName) && gubun.includes(ImageGubun) ) {
+                if(data.gubun ==='앱 서비스' ){
+                    objTable2.append('<tr style="cursor:pointer;" data-id='+data.id+'>'
+                        + '<td>' + data.name + '</td>'
+                        + '<td>' + data.gubun2 + '</td>'
+                        + '<td>' + data.url + '</td>'
+                        + '</tr>');
+                }else {
+                    objTable.append('<tr style="cursor:pointer;" data-id='+data.id+'>'
+                        + '<td>' + data.name + '</td>'
+                        + '<td>' + data.gubun2 + '</td>'
+                        + '<td>' + data.url + '</td>'
+                        + '</tr>');
+                }
+            }
+        });
+    }
+
+    /*]]>*/
+
 </script>
 </body>
 </html>
