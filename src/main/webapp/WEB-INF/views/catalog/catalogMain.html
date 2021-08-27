@@ -239,7 +239,7 @@
                                             <table class="table table-striped text-center" style="word-break:break-all;">
                                                 <colgroup>
                                                     <col class="col-xs-4"/>
-                                                    <col class="col-xs-4"/>
+                                                    <col class="col-xs-2"/>
                                                     <col class="col-xs-4"/>
                                                 </colgroup>
                                                 <thead>
@@ -247,6 +247,7 @@
                                                     <th>이름</th>
                                                     <th>항목</th>
                                                     <th>세부항목</th>
+                                                    <th>공개</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody id="doc_List" name="dataList">
@@ -1034,7 +1035,27 @@
                                                 </select>
                                             </div>
                                         </div>
+                                        <div class="form-group required">
+                                            <label for="isFreeGuide" class="col-sm-3 control-label">공개</label>
+                                            <div class="col-sm-9">
 
+                                                <div id="isFreeGuide" class="radio">
+                                                    <div class="col-sm-2">
+                                                        <label>
+                                                            <input type="radio" name="guideUseYn" value="Y"/>
+                                                            Y
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-sm-10">
+                                                        <label>
+                                                            <input type="radio" name="guideUseYn" value="N" />
+                                                            N
+                                                        </label>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
                                         <div class="form-group">
                                             <label for="content" class="col-sm-3 control-label" >Content:</label>
                                             <div class="col-sm-9">
@@ -1222,6 +1243,7 @@
             $('button[name=modalDeleteBtn]').hide();
             $('button[name=modalSaveBtn]').hide();
             $('button[name=modalRegBtn]').show();
+            $("input:radio[name=guideUseYn]").prop("checked",false);
 
             initModal();
         });
@@ -2744,6 +2766,7 @@
             $('.tag-param-added').remove();
 
             $('div[name=appRemove]').trigger('click');
+
         }
 
         BEFORE_THUMB_NAME = "";
@@ -3293,10 +3316,12 @@
 
     /* [가이드] 등록  */
     function createGuides() {
+
         $('.modal').modal('hide');
         $('#catalogSearch')[0].reset();
         var param = {
             name                        : $("#docName").val(),
+            useYn                      : $("input:radio[name=guideUseYn]:checked").val(),
             gubun                       : $("#docList").val(),
             gubun2                      : $("#docPackList").val(),
             markdown                    : simplemde.value()
@@ -3314,13 +3339,16 @@
         objTable.html('');
         var dataList = data['data'];
         $.each(dataList, function (id, data) {
-            objTable.append('<tr style="cursor:pointer;" data-id='+data.name+'>'
+            var useYnClass = (data.useYn == 'Y')  ? "bg-green"  : "bg-red" ;
+            objTable.append('<tr style="cursor:pointer;" data-id="'+data.name+'">'
                 + '<td>' + data.name + '</td>'
                 + '<td>' + data.gubun + '</td>'
                 + '<td>' + data.gubun2 + '</td>'
+                + '<td><span class="label label-default '+useYnClass+'">' + data.useYn + '</span></td>'
                 + '</tr>');
         });
     };
+
 
     var getDoc = function(id){
 
@@ -3341,8 +3369,13 @@
         changeClassification(entity.gubun);
         $("#docName").val(entity.name);
         simplemde.value(entity.markdown);
-
         $("#docList").val(entity.gubun);
+        if(entity.useYn == "Y"){
+            $("input:radio[name=guideUseYn]:radio[value='Y']").prop("checked",true);
+        }
+        if(entity.useYn == "N"){
+            $("input:radio[name=guideUseYn]:radio[value='N']").prop("checked",true);
+        }
     }
 
     var docInit = function (){
@@ -3357,6 +3390,7 @@
         var param = {
             gubun                       : $("#docList").val(),
             gubun2                      : $("#docPackList").val(),
+            useYn                      : $("input:radio[name=guideUseYn]:checked").val(),
             markdown                    : simplemde.value()
         }
         procCallAjax(GUIDE_URL+"/"+SELECT_NAME, "PUT", JSON.stringify(param), getDocList, $('#serviceModalLoadingBar'));
