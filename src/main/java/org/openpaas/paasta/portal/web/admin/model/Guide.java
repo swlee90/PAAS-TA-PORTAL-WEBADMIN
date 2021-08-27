@@ -7,6 +7,7 @@ public class Guide {
     String gubun;
     String gubun2;
     String markdown;
+    String useYn;
 
     public Guide() {
     }
@@ -41,5 +42,13 @@ public class Guide {
 
     public void setMarkdown(String markdown) {
         this.markdown = markdown;
+    }
+
+    public String getUseYn() {
+        return useYn;
+    }
+
+    public void setgetUseYn(String useYn) {
+        this.useYn = useYn;
     }
 }
